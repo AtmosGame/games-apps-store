@@ -8,8 +8,8 @@ stages:
 build:
   stage: build
   script:
-    - chmod +x ./mvnw
-    - ./mvnw package
+    - chmod +x ./gradlew
+    - ./gradlew package
   artifacts:
     paths:
       - target/demo-0.0.1-SNAPSHOT.jar
@@ -17,8 +17,8 @@ build:
 test:
   stage: test
   script:
-    - chmod +x ./mvnw
-    - ./mvnw test
+    - chmod +x ./gradlew
+    - ./gradlew test
 
 deploy:
   stage: deploy
