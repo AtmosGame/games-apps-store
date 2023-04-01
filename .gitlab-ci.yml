@@ -1,0 +1,32 @@
+image: openjdk:11
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - chmod +x ./mvnw
+    - ./mvnw package
+  artifacts:
+    paths:
+      - target/demo-0.0.1-SNAPSHOT.jar
+
+test:
+  stage: test
+  script:
+    - chmod +x ./mvnw
+    - ./mvnw test
+
+deploy:
+  stage: deploy
+  image: ruby:latest
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=test-spring-gitlab --api-key=$HEROKU_API_KEY
+  only:
+  - main
