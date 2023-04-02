@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/dummy")
 public class DummyController {
-
     @GetMapping("/test1")
     public ResponseEntity<String> test1() {
         return ResponseEntity.ok("Test1");
