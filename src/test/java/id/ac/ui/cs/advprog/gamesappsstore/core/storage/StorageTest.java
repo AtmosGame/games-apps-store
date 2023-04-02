@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.storage;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +19,9 @@ class StorageTest {
 
     @Test
     void uploadFile() {
-        InputStream in = new ByteArrayInputStream("Ehe Te Nandayo".getBytes());
-        storage.uploadFile(in, "/Test/ventix.txt");
+        InputStream in = new ByteArrayInputStream("Test Upload File".getBytes());
+        String url = storage.uploadFile(in, "/Test/Hehe.txt");
+        System.out.println("URL: " + url);
+        Assertions.assertTrue(url.contains("https"));
     }
 }
