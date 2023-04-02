@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.models;
+package id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration;
 
 import org.springframework.stereotype.Component;
 

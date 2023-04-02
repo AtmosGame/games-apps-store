@@ -1,6 +1,6 @@
-package id.ac.ui.cs.advprog.gamesappsstore.repository;
+package id.ac.ui.cs.advprog.gamesappsstore.repository.AppRegistration;
 
-import id.ac.ui.cs.advprog.gamesappsstore.models.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppData;
 
 import java.util.HashMap;
 import java.util.Map;

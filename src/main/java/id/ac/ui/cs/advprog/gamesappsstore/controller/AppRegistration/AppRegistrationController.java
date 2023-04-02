@@ -1,7 +1,7 @@
-package id.ac.ui.cs.advprog.gamesappsstore.controller;
+package id.ac.ui.cs.advprog.gamesappsstore.controller.AppRegistration;
 
-import id.ac.ui.cs.advprog.gamesappsstore.models.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistrationService;
+import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration.AppRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,9 +1,9 @@
 package id.ac.ui.cs.advprog.gamesappsstore;
 
-import id.ac.ui.cs.advprog.gamesappsstore.models.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.models.AppDataValidator;
-import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistrationService;
-import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistrationServiceImpl;
+import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppDataValidator;
+import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration.AppRegistrationService;
+import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration.AppRegistrationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Component;
