@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.gamesappsstore.core.storage;
 
 import id.ac.ui.cs.advprog.gamesappsstore.constants.DropboxKeys;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.AccessTokenAPICall;
+import id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.ShareURLAPICall;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.UploadFileAPICall;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,9 @@ public class Storage {
         String accessToken = accessTokenAPICall.execute();
 
         UploadFileAPICall uploadFileAPICall = new UploadFileAPICall(accessToken, path, file);
-        return uploadFileAPICall.execute();
+        uploadFileAPICall.execute();
+
+        ShareURLAPICall shareURLAPICall = new ShareURLAPICall(accessToken, path);
+        return shareURLAPICall.execute();
     }
 }

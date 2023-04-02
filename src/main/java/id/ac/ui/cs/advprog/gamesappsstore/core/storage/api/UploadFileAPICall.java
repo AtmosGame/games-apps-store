@@ -68,12 +68,11 @@ public class UploadFileAPICall extends APICall<byte[], String, String> {
 
     @Override
     public String processResponse(ResponseEntity<String> response) {
-        String jsonString = response.getBody();
         JsonNode json;
         try {
-            json = objectMapper.readTree(jsonString);
+            json = objectMapper.readTree(response.getBody());
         } catch (JsonProcessingException e) {
-            throw new ExternalAPIException("Error on storage authentication");
+            throw new ExternalAPIException("Error on file upload");
         }
 
         String storagePath = json.get("path_display").textValue();
