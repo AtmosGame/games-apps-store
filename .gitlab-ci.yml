@@ -1,6 +1,6 @@
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  POSTGRES_DB: games-and-apps-store
+  POSTGRES_DB: atmos-games-apps-store
   POSTGRES_HOST: postgres
   POSTGRES_PORT: 5432
   POSTGRES_USER: postgres
