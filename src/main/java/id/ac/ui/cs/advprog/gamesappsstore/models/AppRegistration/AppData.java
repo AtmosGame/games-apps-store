@@ -1,19 +1,21 @@
 package id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration;
 
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class AppData {
     private String name;
-    private String imageFileName;
+    private MultipartFile imageFile;
     private String description;
-    private String installerFileName;
+    private MultipartFile installerFile;
     private String version;
     private Double price;
-    public AppData(String name, String description, String imageFileName,
-                   String installerFileName, String version, double price) {
+    public AppData(String name, String description, MultipartFile imageFile,
+                   MultipartFile installerFile, String version, double price) {
         this.name = name;
         this.description = description;
-        this.imageFileName = imageFileName;
-        this.installerFileName = installerFileName;
+        this.imageFile = imageFile;
+        this.installerFile = installerFile;
         this.version = version;
         this.price = price;
     }
@@ -22,12 +24,12 @@ public class AppData {
         return name;
     }
 
-    public String getImageFileName() {
-        return imageFileName;
+    public MultipartFile getImageFile() {
+        return imageFile;
     }
 
-    public void setImageFileName(String imageFileName) {
-        this.imageFileName = imageFileName;
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
     }
 
     public String getDescription() {
@@ -38,12 +40,12 @@ public class AppData {
         this.description = description;
     }
 
-    public String getInstallerFileName() {
-        return installerFileName;
+    public MultipartFile getInstallerFile() {
+        return installerFile;
     }
 
-    public void setInstallerFileName(String installerFileName) {
-        this.installerFileName = installerFileName;
+    public void setInstallerFile(MultipartFile installerFile) {
+        this.installerFile = installerFile;
     }
 
     public String getVersion() {
@@ -60,5 +62,9 @@ public class AppData {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

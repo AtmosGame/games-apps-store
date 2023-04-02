@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore;
+package id.ac.ui.cs.advprog.gamesappsstore.AppRegistration;
 
 import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppDataValidator;
@@ -6,35 +6,52 @@ import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration.AppRegistratio
 import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration.AppRegistrationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
-public class AppDataValidatorTest {
+class AppDataValidatorTest {
     AppDataValidator appDataValidator = new AppDataValidator();
     AppRegistrationService appRegistrationService = new AppRegistrationServiceImpl();
 
+    AppData createMockApp(){
+        byte[] imageData = "dummy image data".getBytes();
+        MultipartFile imageFile = new MockMultipartFile("image.png", imageData);
+
+        byte[] installerData = "dummy installer data".getBytes();
+        MultipartFile installerFile = new MockMultipartFile("installer.exe", installerData);
+
+        String appName = "MyApp";
+        String description = "This is a great app for all your needs.";
+        String version = "1.0.0";
+        Double price = 4.99;
+        AppData appData = new AppData(appName, description, imageFile, installerFile, version, price);
+        return appData;
+    }
     @Test
-    public void testValidationWithValidData(){
-        AppData appData = new AppData("My App", "This is my app", "app.png", "app.zip", "1.0.0", 10.0);
+    void testValidationWithValidData(){
+        AppData appData = createMockApp();
         Assertions.assertTrue(appDataValidator.validate(appData));
     }
 
     @Test
-    public void testValidationWithInvalidVersionFormat() {
-        AppData appData = new AppData("My App", "This is my app", "app.png", "app.zip", "1.0", 10.0);
+    void testValidationWithInvalidVersionFormat() {
+        AppData appData = createMockApp();
+        appData.setVersion("1/1/1");
         Assertions.assertFalse(appDataValidator.validate(appData));
     }
 
     @Test
-    public void testValidationWithNegativePrice() {
-        AppData appData = new AppData("My App", "This is my app", "app.png", "app.zip", "1.0.0", -10.0);
+    void testValidationWithNegativePrice() {
+        AppData appData = createMockApp();
+        appData.setPrice(-4.99);
         Assertions.assertFalse(appDataValidator.validate(appData));
     }
 
     @Test
-    public void testValidationWithTooLongDescription() {
-
-        AppData appData = new AppData("My App", "abc", "app.png", "app.zip", "1.0.0", -10.0);
+    void testValidationWithTooLongDescription() {
+        AppData appData = createMockApp();
         String longDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
                 "Nullam iaculis orci non libero bibendum consectetur. Vivamus malesuada dui quis " +
                 "lorem congue suscipit. Donec sit amet metus nulla. Morbi nec velit vel elit " +
@@ -50,10 +67,16 @@ public class AppDataValidatorTest {
     }
 
     @Test
-    public void testIDGenerator(){
-        AppData appData = new AppData("My App", "This is my app", "app.png", "app.zip", "1.0.0", 10.0);
-        appRegistrationService.validateApp(appData);
-
+    void testValidationWithNullInstaller(){
+        AppData appData = createMockApp();
+        appData.setInstallerFile(null);
+        Assertions.assertFalse(appDataValidator.validate(appData));
+    }
+    @Test
+    void testValidationWithNullAppName(){
+        AppData appData = createMockApp();
+        appData.setName(null);
+        Assertions.assertFalse(appDataValidator.validate(appData));
     }
 
 }

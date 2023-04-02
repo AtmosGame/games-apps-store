@@ -23,10 +23,12 @@ public class AppRegistrationController {
                              @RequestParam("installer") MultipartFile installerFile,
                              @RequestParam("version") String version,
                              @RequestParam("price") Double price) {
-        AppData appData = new AppData(appName, imageFile.getName(), description, installerFile.getName(), version, price);
-        appRegistrationService.validateApp(appData);
-        // Return the name of the success page
-        return "success-page";
+        AppData appData = new AppData(appName, description, imageFile, installerFile, version, price);
+        boolean isValid = appRegistrationService.validateApp(appData);
+        if (isValid) {
+            return "success-page";
+        }
+        return "fail-page";
     }
 
 }

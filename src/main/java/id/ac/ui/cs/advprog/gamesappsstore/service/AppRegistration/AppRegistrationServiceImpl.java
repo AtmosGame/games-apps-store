@@ -10,6 +10,7 @@ public class AppRegistrationServiceImpl implements AppRegistrationService{
     @Autowired
     AppDataValidator appDataValidator;
     AppDataRepositoryImpl appDataRepository;
+    @Override
     public boolean validateApp(AppData appData){
         boolean isAppDataValid = appDataValidator.validate(appData);
         if (isAppDataValid){
