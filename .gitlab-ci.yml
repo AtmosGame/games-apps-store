@@ -45,6 +45,9 @@ Test:
     - echo `pwd`
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - export SPRING_PROFILES_ACTIVE=test
+    - export STORAGE_TOKEN=$STORAGE_TOKEN_DEV
+    - export STORAGE_KEY=$STORAGE_KEY_DEV
+    - export STORAGE_SECRET=$STORAGE_SECRET_DEV
   script:
     - gradle check --info --stacktrace
     - gradle test
@@ -67,7 +70,7 @@ Publish:
     - echo $DOCKER_PASSWORD| docker login -u $REGISTRY_USER --password-stdin docker.io
   script:
     - ls
-    - docker build --build-arg PRODUCTION=$PRODUCTION --build-arg JDBC_DATABASE_PASSWORD=$JDBC_DATABASE_PASSWORD --build-arg JDBC_DATABASE_URL=$JDBC_DATABASE_URL --build-arg JDBC_DATABASE_USERNAME=$JDBC_DATABASE_USERNAME -t $REGISTRY_USER/$IMAGE_NAME:$IMAGE_TAG .
+    - docker build --build-arg PRODUCTION=$PRODUCTION --build-arg JDBC_DATABASE_PASSWORD=$JDBC_DATABASE_PASSWORD --build-arg JDBC_DATABASE_URL=$JDBC_DATABASE_URL --build-arg JDBC_DATABASE_USERNAME=$JDBC_DATABASE_USERNAME --build-arg STORAGE_TOKEN=$STORAGE_TOKEN --build-arg STORAGE_KEY=$STORAGE_KEY --build-arg STORAGE_SECRET=$STORAGE_SECRET -t $REGISTRY_USER/$IMAGE_NAME:$IMAGE_TAG .
     - docker push $REGISTRY_USER/$IMAGE_NAME:$IMAGE_TAG
   tags:
     - dind
