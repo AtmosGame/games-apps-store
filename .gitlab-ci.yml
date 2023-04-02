@@ -1,6 +1,6 @@
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  POSTGRES_DB: db.tjsbosmjjaxvbvtugmmb.supabase.co
+  POSTGRES_DB: games-and-apps-store
   POSTGRES_HOST: postgres
   POSTGRES_PORT: 5432
   POSTGRES_USER: postgres
@@ -12,15 +12,11 @@ variables:
   GCP_USERNAME: $GCP_USERNAME
   GCP_STATIC_IP: $GCP_STATIC_IP
 
-
 stages:
   - build
   - test
   - publish
   - deploy
-
-
-
 
 Build:
   stage: build
@@ -37,9 +33,6 @@ Build:
     paths:
       - build/libs/*.jar
     expire_in: 1 week
-
-
-
 
 Test:
   stage: test
@@ -63,9 +56,6 @@ Test:
       junit: build/test-results/test/**/TEST-*.xml
   coverage: '/Total.*?([0-9]{1,3})%/'
 
-
-
-
 Publish:
   stage: publish
   image: docker:latest
@@ -83,9 +73,6 @@ Publish:
     - dind
   only:
     - main
-
-
-
 
 Deploy:
   stage: deploy
