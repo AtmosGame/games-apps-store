@@ -13,8 +13,6 @@ ENV STORAGE_KEY ${STORAGE_KEY}
 ENV STORAGE_SECRET ${STORAGE_SECRET}
 
 WORKDIR /app
-RUN ls -al
-RUN ls -al ./build
-COPY ./build/libs/store-0.0.1-SNAPSHOT.jar /app
+COPY ./build/libs/games-apps-store-0.0.1-SNAPSHOT.jar /app
 EXPOSE 8080
-CMD ["java","-jar","store-0.0.1-SNAPSHOT.jar"]
+CMD ["java","-jar","games-apps-store-0.0.1-SNAPSHOT.jar"]
