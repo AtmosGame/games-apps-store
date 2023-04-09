@@ -59,5 +59,7 @@ sonarqube {
 		property ("sonar.projectKey", "GAMES_APPS_STORE")
 		property ("sonar.organization", "atmos-games-apps-store")
 		property( "sonar.host.url", "https://sonarcloud.io")
+		property ("sonar.login","09ef11163603cfb912a05e1b8cbe425350f573bc")
+
 	}
 }

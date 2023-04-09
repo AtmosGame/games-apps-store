@@ -53,6 +53,7 @@ Test:
     - gradle test
     - gradle jacocoTestReport
     - grep -Eo "Total.*?([0-9]{1,3})%" build/jacocoHtml/index.html
+    - ./gradlew sonarqube
   artifacts:
     when: always
     reports:
