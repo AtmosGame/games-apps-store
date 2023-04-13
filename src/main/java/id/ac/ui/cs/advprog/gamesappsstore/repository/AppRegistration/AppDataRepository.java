@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.gamesappsstore.repository.AppRegistration;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
@@ -16,8 +17,12 @@ public interface AppDataRepository extends JpaRepository<AppData, String> {
 
     List<AppData> findAllByUserId(Integer userId);
     @NonNull
-    Optional<AppData> findById(@NonNull Integer id);
+    Optional<AppData> findById(@NonNull Long id);
 
     @Query("SELECT MAX(id) FROM AppData")
     Long findLatestId();
+
+    List<AppData> findByVerificationStatusIsNull();
+
+    List<AppData> findByVerificationStatus(VerificationStatus verificationStatus);
 }

@@ -7,5 +7,5 @@ public interface AppDataVerificationState {
     void setContext(AppDataVerification context);
     void verify(User admin);
     void reject(User admin);
-    void requestVerification();
+    void requestReverification();
 }

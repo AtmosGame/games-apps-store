@@ -5,6 +5,8 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ForbiddenMethodCall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
 
+import java.util.Date;
+
 public class VerifiedState implements AppDataVerificationState {
     private AppDataVerification context;
 
@@ -22,11 +24,11 @@ public class VerifiedState implements AppDataVerificationState {
     @Override
     public void reject(User admin) {
         if (!admin.isAdmin()) throw new UnauthorizedException("User is not admin");
-        throw new ForbiddenMethodCall("Cannot reject verified apps");
+        context.changeState(new RejectedState(), admin, new Date());
     }
 
     @Override
-    public void requestVerification() {
+    public void requestReverification() {
         throw new ForbiddenMethodCall("Cannot request verification on verified apps");
     }
 }

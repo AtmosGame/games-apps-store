@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppDataValidator;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.AppDataRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.AppRegistration.AppDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class AppRegistrationServiceImpl implements AppRegistrationService{
         return appDataRepository.findAll();
     }
 
+    @Override
     public String storeFile(MultipartFile file) throws IOException {
         InputStream inputStream =  new BufferedInputStream(file.getInputStream());
         String fileId = "x";
@@ -43,6 +45,7 @@ public class AppRegistrationServiceImpl implements AppRegistrationService{
         return path;
     }
 
+    @Override
     public AppData create(AppDataRequest appDataRequest) throws IOException {
         return AppData.builder()
                 .name(appDataRequest.getAppName())
@@ -54,6 +57,13 @@ public class AppRegistrationServiceImpl implements AppRegistrationService{
                 .build();
     }
 
+    @Override
+    public List<AppData> findAllVerifiedApps() {
+        return appDataRepository.findByVerificationStatus(VerificationStatus.VERIFIED);
+    }
 
-
+    @Override
+    public List<AppData> findAllUnverifiedApps() {
+        return appDataRepository.findByVerificationStatusIsNull();
+    }
 }

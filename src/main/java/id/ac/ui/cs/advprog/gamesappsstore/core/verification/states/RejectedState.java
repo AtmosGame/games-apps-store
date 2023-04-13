@@ -27,7 +27,7 @@ public class RejectedState implements AppDataVerificationState {
     }
 
     @Override
-    public void requestVerification() {
+    public void requestReverification() {
         context.changeState(new UnverifiedState());
     }
 }

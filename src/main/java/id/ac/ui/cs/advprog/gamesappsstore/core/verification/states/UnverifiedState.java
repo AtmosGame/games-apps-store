@@ -28,7 +28,7 @@ public class UnverifiedState implements AppDataVerificationState {
     }
 
     @Override
-    public void requestVerification() {
+    public void requestReverification() {
         throw new ForbiddenMethodCall("Cannot request verification on unverified apps");
     }
 }

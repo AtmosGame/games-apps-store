@@ -17,7 +17,7 @@ public class AppDataVerification {
     private AppDataVerificationState state;
     private User admin;
     private Date date;
-    private AppDataRepository repository;
+    private final AppDataRepository repository;
 
     public AppDataVerification(AppData appData, AppDataRepository repository) {
         this.appData = appData;
@@ -82,7 +82,7 @@ public class AppDataVerification {
     }
 
     public void requestReverification() {
-        this.state.requestVerification();
+        this.state.requestReverification();
     }
 
     private VerificationStatus getVerificationStatus(AppDataVerificationState state) {
