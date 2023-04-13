@@ -1,6 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.app;
 
-import id.ac.ui.cs.advprog.gamesappsstore.models.verification.VerificationStatus;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.models.verification;
+package id.ac.ui.cs.advprog.gamesappsstore.models.app;
 
 public enum VerificationStatus {
     UNVERIFIED,
