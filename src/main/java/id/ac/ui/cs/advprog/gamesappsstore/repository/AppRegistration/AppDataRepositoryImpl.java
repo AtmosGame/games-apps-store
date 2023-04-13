@@ -2,7 +2,9 @@ package id.ac.ui.cs.advprog.gamesappsstore.repository.AppRegistration;
 
 import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppData;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AppDataRepositoryImpl implements  AppDataRepository{
@@ -17,5 +19,17 @@ public class AppDataRepositoryImpl implements  AppDataRepository{
     public String getId(){
         String id = Integer.toString(appDatas.size());
         return id;
+    }
+
+    public List<AppData> findByVerificationIsNull() {
+        return new ArrayList<>(appDatas.values());
+    }
+
+    public void save(AppData appData) {
+        appDatas.put(appData.getId(), appData);
+    }
+
+    public void deleteById(Integer id) {
+        appDatas.remove(id);
     }
 }
