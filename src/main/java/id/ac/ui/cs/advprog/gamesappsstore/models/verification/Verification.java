@@ -1,6 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.models.verification;
 
-import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,16 +13,16 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-//@Entity
+@Entity
 public class Verification {
-//    @Id
-//    @GeneratedValue
+    @Id
+    @GeneratedValue
     private Integer id;
-//    @OneToOne
-//    @JoinColumn(name = "_app_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "_app_id", nullable = false)
     private AppData app;
     private Integer adminId;
     private Date date;
-//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private VerificationStatus status;
 }

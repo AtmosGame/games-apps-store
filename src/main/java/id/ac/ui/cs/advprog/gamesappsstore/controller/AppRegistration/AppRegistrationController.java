@@ -1,45 +1,32 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.AppRegistration;
 
-import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.AppDataRequest;
 import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration.AppRegistrationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
 
 @Controller
+@RestController
+@RequiredArgsConstructor
 public class AppRegistrationController {
+    private final AppRegistrationService appRegistrationService;
 
-    @Autowired
-    private AppRegistrationService appRegistrationService;
+    @Value("${file.upload-dir}")
+    private String uploadDir; // the directory to store uploaded files
 
     @PostMapping("/submit")
-    public String submitForm(Model model,
-                             @RequestParam("app-name") String appName,
-                             @RequestParam("image") MultipartFile imageFile,
-                             @RequestParam("description") String description,
-                             @RequestParam("installer") MultipartFile installerFile,
-                             @RequestParam("version") String version,
-                             @RequestParam("price") Double price) {
-        AppData appData = new AppData(
-                "1",
-                appName,
-                description,
-                imageFile,
-                installerFile,
-                version,
-                price,
-                null,
-                null,
-                null
-        );
-        boolean isValid = appRegistrationService.validateApp(appData);
+    public String submitForm(Model model, @ModelAttribute AppDataRequest request) throws IOException {
+        boolean isValid = appRegistrationService.validateApp(request);
         if (isValid) {
             return "success-page";
         }
         return "fail-page";
     }
-
 }
