@@ -5,6 +5,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.user.User;
 import id.ac.ui.cs.advprog.gamesappsstore.core.user.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.AppRegistration.AppDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VerificationService {
     private final AppDataRepository appDataRepository;
+
+    public List<AppData> findAllVerifiedApps() {
+        return appDataRepository.findByVerificationStatus(VerificationStatus.VERIFIED);
+    }
 
     public List<AppData> findAllUnverifiedApps() {
         return appDataRepository.findByVerificationStatusIsNull();
