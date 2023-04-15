@@ -17,7 +17,6 @@ public class VerifiedState implements AppDataVerificationState {
 
     @Override
     public void verify(User admin) {
-        if (Boolean.FALSE.equals(admin.isAdmin())) throw new UnauthorizedException("User is not admin");
         throw new ForbiddenMethodCall("Cannot verify unverified apps");
     }
 

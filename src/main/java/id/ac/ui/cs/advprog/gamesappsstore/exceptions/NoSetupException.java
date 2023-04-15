@@ -4,8 +4,4 @@ public class NoSetupException extends RuntimeException {
     public NoSetupException() {
         super();
     }
-
-    public NoSetupException(String message) {
-        super(message);
-    }
 }

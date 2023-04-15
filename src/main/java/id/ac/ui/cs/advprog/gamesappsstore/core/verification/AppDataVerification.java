@@ -37,7 +37,7 @@ public class AppDataVerification {
             throw new IllegalArgumentException();
         }
 
-        appData.setVerificationStatus(VerificationStatus.UNVERIFIED);
+        appData.setVerificationStatus(getVerificationStatus(state));
         appData.setVerificationAdminId(null);
         appData.setVerificationDate(null);
         repository.save(appData);
@@ -71,10 +71,6 @@ public class AppDataVerification {
     }
 
     private VerificationStatus getVerificationStatus(AppDataVerificationState state) {
-        if (state == null) {
-            return VerificationStatus.UNVERIFIED;
-        }
-
         if (state instanceof VerifiedState) {
             return VerificationStatus.VERIFIED;
         } else if (state instanceof RejectedState) {
