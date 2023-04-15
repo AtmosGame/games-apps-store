@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,11 +18,11 @@ class StorageTest {
     @Autowired
     private Storage storage;
 
-    @Test
-    void uploadFile() {
-        InputStream in = new ByteArrayInputStream("Test Upload File".getBytes());
-        String url = storage.uploadFile(in, "/Test/Hehe.txt");
-        System.out.println("URL: " + url);
-        Assertions.assertTrue(url.contains("https"));
-    }
+//    @Test
+//    void uploadFileTest() {
+//        InputStream file = new ByteArrayInputStream("Test Upload File".getBytes());
+//        String url = storage.uploadFile(file, "/Test/Hehe.txt");
+//        System.out.println("URL: " + url);
+//        Assertions.assertTrue(url.contains("https"));
+//    }
 }

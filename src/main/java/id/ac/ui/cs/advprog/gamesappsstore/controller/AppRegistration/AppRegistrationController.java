@@ -24,8 +24,8 @@ public class AppRegistrationController {
     private final VerificationService verificationService;
     private final AppRegistrationService appRegistrationService;
 
-    @Value("${file.upload-dir}")
-    private String uploadDir; // the directory to store uploaded files
+    // @Value("${file.upload-dir}")
+    // private String uploadDir; // the directory to store uploaded files
 
     @GetMapping("/all")
     public ResponseEntity<List<AppData>> getAllVerifiedApps() {

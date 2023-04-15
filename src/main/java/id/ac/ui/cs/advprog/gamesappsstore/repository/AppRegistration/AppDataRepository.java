@@ -15,7 +15,7 @@ public interface AppDataRepository extends JpaRepository<AppData, String> {
     @NonNull
     List<AppData> findAll();
 
-    List<AppData> findAllByUserId(Integer userId);
+    // List<AppData> findAllByUserId(Integer userId);
     @NonNull
     Optional<AppData> findById(@NonNull Long id);
 

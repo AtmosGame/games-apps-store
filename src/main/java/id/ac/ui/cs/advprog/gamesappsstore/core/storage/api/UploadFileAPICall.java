@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.gamesappsstore.core.api.APICall;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ExternalAPIException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.PayloadTooLargeException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServerException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,22 +16,15 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
 
+@RequiredArgsConstructor
 public class UploadFileAPICall extends APICall<byte[], String, String> {
     public static final String ENDPOINT = "https://content.dropboxapi.com/2/files/upload";
 
     private final String accessToken;
     private final String path;
     private final InputStream file;
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
-
-    public UploadFileAPICall(String accessToken, String path, InputStream file) {
-        this.accessToken = accessToken;
-        this.path = path;
-        this.file = file;
-        this.restTemplate = new RestTemplate();
-        this.objectMapper = new ObjectMapper();
-    }
+    private RestTemplate restTemplate = new RestTemplate();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public HttpHeaders getHeaders() {
@@ -53,7 +47,7 @@ public class UploadFileAPICall extends APICall<byte[], String, String> {
         try {
             return file.readAllBytes();
         } catch (Exception e) {
-            throw new ServerException("Error on file conversion");
+            throw new ServiceUnavailableException("Error on file conversion");
         }
     }
 
@@ -72,14 +66,14 @@ public class UploadFileAPICall extends APICall<byte[], String, String> {
         try {
             json = objectMapper.readTree(response.getBody());
         } catch (JsonProcessingException e) {
-            throw new ExternalAPIException("Error on file upload");
+            throw new ServiceUnavailableException("Error on file upload");
         }
 
-        String storagePath = json.get("path_display").textValue();
-        if (storagePath != null) return storagePath;
+        JsonNode storagePath = json.get("path_display");
+        if (storagePath != null) return storagePath.textValue();
 
         String errorMessage = json.get("error").get(".tag").textValue();
         if (errorMessage.equals("payload_too_large")) throw new PayloadTooLargeException("Payload is too large");
-        else throw new ExternalAPIException("Error on file upload");
+        else throw new ServiceUnavailableException("Error on file upload");
     }
 }
