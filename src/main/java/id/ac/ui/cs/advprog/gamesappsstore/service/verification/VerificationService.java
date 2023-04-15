@@ -9,10 +9,16 @@ import id.ac.ui.cs.advprog.gamesappsstore.repository.AppRegistration.AppDataRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class VerificationService {
     private final AppDataRepository appDataRepository;
+
+    public List<AppData> findAllUnverifiedApps() {
+        return appDataRepository.findByVerificationStatusIsNull();
+    }
 
     public void verify(Integer adminId, Long id) {
         User admin = new User(adminId, UserRole.ADMINISTRATOR); // TODO: replace placeholders
