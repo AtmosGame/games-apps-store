@@ -17,18 +17,18 @@ public class Storage {
     @Value("${atmos.storage.secret}")
     private String appSecret;
 
+    private AccessTokenAPICall accessTokenAPICall = new AccessTokenAPICall();
+    private UploadFileAPICall uploadFileAPICall = new UploadFileAPICall();
+    private ShareURLAPICall shareURLAPICall = new ShareURLAPICall();
+
     public String uploadFile(InputStream file, String path) {
-        AccessTokenAPICall accessTokenAPICall = new AccessTokenAPICall(refreshToken, appKey, appSecret);
+        accessTokenAPICall.setup(refreshToken, appKey, appSecret);
         String accessToken = accessTokenAPICall.execute();
 
-        UploadFileAPICall uploadFileAPICall = new UploadFileAPICall(accessToken, path, file);
+        uploadFileAPICall.setup(accessToken, path, file);
         uploadFileAPICall.execute();
 
-        ShareURLAPICall shareURLAPICall = new ShareURLAPICall(accessToken, path);
+        shareURLAPICall.setup(accessToken, path);
         return shareURLAPICall.execute();
     }
-
-//    public void printKeys() {
-//        System.out.println(refreshToken + " " + appKey + " " + appSecret);
-//    }
 }

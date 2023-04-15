@@ -4,8 +4,8 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppDataValidator;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.repository.AppRegistration.AppDataRepository;
-import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration.AppRegistrationServiceImpl;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.service.appregistration.AppRegistrationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @ExtendWith(MockitoExtension.class)
-public class AppDataValidatorTest {
+class AppDataValidatorTest {
     private AppDataValidator appDataValidator = new AppDataValidator();
     @InjectMocks
     private AppRegistrationServiceImpl appRegistrationService;

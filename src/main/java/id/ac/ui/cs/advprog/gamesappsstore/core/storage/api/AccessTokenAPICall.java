@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.gamesappsstore.core.api.APICall;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,16 +14,21 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-@RequiredArgsConstructor
 public class AccessTokenAPICall extends APICall<MultiValueMap<String, String>, String, String> {
     public static final String ENDPOINT = "https://api.dropbox.com/oauth2/token";
 
-    private final String refreshToken;
-    private final String appKey;
-    private final String appSecret;
+    private String refreshToken;
+    private String appKey;
+    private String appSecret;
 
     private RestTemplate restTemplate = new RestTemplate();
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    public void setup(String refreshToken, String appKey, String appSecret) {
+        this.refreshToken = refreshToken;
+        this.appKey = appKey;
+        this.appSecret = appSecret;
+    }
 
     @Override
     public HttpHeaders getHeaders() {
@@ -34,6 +39,7 @@ public class AccessTokenAPICall extends APICall<MultiValueMap<String, String>, S
 
     @Override
     public MultiValueMap<String, String> getBody() {
+        if (refreshToken == null) throw new NoSetupException();
         MultiValueMap<String, String> request = new LinkedMultiValueMap<>();
         request.add("refresh_token", this.refreshToken);
         request.add("grant_type", "refresh_token");

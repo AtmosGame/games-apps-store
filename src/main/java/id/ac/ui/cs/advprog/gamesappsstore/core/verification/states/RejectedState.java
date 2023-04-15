@@ -17,7 +17,7 @@ public class RejectedState implements AppDataVerificationState {
 
     @Override
     public void verify(User admin) {
-        if (!admin.isAdmin()) throw new UnauthorizedException("User is not admin");
+        if (Boolean.FALSE.equals(admin.isAdmin())) throw new UnauthorizedException("User is not admin");
         context.changeState(new VerifiedState(), admin, new Date());
     }
 

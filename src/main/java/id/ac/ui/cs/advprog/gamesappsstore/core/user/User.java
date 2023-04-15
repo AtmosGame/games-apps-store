@@ -14,15 +14,15 @@ public class User {
         this.role = role;
     }
 
-    public Boolean isAdmin() {
+    public boolean isAdmin() {
         return this.role.equals(UserRole.ADMINISTRATOR);
     }
 
-    public Boolean isCustomer() {
+    public boolean isCustomer() {
         return this.role.equals(UserRole.CUSTOMER);
     }
 
-    public Boolean isDeveloper() {
+    public boolean isDeveloper() {
         return this.role.equals(UserRole.DEVELOPER);
     }
 }

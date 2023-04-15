@@ -1,8 +1,10 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
 
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.PayloadTooLargeException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
-public class ShareURLAPICallTest {
+class ShareURLAPICallTest {
     private final String accessToken = "ini.access.tokennya";
     private final String path = "/Homework/math/Prime_Numbers.txt";
 
@@ -26,7 +28,12 @@ public class ShareURLAPICallTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private ShareURLAPICall shareURLAPICall = new ShareURLAPICall(accessToken, path);
+    private ShareURLAPICall shareURLAPICall = new ShareURLAPICall();
+
+    @BeforeEach
+    void setup() {
+        shareURLAPICall.setup(accessToken, path);
+    }
 
     @Test
     void whenSuccessfulTest() {
@@ -155,5 +162,12 @@ public class ShareURLAPICallTest {
         Assertions.assertThrows(ServiceUnavailableException.class, () -> {
             shareURLAPICall.execute();
         });
+    }
+
+    @Test
+    void noSetupTest() {
+        ShareURLAPICall shareURLAPICall1 = new ShareURLAPICall();
+        Assertions.assertThrows(NoSetupException.class, shareURLAPICall1::getHeaders);
+        Assertions.assertThrows(NoSetupException.class, shareURLAPICall1::getBody);
     }
 }

@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.repository.AppRegistration;
+package id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;

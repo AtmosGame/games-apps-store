@@ -1,11 +1,11 @@
-package id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration;
+package id.ac.ui.cs.advprog.gamesappsstore.service.appregistration;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppDataValidator;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.AppDataRequest;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
-import id.ac.ui.cs.advprog.gamesappsstore.repository.AppRegistration.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

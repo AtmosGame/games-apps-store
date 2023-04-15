@@ -1,8 +1,10 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
 
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.PayloadTooLargeException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +22,7 @@ import java.io.InputStream;
 import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UploadFileAPICallTest {
+class UploadFileAPICallTest {
     private final String accessToken = "ini.access.tokennya";
     private final String path = "/Homework/math/Prime_Numbers.txt";
     private final InputStream file = new ByteArrayInputStream("File String".getBytes());
@@ -29,7 +31,12 @@ public class UploadFileAPICallTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private UploadFileAPICall uploadFileAPICall = new UploadFileAPICall(accessToken, path, file);
+    private UploadFileAPICall uploadFileAPICall = new UploadFileAPICall();
+
+    @BeforeEach
+    void setup() {
+        uploadFileAPICall.setup(accessToken, path, file);
+    }
 
     @Test
     void whenSuccessfulTest() {
@@ -133,5 +140,12 @@ public class UploadFileAPICallTest {
         Assertions.assertThrows(ServiceUnavailableException.class, () -> {
             uploadFileAPICall.execute();
         });
+    }
+
+    @Test
+    void noSetupTest() {
+        UploadFileAPICall uploadFileAPICall1 = new UploadFileAPICall();
+        Assertions.assertThrows(NoSetupException.class, uploadFileAPICall1::getHeaders);
+        Assertions.assertThrows(NoSetupException.class, uploadFileAPICall1::getBody);
     }
 }

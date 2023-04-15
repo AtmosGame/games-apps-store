@@ -4,28 +4,33 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.gamesappsstore.core.api.APICall;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-@RequiredArgsConstructor
 public class ShareURLAPICall extends APICall<String, String, String> {
     public static final String ENDPOINT = "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings";
 
-    private final String accessToken;
+    private String accessToken;
 
-    private final String path;
+    private String path;
 
     private RestTemplate restTemplate = new RestTemplate();
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    public void setup(String accessToken, String path) {
+        this.accessToken = accessToken;
+        this.path = path;
+    }
+
     @Override
     public HttpHeaders getHeaders() {
+        if (accessToken == null) throw new NoSetupException();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -34,6 +39,7 @@ public class ShareURLAPICall extends APICall<String, String, String> {
 
     @Override
     public String getBody() {
+        if (accessToken == null) throw new NoSetupException();
         return "{"
             + "\"path\":\"" + path + "\","
             + "\"settings\": {"

@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration;
+package id.ac.ui.cs.advprog.gamesappsstore.service.appregistration;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.AppDataRequest;

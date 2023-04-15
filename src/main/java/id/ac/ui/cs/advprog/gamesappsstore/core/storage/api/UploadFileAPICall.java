@@ -4,10 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.gamesappsstore.core.api.APICall;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.PayloadTooLargeException;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServerException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,18 +15,24 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
 
-@RequiredArgsConstructor
 public class UploadFileAPICall extends APICall<byte[], String, String> {
     public static final String ENDPOINT = "https://content.dropboxapi.com/2/files/upload";
 
-    private final String accessToken;
-    private final String path;
-    private final InputStream file;
+    private String accessToken;
+    private String path;
+    private InputStream file;
     private RestTemplate restTemplate = new RestTemplate();
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    public void setup(String accessToken, String path, InputStream file) {
+        this.accessToken = accessToken;
+        this.path = path;
+        this.file = file;
+    }
+
     @Override
     public HttpHeaders getHeaders() {
+        if (accessToken == null) throw new NoSetupException();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         headers.set("Dropbox-API-Arg", "{"
@@ -44,6 +49,7 @@ public class UploadFileAPICall extends APICall<byte[], String, String> {
 
     @Override
     public byte[] getBody() {
+        if (accessToken == null) throw new NoSetupException();
         try {
             return file.readAllBytes();
         } catch (Exception e) {

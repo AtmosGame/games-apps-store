@@ -1,11 +1,10 @@
-package id.ac.ui.cs.advprog.gamesappsstore.controller.AppRegistration;
+package id.ac.ui.cs.advprog.gamesappsstore.controller.appregistration;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration.AppRegistrationService;
+import id.ac.ui.cs.advprog.gamesappsstore.service.appregistration.AppRegistrationService;
 import id.ac.ui.cs.advprog.gamesappsstore.service.verification.VerificationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

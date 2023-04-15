@@ -6,7 +6,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.user.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
-import id.ac.ui.cs.advprog.gamesappsstore.repository.AppRegistration.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
