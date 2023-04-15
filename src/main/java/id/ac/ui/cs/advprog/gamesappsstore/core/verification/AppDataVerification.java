@@ -14,11 +14,9 @@ import java.util.Date;
 public class AppDataVerification {
     private AppData appData;
     private AppDataVerificationState state;
-    private final AppDataRepository repository;
 
-    public AppDataVerification(AppData appData, AppDataRepository repository) {
+    public AppDataVerification(AppData appData) {
         this.appData = appData;
-        this.repository = repository;
 
         VerificationStatus appStatus = appData.getVerificationStatus();
         if (appStatus.equals(VerificationStatus.VERIFIED)) {
@@ -40,7 +38,6 @@ public class AppDataVerification {
         appData.setVerificationStatus(getVerificationStatus(state));
         appData.setVerificationAdminId(null);
         appData.setVerificationDate(null);
-        repository.save(appData);
 
         this.state = state;
     }
@@ -53,7 +50,6 @@ public class AppDataVerification {
         appData.setVerificationStatus(getVerificationStatus(state));
         appData.setVerificationAdminId(admin.getId());
         appData.setVerificationDate(date);
-        repository.save(appData);
 
         this.state = state;
     }

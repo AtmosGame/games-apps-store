@@ -30,8 +30,6 @@ class AppDataVerificationTest {
 
     private User admin;
     private User customer;
-    private User developer1;
-    private User developer2;
 
     @BeforeEach
     void setup() {
@@ -78,8 +76,6 @@ class AppDataVerificationTest {
 
         admin = new User(1, UserRole.ADMINISTRATOR);
         customer = new User(2, UserRole.CUSTOMER);
-        developer1 = new User(3, UserRole.DEVELOPER);
-        developer2 = new User(4, UserRole.DEVELOPER);
     }
 
     @Test
@@ -88,7 +84,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         verification.verify(admin);
 
         Assertions.assertEquals(VerificationStatus.VERIFIED, appData.getVerificationStatus());
@@ -100,7 +96,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         Assertions.assertThrows(UnauthorizedException.class, () -> {
             verification.verify(customer);
         });
@@ -114,7 +110,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         verification.reject(admin);
 
         Assertions.assertEquals(VerificationStatus.REJECTED, appData.getVerificationStatus());
@@ -126,7 +122,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         Assertions.assertThrows(UnauthorizedException.class, () -> {
             verification.reject(customer);
         });
@@ -140,7 +136,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         Assertions.assertThrows(ForbiddenMethodCall.class, verification::requestReverification);
 
         Assertions.assertEquals(VerificationStatus.UNVERIFIED, appData.getVerificationStatus());
@@ -152,7 +148,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         Assertions.assertThrows(ForbiddenMethodCall.class, () -> {
             verification.verify(admin);
         });
@@ -165,7 +161,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         verification.reject(admin);
 
         Assertions.assertEquals(VerificationStatus.REJECTED, appData.getVerificationStatus());
@@ -177,7 +173,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         Assertions.assertThrows(UnauthorizedException.class, () -> {
             verification.reject(customer);
         });
@@ -190,7 +186,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         Assertions.assertThrows(ForbiddenMethodCall.class, verification::requestReverification);
 
         Assertions.assertEquals(VerificationStatus.VERIFIED, appData.getVerificationStatus());
@@ -202,7 +198,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         verification.verify(admin);
 
         Assertions.assertEquals(VerificationStatus.VERIFIED, appData.getVerificationStatus());
@@ -214,7 +210,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         Assertions.assertThrows(UnauthorizedException.class, () -> {
             verification.verify(customer);
         });
@@ -228,7 +224,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         Assertions.assertThrows(ForbiddenMethodCall.class, () -> {
             verification.reject(admin);
         });
@@ -242,7 +238,7 @@ class AppDataVerificationTest {
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         verification.requestReverification();
 
         Assertions.assertEquals(VerificationStatus.UNVERIFIED, appData.getVerificationStatus());
@@ -256,7 +252,7 @@ class AppDataVerificationTest {
 
         AppDataVerificationState newState = new VerifiedState();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             verification.changeState(newState);
         });
@@ -271,7 +267,7 @@ class AppDataVerificationTest {
         AppDataVerificationState newState = new UnverifiedState();
         Date newDate = new Date();
 
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             verification.changeState(newState, admin, newDate);
         });

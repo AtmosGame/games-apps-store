@@ -22,27 +22,30 @@ public class VerificationService {
     }
 
     public List<AppData> findAllUnverifiedApps() {
-        return appDataRepository.findByVerificationStatusIsNull();
+        return appDataRepository.findByVerificationStatus(VerificationStatus.UNVERIFIED);
     }
 
     public void verify(Integer adminId, Long id) {
         User admin = new User(adminId, UserRole.ADMINISTRATOR); // TODO: replace placeholders
         AppData appData = getAppOrNotFound(id);
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         verification.verify(admin);
+        appDataRepository.save(appData);
     }
 
     public void reject(Integer adminId, Long id) {
         User admin = new User(adminId, UserRole.ADMINISTRATOR); // TODO: replace placeholders
         AppData appData = getAppOrNotFound(id);
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         verification.reject(admin);
+        appDataRepository.save(appData);
     }
 
     public void requestReverification(Long id) {
         AppData appData = getAppOrNotFound(id);
-        AppDataVerification verification = new AppDataVerification(appData, appDataRepository);
+        AppDataVerification verification = new AppDataVerification(appData);
         verification.requestReverification();
+        appDataRepository.save(appData);
     }
 
     private AppData getAppOrNotFound(Long id) {
