@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.gamesappsstore.core.api.APICall;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ExternalAPIException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,23 +15,22 @@ import org.springframework.web.client.RestTemplate;
 public class ShareURLAPICall extends APICall<String, String, String> {
     public static final String ENDPOINT = "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings";
 
-    private final String accessToken;
+    private String accessToken;
 
-    private final String path;
+    private String path;
 
-    private final RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
 
-    private final ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    public ShareURLAPICall(String accessToken, String path) {
+    public void setup(String accessToken, String path) {
         this.accessToken = accessToken;
         this.path = path;
-        this.restTemplate = new RestTemplate();
-        this.objectMapper = new ObjectMapper();
     }
 
     @Override
     public HttpHeaders getHeaders() {
+        if (accessToken == null) throw new NoSetupException();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -39,6 +39,7 @@ public class ShareURLAPICall extends APICall<String, String, String> {
 
     @Override
     public String getBody() {
+        if (accessToken == null) throw new NoSetupException();
         return "{"
             + "\"path\":\"" + path + "\","
             + "\"settings\": {"
@@ -65,11 +66,11 @@ public class ShareURLAPICall extends APICall<String, String, String> {
         try {
             json = objectMapper.readTree(response.getBody());
         } catch (JsonProcessingException e) {
-            throw new ExternalAPIException("Error on sharing");
+            throw new ServiceUnavailableException("Error on sharing");
         }
 
-        String url = json.get("url").textValue();
-        if (url != null) return url;
-        else throw new ExternalAPIException("Error on sharing");
+        JsonNode url = json.get("url");
+        if (url != null) return url.textValue();
+        else throw new ServiceUnavailableException("Error on sharing");
     }
 }
