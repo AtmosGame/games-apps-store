@@ -23,21 +23,21 @@ stages:
   - publish
   - deploy
 
-#Build:
-#  stage: build
-#  image: gradle:jdk17-alpine
-#  before_script:
-#    - echo `pwd`
-#    - export GRADLE_USER_HOME=`pwd`/.gradle
-#  script:
-#    - gradle wrapper
-#    - ./gradlew assemble
-#    - ls
-#  artifacts:
-#    when: always
-#    paths:
-#      - build/libs/*.jar
-#    expire_in: 1 week
+Build:
+  stage: build
+  image: gradle:jdk17-alpine
+  before_script:
+    - echo `pwd`
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+  script:
+    - gradle wrapper
+    - ./gradlew assemble
+    - ls
+  artifacts:
+    when: always
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 week
 
 Test:
   stage: test
@@ -102,6 +102,6 @@ sonarcloud-check:
     key: "${CI_JOB_NAME}"
     paths:
       - .sonar/cache
-  script: gradle sonarqube
+  script: ./gradle sonarqube
   rules:
     - if: $CI_COMMIT_REF_NAME == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
