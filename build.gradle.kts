@@ -61,6 +61,7 @@ sonarqube {
 		property( "sonar.host.url", "https://sonarcloud.io")
 		property ("sonar.login","e445a57baa81643c1148d0dfda5d1c53f10bd5c0")
 		property ("sonar.sourceEncoding", "UTF-8")
+		property ("sonar.java.binaries", "build/classes")
 
 	}
 }
