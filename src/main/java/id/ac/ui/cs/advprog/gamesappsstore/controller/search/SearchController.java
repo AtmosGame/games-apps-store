@@ -17,8 +17,8 @@ import java.util.List;
 @RequestMapping("/search")
 @RequiredArgsConstructor
 public class SearchController {
-    private final SearchService searchService;
-    @GetMapping("")
+    private SearchServiceImpl searchService;
+    @GetMapping("/{keyword}")
     public ResponseEntity<List<AppData>> getAppsByKeyword(@PathVariable String keyword) {
         List<AppData> response = searchService.searchAppsByKeyword(keyword);
         return ResponseEntity.ok(response);

@@ -1,8 +1,8 @@
-package id.ac.ui.cs.advprog.gamesappsstore.controller.appregistration;
+package id.ac.ui.cs.advprog.gamesappsstore.controller.registration;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.service.appregistration.AppRegistrationService;
+import id.ac.ui.cs.advprog.gamesappsstore.service.registration.AppRegistrationService;
 import id.ac.ui.cs.advprog.gamesappsstore.service.verification.VerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

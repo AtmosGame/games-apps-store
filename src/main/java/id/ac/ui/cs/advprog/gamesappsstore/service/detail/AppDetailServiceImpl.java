@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.service.appdetail;
+package id.ac.ui.cs.advprog.gamesappsstore.service.detail;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.AppDetailResponse;
@@ -6,7 +6,6 @@ import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Optional;
 
 @Service
