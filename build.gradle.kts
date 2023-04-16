@@ -65,15 +65,15 @@ sonarqube {
 	}
 }
 
-//buildscript {
-//	repositories {
-//		maven {
-//			url = uri("https://plugins.gradle.org/m2/")
-//		}
-//	}
-//	dependencies {
-//		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.5.0.2730")
-//	}
-//}
-//
-//apply(plugin = "org.sonarqube")
+buildscript {
+	repositories {
+		maven {
+			url = uri("https://plugins.gradle.org/m2/")
+		}
+	}
+	dependencies {
+		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.5.0.2730")
+	}
+}
+
+apply(plugin = "org.sonarqube")
