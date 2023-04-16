@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.service.search;
+package id.ac.ui.cs.advprog.gamesappsstore.service.detail;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.user.User;
@@ -7,6 +7,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.AppDataVerificationState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.UnverifiedState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.VerifiedState;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.AppDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ForbiddenMethodCall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
@@ -28,12 +29,12 @@ import java.util.List;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-class SearchServiceTest {
+class AppDetailServiceTest {
     @Autowired
     AppDataRepository appDataRepository;
 
     @Autowired
-    SearchServiceImpl searchService;
+    AppDetailServiceImpl appDetailService;
 
     @BeforeEach
     void setup() {
@@ -84,14 +85,14 @@ class SearchServiceTest {
         Assertions.assertEquals(3, searchResults.size());
     }
     @Test
-    void SearchByAvailableApps(){
-        List<AppData> searchResults = searchService.searchAppsByKeyword("dota");
-        Assertions.assertEquals(2, searchResults.size());
+    void findByAvailableApps(){
+        AppDetailResponse response = appDetailService.getAppDetailbyId(1L);
+        Assertions.assertEquals("Dota 1", response.getName());
     }
 
     @Test
-    void SearchByUnavailableApps(){
-        List<AppData> searchResults = searchService.searchAppsByKeyword("geming");
-        Assertions.assertEquals(0, searchResults.size());
+    void findByUnavailableApps(){
+        AppDetailResponse response = appDetailService.getAppDetailbyId(5L);
+        Assertions.assertNull(response);
     }
 }

@@ -1,45 +1,51 @@
-package id.ac.ui.cs.advprog.gamesappsstore.service.search;
+package id.ac.ui.cs.advprog.gamesappsstore.controller.search;
 
+import id.ac.ui.cs.advprog.gamesappsstore.controller.verification.VerificationController;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.user.User;
 import id.ac.ui.cs.advprog.gamesappsstore.core.user.UserRole;
-import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
-import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.AppDataVerificationState;
-import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.UnverifiedState;
-import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.VerifiedState;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.StatusResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ForbiddenMethodCall;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
-import id.ac.ui.cs.advprog.gamesappsstore.service.search.SearchService;
+import id.ac.ui.cs.advprog.gamesappsstore.service.search.SearchServiceImpl;
+import id.ac.ui.cs.advprog.gamesappsstore.service.verification.VerificationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.*;
+
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-class SearchServiceTest {
-    @Autowired
-    AppDataRepository appDataRepository;
+class SearchControllerTest {
+    @Mock
+    private SearchServiceImpl searchService;
 
-    @Autowired
-    SearchServiceImpl searchService;
+    @InjectMocks
+    private SearchController searchController;
+
+    AppData appData1;
+    AppData appData2;
+    AppData appData3;
 
     @BeforeEach
     void setup() {
-        AppData appData1 = AppData.builder()
+        appData1 = AppData.builder()
                 .id(1L)
-                .name("Dota 1")
+                .name("App 1")
                 .imageUrl("https://image.com/app1")
                 .installerUrl("https://storage.com/app1")
                 .description("The first app")
@@ -49,9 +55,9 @@ class SearchServiceTest {
                 .verificationAdminId(null)
                 .verificationDate(null)
                 .build();
-        AppData appData2 = AppData.builder()
+        appData2 = AppData.builder()
                 .id(2L)
-                .name("dota 2")
+                .name("App 2")
                 .imageUrl("https://image.com/app2")
                 .installerUrl("https://storage.com/app2")
                 .description("The second app")
@@ -61,9 +67,9 @@ class SearchServiceTest {
                 .verificationAdminId(1)
                 .verificationDate(new Date())
                 .build();
-        AppData appData3 = AppData.builder()
+        appData3 = AppData.builder()
                 .id(3L)
-                .name("Mobile Legends")
+                .name("App 3")
                 .imageUrl("https://image.com/app3")
                 .installerUrl("https://storage.com/app3")
                 .description("The third app")
@@ -73,25 +79,21 @@ class SearchServiceTest {
                 .verificationAdminId(1)
                 .verificationDate(new Date())
                 .build();
-
-        appDataRepository.save(appData1);
-        appDataRepository.save(appData2);
-        appDataRepository.save(appData3);
-    }
-    @Test
-    void findAll(){
-        List<AppData> searchResults = appDataRepository.findAll();
-        Assertions.assertEquals(3, searchResults.size());
-    }
-    @Test
-    void SearchByAvailableApps(){
-        List<AppData> searchResults = searchService.searchAppsByKeyword("dota");
-        Assertions.assertEquals(2, searchResults.size());
     }
 
     @Test
-    void SearchByUnavailableApps(){
-        List<AppData> searchResults = searchService.searchAppsByKeyword("geming");
-        Assertions.assertEquals(0, searchResults.size());
+    void getAppsByKeyword() {
+        List<AppData> expectedList = new ArrayList<>();
+        expectedList.add(appData1);
+        expectedList.add(appData2);
+        expectedList.add(appData3);
+
+        Mockito
+                .when(searchService.searchAppsByKeyword("app"))
+                .thenReturn(expectedList);
+        ResponseEntity<List<AppData>> response = searchController.getAppsByKeyword("app");
+        List<AppData> appList = response.getBody();
+        Assertions.assertEquals(expectedList, appList);
     }
+
 }
