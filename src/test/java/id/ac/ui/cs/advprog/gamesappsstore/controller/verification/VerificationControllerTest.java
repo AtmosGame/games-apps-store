@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.user.User;
 import id.ac.ui.cs.advprog.gamesappsstore.core.user.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.StatusResponse;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
@@ -39,8 +40,12 @@ class VerificationControllerTest {
     AppData appData2;
     AppData appData3;
 
+    Date date2;
+
     @BeforeEach
     void setup() {
+        date2 = new Date();
+
         appData1 = AppData.builder()
                 .id(1L)
                 .name("App 1")
@@ -63,7 +68,7 @@ class VerificationControllerTest {
                 .price(10000d)
                 .verificationStatus(VerificationStatus.VERIFIED)
                 .verificationAdminId(1)
-                .verificationDate(new Date())
+                .verificationDate(date2)
                 .build();
         appData3 = AppData.builder()
                 .id(3L)
@@ -92,6 +97,28 @@ class VerificationControllerTest {
         ResponseEntity<List<AppData>> response = verificationController.getAllUnverifiedApps();
         List<AppData> appList = response.getBody();
         Assertions.assertEquals(expectedList, appList);
+    }
+
+    @Test
+    void getAppDetailTest() {
+        VerificationDetailResponse expected = new VerificationDetailResponse(
+                2L,
+                "App 2",
+                "https://image.com/app2",
+                "The second app",
+                "https://storage.com/app2",
+                "1.0.0",
+                10000d,
+                "VERIFIED",
+                1,
+                date2
+        );
+
+        Mockito
+                .when(verificationService.getAppDetail(2L))
+                .thenReturn(expected);
+        var response = verificationController.getAppDetail(2L);
+        Assertions.assertEquals(expected, response.getBody());
     }
 
     @Test

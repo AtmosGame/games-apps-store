@@ -7,7 +7,6 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.RejectedState
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.UnverifiedState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.VerifiedState;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
-import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
 
 import java.util.Date;
 
