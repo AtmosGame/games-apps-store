@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.gamesappsstore.controller.search;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.service.search.SearchService;
+import id.ac.ui.cs.advprog.gamesappsstore.service.search.SearchServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
