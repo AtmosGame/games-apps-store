@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
@@ -15,13 +16,13 @@ public interface AppDataRepository extends JpaRepository<AppData, String> {
     @NonNull
     List<AppData> findAll();
 
-    // List<AppData> findAllByUserId(Integer userId);
     @NonNull
     Optional<AppData> findById(@NonNull Long id);
 
     @Query("SELECT MAX(id) FROM AppData")
     Long findLatestId();
-
+    @Query("SELECT a FROM AppData a WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<AppData> searchAppsByKeyword(@Param("keyword") String keyword);
     List<AppData> findByVerificationStatusIsNull();
 
     List<AppData> findByVerificationStatus(VerificationStatus verificationStatus);
