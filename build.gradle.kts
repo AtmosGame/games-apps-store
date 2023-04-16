@@ -59,7 +59,21 @@ sonarqube {
 		property ("sonar.projectKey", "GAMES_APPS_STORE")
 		property ("sonar.organization", "atmos-games-apps-store")
 		property( "sonar.host.url", "https://sonarcloud.io")
-		property ("sonar.login","09ef11163603cfb912a05e1b8cbe425350f573bc")
+		property ("sonar.login","e445a57baa81643c1148d0dfda5d1c53f10bd5c0")
+		property ("sonar.sourceEncoding", "UTF-8")
 
 	}
 }
+
+//buildscript {
+//	repositories {
+//		maven {
+//			url = uri("https://plugins.gradle.org/m2/")
+//		}
+//	}
+//	dependencies {
+//		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.5.0.2730")
+//	}
+//}
+//
+//apply(plugin = "org.sonarqube")
