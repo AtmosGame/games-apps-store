@@ -7,6 +7,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.AppDataVerificationState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.UnverifiedState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.VerifiedState;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ForbiddenMethodCall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
@@ -34,8 +35,12 @@ class VerificationServiceTest {
     @Autowired
     private VerificationService verificationService;
 
+    private Date date2;
+
     @BeforeEach
     void setup() {
+        date2 = new Date();
+
         AppData appData1 = AppData.builder()
                 .id(1L)
                 .name("App 1")
@@ -58,7 +63,7 @@ class VerificationServiceTest {
                 .price(10000d)
                 .verificationStatus(VerificationStatus.VERIFIED)
                 .verificationAdminId(1)
-                .verificationDate(new Date())
+                .verificationDate(date2)
                 .build();
         AppData appData3 = AppData.builder()
                 .id(3L)
@@ -91,6 +96,26 @@ class VerificationServiceTest {
     }
 
     @Test
+    void getAppDetailTest() {
+        VerificationDetailResponse expected = new VerificationDetailResponse(
+                2L,
+                "App 2",
+                "https://image.com/app2",
+                "The second app",
+                "https://storage.com/app2",
+                "1.0.0",
+                10000d,
+                "VERIFIED",
+                1,
+                date2
+        );
+
+        VerificationDetailResponse response = verificationService.getAppDetail(2L);
+
+        Assertions.assertEquals(expected, response);
+    }
+
+    @Test
     void appNotFound() {
         Assertions.assertThrows(AppDataNotFoundException.class, () -> {
             verificationService.verify(1, 4L);
@@ -100,6 +125,9 @@ class VerificationServiceTest {
         });
         Assertions.assertThrows(AppDataNotFoundException.class, () -> {
             verificationService.requestReverification(4L);
+        });
+        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
+            verificationService.getAppDetail(4L);
         });
     }
 
