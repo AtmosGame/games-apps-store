@@ -3,9 +3,9 @@ package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import id.ac.ui.cs.advprog.gamesappsstore.constants.DropboxKeys;
 import id.ac.ui.cs.advprog.gamesappsstore.core.api.APICall;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ExternalAPIException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,14 +17,17 @@ import org.springframework.web.client.RestTemplate;
 public class AccessTokenAPICall extends APICall<MultiValueMap<String, String>, String, String> {
     public static final String ENDPOINT = "https://api.dropbox.com/oauth2/token";
 
-    private final DropboxKeys dropboxKeys;
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
+    private String refreshToken;
+    private String appKey;
+    private String appSecret;
 
-    public AccessTokenAPICall(DropboxKeys dropboxKeys) {
-        this.dropboxKeys = dropboxKeys;
-        this.restTemplate = new RestTemplate();
-        this.objectMapper = new ObjectMapper();
+    private RestTemplate restTemplate = new RestTemplate();
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    public void setup(String refreshToken, String appKey, String appSecret) {
+        this.refreshToken = refreshToken;
+        this.appKey = appKey;
+        this.appSecret = appSecret;
     }
 
     @Override
@@ -36,11 +39,12 @@ public class AccessTokenAPICall extends APICall<MultiValueMap<String, String>, S
 
     @Override
     public MultiValueMap<String, String> getBody() {
+        if (refreshToken == null) throw new NoSetupException();
         MultiValueMap<String, String> request = new LinkedMultiValueMap<>();
-        request.add("refresh_token", dropboxKeys.refreshToken);
+        request.add("refresh_token", this.refreshToken);
         request.add("grant_type", "refresh_token");
-        request.add("client_id", dropboxKeys.appKey);
-        request.add("client_secret", dropboxKeys.appSecret);
+        request.add("client_id", this.appKey);
+        request.add("client_secret", this.appSecret);
         return request;
     }
 
@@ -51,12 +55,12 @@ public class AccessTokenAPICall extends APICall<MultiValueMap<String, String>, S
         try {
             json = objectMapper.readTree(jsonString);
         } catch (JsonProcessingException e) {
-            throw new ExternalAPIException("Error on storage authentication");
+            throw new ServiceUnavailableException("Error on storage authentication");
         }
 
-        String accessToken = json.get("access_token").textValue();
-        if (accessToken != null) return accessToken;
-        else throw new ExternalAPIException("Error on storage authentication");
+        JsonNode accessToken = json.get("access_token");
+        if (accessToken != null) return accessToken.textValue();
+        else throw new ServiceUnavailableException("Error on storage authentication");
     }
 
     @Override

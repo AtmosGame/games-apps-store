@@ -1,21 +1,33 @@
 package id.ac.ui.cs.advprog.gamesappsstore.AppRegistration;
 
-import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.models.AppRegistration.AppDataValidator;
-import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration.AppRegistrationService;
-import id.ac.ui.cs.advprog.gamesappsstore.service.AppRegistration.AppRegistrationServiceImpl;
+import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppDataValidator;
+import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.AppDataRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.service.appregistration.AppRegistrationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-@Component
-class AppDataValidatorTest {
-    AppDataValidator appDataValidator = new AppDataValidator();
-    AppRegistrationService appRegistrationService = new AppRegistrationServiceImpl();
+import java.io.IOException;
 
-    AppData createMockApp(){
+@ExtendWith(MockitoExtension.class)
+class AppDataValidatorTest {
+    private AppDataValidator appDataValidator = new AppDataValidator();
+    @InjectMocks
+    private AppRegistrationServiceImpl appRegistrationService;
+    @Mock
+    private AppDataRepository appDataRepository;
+    @Mock
+    private Storage storage;
+
+    AppData createMockApp() throws IOException {
         byte[] imageData = "dummy image data".getBytes();
         MultipartFile imageFile = new MockMultipartFile("image.png", imageData);
 
@@ -26,31 +38,32 @@ class AppDataValidatorTest {
         String description = "This is a great app for all your needs.";
         String version = "1.0.0";
         Double price = 4.99;
-        AppData appData = new AppData(appName, description, imageFile, installerFile, version, price);
+        AppDataRequest appDataRequest = new AppDataRequest(appName, imageFile, description, installerFile, version, price);
+        AppData appData = appRegistrationService.create(appDataRequest);
         return appData;
     }
     @Test
-    void testValidationWithValidData(){
+    void testValidationWithValidData() throws IOException {
         AppData appData = createMockApp();
         Assertions.assertTrue(appDataValidator.validate(appData));
     }
 
     @Test
-    void testValidationWithInvalidVersionFormat() {
+    void testValidationWithInvalidVersionFormat() throws IOException {
         AppData appData = createMockApp();
         appData.setVersion("1/1/1");
         Assertions.assertFalse(appDataValidator.validate(appData));
     }
 
     @Test
-    void testValidationWithNegativePrice() {
+    void testValidationWithNegativePrice() throws IOException {
         AppData appData = createMockApp();
         appData.setPrice(-4.99);
         Assertions.assertFalse(appDataValidator.validate(appData));
     }
 
     @Test
-    void testValidationWithTooLongDescription() {
+    void testValidationWithTooLongDescription() throws IOException {
         AppData appData = createMockApp();
         String longDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
                 "Nullam iaculis orci non libero bibendum consectetur. Vivamus malesuada dui quis " +
@@ -67,13 +80,13 @@ class AppDataValidatorTest {
     }
 
     @Test
-    void testValidationWithNullInstaller(){
+    void testValidationWithNullInstaller() throws IOException {
         AppData appData = createMockApp();
-        appData.setInstallerFile(null);
+        appData.setInstallerUrl(null);
         Assertions.assertFalse(appDataValidator.validate(appData));
     }
     @Test
-    void testValidationWithNullAppName(){
+    void testValidationWithNullAppName() throws IOException {
         AppData appData = createMockApp();
         appData.setName(null);
         Assertions.assertFalse(appDataValidator.validate(appData));
