@@ -13,8 +13,8 @@ variables:
   GCP_STATIC_IP: $GCP_STATIC_IP
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
-  SONAR_TOKEN: e445a57baa81643c1148d0dfda5d1c53f10bd5c0
-  SONAR_HOST_URL: https://sonarcloud.io
+  SONAR_TOKEN: "e445a57baa81643c1148d0dfda5d1c53f10bd5c0"
+  SONAR_HOST_URL: "https://sonarcloud.io"
 
 
 stages:
