@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.user.User;
 import id.ac.ui.cs.advprog.gamesappsstore.core.user.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
@@ -25,8 +26,24 @@ public class VerificationService {
         return appDataRepository.findByVerificationStatus(VerificationStatus.UNVERIFIED);
     }
 
+    public VerificationDetailResponse getAppDetail(Long id) {
+        AppData appData = getAppOrNotFound(id);
+        return new VerificationDetailResponse(
+                appData.getId(),
+                appData.getName(),
+                appData.getImageUrl(),
+                appData.getDescription(),
+                appData.getInstallerUrl(),
+                appData.getVersion(),
+                appData.getPrice(),
+                appData.getVerificationStatus().toString(),
+                appData.getVerificationAdminId(),
+                appData.getVerificationDate()
+        );
+    }
+
     public void verify(Integer adminId, Long id) {
-        User admin = new User(adminId, UserRole.ADMINISTRATOR); // TODO: replace placeholders
+        User admin = new User(adminId, UserRole.ADMINISTRATOR);
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.verify(admin);
@@ -34,7 +51,7 @@ public class VerificationService {
     }
 
     public void reject(Integer adminId, Long id) {
-        User admin = new User(adminId, UserRole.ADMINISTRATOR); // TODO: replace placeholders
+        User admin = new User(adminId, UserRole.ADMINISTRATOR);
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.reject(admin);
