@@ -1,6 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.verification.states;
 
-import id.ac.ui.cs.advprog.gamesappsstore.core.user.User;
+import id.ac.ui.cs.advprog.gamesappsstore.models.user.User;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ForbiddenMethodCall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
