@@ -1,12 +1,12 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.verification;
 
-import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.core.user.User;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.models.user.User;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.AppDataVerificationState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.RejectedState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.UnverifiedState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.VerifiedState;
-import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 
 import java.util.Date;
 

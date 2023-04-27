@@ -1,13 +1,13 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.verification;
 
-import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.core.user.User;
-import id.ac.ui.cs.advprog.gamesappsstore.core.user.UserRole;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.models.user.User;
+import id.ac.ui.cs.advprog.gamesappsstore.models.user.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
-import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
-import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
