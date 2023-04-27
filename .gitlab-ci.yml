@@ -15,9 +15,9 @@ variables:
   SONAR_HOST_URL: $SONAR_HOST_URL
 
 stages:
+  - sonarcloud
   - build
   - test
-  - sonarcloud
   - publish
   - deploy
 
