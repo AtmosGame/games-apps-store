@@ -109,4 +109,3 @@ SonarCloud:
   rules:
     - main
     - develop
-    - merge_requests
