@@ -1,6 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.app.validator;
 
-import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,6 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.verification;
 
-import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.StatusResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.service.verification.VerificationService;
