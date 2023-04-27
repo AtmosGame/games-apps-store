@@ -1,7 +1,7 @@
-package id.ac.ui.cs.advprog.gamesappsstore.service.verification;
+package id.ac.ui.cs.advprog.gamesappsstore.service.app;
 
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
@@ -14,23 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
-import java.util.List;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-class VerificationServiceTest {
+class AppServiceTest {
     @Autowired
     private AppDataRepository appDataRepository;
 
     @Autowired
-    private VerificationService verificationService;
-
-    private Date date2;
+    private AppService appService;
 
     @BeforeEach
     void setup() {
-        date2 = new Date();
-
         AppData appData1 = AppData.builder()
                 .id(1L)
                 .name("App 1")
@@ -53,7 +48,7 @@ class VerificationServiceTest {
                 .price(10000d)
                 .verificationStatus(VerificationStatus.VERIFIED)
                 .verificationAdminId(1)
-                .verificationDate(date2)
+                .verificationDate(new Date())
                 .build();
         AppData appData3 = AppData.builder()
                 .id(3L)
@@ -74,33 +69,17 @@ class VerificationServiceTest {
     }
 
     @Test
-    void findAllUnverifiedAppsTest() {
-        List<AppData> unverifiedApps = verificationService.findAllUnverifiedApps();
-        Assertions.assertEquals(1, unverifiedApps.size());
-    }
-
-    @Test
-    void findAllVerifiedAppsTest() {
-        List<AppData> verifiedApps = verificationService.findAllVerifiedApps();
-        Assertions.assertEquals(1, verifiedApps.size());
-    }
-
-    @Test
     void getAppDetailTest() {
-        VerificationDetailResponse expected = new VerificationDetailResponse(
+        AppDetailResponse expected = new AppDetailResponse(
                 2L,
                 "App 2",
                 "https://image.com/app2",
                 "The second app",
-                "https://storage.com/app2",
                 "1.0.0",
-                10000d,
-                "VERIFIED",
-                1,
-                date2
+                10000d
         );
 
-        VerificationDetailResponse response = verificationService.getAppDetail(2L);
+        AppDetailResponse response = appService.getAppDetail(2L);
 
         Assertions.assertEquals(expected, response);
     }
@@ -108,49 +87,7 @@ class VerificationServiceTest {
     @Test
     void appNotFound() {
         Assertions.assertThrows(AppDataNotFoundException.class, () -> {
-            verificationService.verify(1, 4L);
+            appService.getAppDetail(4L);
         });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
-            verificationService.reject(1, 4L);
-        });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
-            verificationService.requestReverification(4L);
-        });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
-            verificationService.getAppDetail(4L);
-        });
-    }
-
-    @Test
-    void verifyApp() {
-        verificationService.verify(1, 1L);
-
-        var appDataOptional = appDataRepository.findById(1L);
-        Assertions.assertTrue(appDataOptional.isPresent());
-        AppData appData = appDataOptional.get();
-        Assertions.assertEquals(VerificationStatus.VERIFIED, appData.getVerificationStatus());
-        Assertions.assertEquals(1, appData.getVerificationAdminId());
-    }
-
-    @Test
-    void rejectApp() {
-        verificationService.reject(1, 1L);
-
-        var appDataOptional = appDataRepository.findById(1L);
-        Assertions.assertTrue(appDataOptional.isPresent());
-        AppData appData = appDataOptional.get();
-        Assertions.assertEquals(VerificationStatus.REJECTED, appData.getVerificationStatus());
-        Assertions.assertEquals(1, appData.getVerificationAdminId());
-    }
-
-    @Test
-    void requestReverification() {
-        verificationService.requestReverification(3L);
-
-        var appDataOptional = appDataRepository.findById(3L);
-        Assertions.assertTrue(appDataOptional.isPresent());
-        AppData appData = appDataOptional.get();
-        Assertions.assertEquals(VerificationStatus.UNVERIFIED, appData.getVerificationStatus());
-        Assertions.assertEquals(null, appData.getVerificationAdminId());
     }
 }

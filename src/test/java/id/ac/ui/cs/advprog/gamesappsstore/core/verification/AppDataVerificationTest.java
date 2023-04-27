@@ -1,18 +1,16 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.verification;
 
-import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.core.user.User;
-import id.ac.ui.cs.advprog.gamesappsstore.core.user.UserRole;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
+import id.ac.ui.cs.advprog.gamesappsstore.models.user.User;
+import id.ac.ui.cs.advprog.gamesappsstore.models.user.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.AppDataVerificationState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.UnverifiedState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.VerifiedState;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ForbiddenMethodCall;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
-import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
-import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
