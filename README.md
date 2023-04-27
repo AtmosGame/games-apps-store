@@ -5,8 +5,8 @@
 ## Description
 Games and apps store microservice for Atmos.
 
-- 🌐 ![Deployment](http://34.87.155.107/)
-- 📄 ![Sonar Analysis](https://sonarcloud.io/summary/new_code?id=GAMES_APPS_STORE&branch=main)
+- 🌐 [Deployment](http://34.87.155.107/)
+- 📄 [Sonar Analysis](https://sonarcloud.io/summary/new_code?id=GAMES_APPS_STORE&branch=main)
 
 ## Installation
 1. Clone the repository
