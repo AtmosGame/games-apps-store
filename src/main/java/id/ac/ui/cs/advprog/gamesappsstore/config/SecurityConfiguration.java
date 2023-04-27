@@ -21,15 +21,18 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                .disable()
+                    .disable()
                 .authorizeHttpRequests()
-                .anyRequest()
-                .authenticated()
+                    .requestMatchers("/")
+                        .permitAll()
+                    .anyRequest()
+                        .authenticated()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionManagement()
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authenticationProvider(authenticationProvider);
+                    .authenticationProvider(authenticationProvider);
+                // TODO: .addFilterBefore
 
         return http.build();
     }

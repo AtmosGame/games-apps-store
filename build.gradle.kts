@@ -26,6 +26,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("com.google.guava:guava:31.1-jre")
 	implementation("com.fasterxml.jackson.core:jackson-databind")
 	implementation("org.apache.commons:commons-lang3")
 	compileOnly("org.projectlombok:lombok")

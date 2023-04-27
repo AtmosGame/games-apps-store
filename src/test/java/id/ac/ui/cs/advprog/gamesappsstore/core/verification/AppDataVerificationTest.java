@@ -72,8 +72,8 @@ class AppDataVerificationTest {
         appDataRepository.save(appData2);
         appDataRepository.save(appData3);
 
-        admin = new User(1, UserRole.ADMINISTRATOR);
-        customer = new User(2, UserRole.CUSTOMER);
+        admin = new User(1, UserRole.ADMIN);
+        customer = new User(2, UserRole.USER);
     }
 
     @Test

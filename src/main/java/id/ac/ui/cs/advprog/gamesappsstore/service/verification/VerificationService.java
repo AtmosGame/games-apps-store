@@ -43,7 +43,7 @@ public class VerificationService {
     }
 
     public void verify(Integer adminId, Long id) {
-        User admin = new User(adminId, UserRole.ADMINISTRATOR);
+        User admin = new User(adminId, UserRole.ADMIN);
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.verify(admin);
@@ -51,7 +51,7 @@ public class VerificationService {
     }
 
     public void reject(Integer adminId, Long id) {
-        User admin = new User(adminId, UserRole.ADMINISTRATOR);
+        User admin = new User(adminId, UserRole.ADMIN);
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.reject(admin);
