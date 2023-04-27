@@ -15,9 +15,9 @@ variables:
   SONAR_HOST_URL: $SONAR_HOST_URL
 
 stages:
-  - sonarcloud
   - build
   - test
+  - sonarcloud
   - publish
   - deploy
 
@@ -82,7 +82,6 @@ SonarCloud:
     paths:
       - .sonar/cache
   script:
-    - gradle sonarqube
     - gradle test jacocoTestReport sonarqube
   allow_failure: true
   only:
