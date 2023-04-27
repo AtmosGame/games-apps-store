@@ -72,7 +72,9 @@ SonarCloud:
     key: "${CI_JOB_NAME}"
     paths:
       - .sonar/cache
-  script: gradle sonarqube
+  script:
+    - gradle sonarqube
+    - gradle test jacocoTestReport sonarqube
   allow_failure: true
   only:
     - main
