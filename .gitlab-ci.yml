@@ -108,4 +108,5 @@ SonarCloud:
   allow_failure: true
   rules:
     - main
-    - develop
+    - development
+    - merge_requests
