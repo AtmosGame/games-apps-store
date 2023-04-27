@@ -58,6 +58,14 @@ sonarqube {
 	properties {
 		property ("sonar.projectKey", "GAMES_APPS_STORE")
 		property ("sonar.organization", "atmos-games-apps-store")
+		property ("sonar.sources", ".")
+		property ("sonar.exclusions", "")
+		property ("sonar.inclusions", "")
+		property ("sonar.tests", ".")
+		property ("sonar.test.exclusions", "")
+		property ("sonar.test.inclusions", "")
+		property ("sonar.sourceEncoding", "UTF-8")
+		property ("sonar.branch.name", "main")
 	}
 }
 
