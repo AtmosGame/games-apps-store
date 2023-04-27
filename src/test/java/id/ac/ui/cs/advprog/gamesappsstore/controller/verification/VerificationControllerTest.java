@@ -1,13 +1,9 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.verification;
 
-import id.ac.ui.cs.advprog.gamesappsstore.core.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.core.user.User;
-import id.ac.ui.cs.advprog.gamesappsstore.core.user.UserRole;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.StatusResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
-import id.ac.ui.cs.advprog.gamesappsstore.models.app.VerificationStatus;
-import id.ac.ui.cs.advprog.gamesappsstore.repository.appregistration.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.service.verification.VerificationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
