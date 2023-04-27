@@ -54,6 +54,14 @@ tasks.jacocoTestReport {
 	}
 }
 
+sonarqube {
+	properties {
+		property ("sonar.projectKey", "GAMES_APPS_STORE")
+		property ("sonar.organization", "atmos-games-apps-store")
+	}
+}
+
+
 buildscript {
 	repositories {
 		maven {
