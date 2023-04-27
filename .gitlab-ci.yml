@@ -106,7 +106,7 @@ SonarCloud:
       - .sonar/cache
   script: gradle sonarqube
   allow_failure: true
-  rules:
+  only:
     - main
     - development
     - merge_requests
