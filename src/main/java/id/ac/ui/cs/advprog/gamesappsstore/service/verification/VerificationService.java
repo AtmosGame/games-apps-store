@@ -1,8 +1,8 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.verification;
 
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.models.user.User;
-import id.ac.ui.cs.advprog.gamesappsstore.models.user.enums.UserRole;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;

@@ -1,7 +1,6 @@
-package id.ac.ui.cs.advprog.gamesappsstore.models.user;
+package id.ac.ui.cs.advprog.gamesappsstore.models.auth;
 
-import id.ac.ui.cs.advprog.gamesappsstore.models.user.enums.UserRole;
-import jakarta.persistence.Entity;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +14,6 @@ import java.util.Collection;
 public class User implements UserDetails {
     private Integer id;
     private String username;
-    private String password;
     private UserRole role;
     private String profilePicture;
     private Boolean active;
@@ -35,6 +33,11 @@ public class User implements UserDetails {
 
     public boolean isDeveloper() {
         return this.role.equals(UserRole.DEVELOPER);
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
     }
 
     @Override

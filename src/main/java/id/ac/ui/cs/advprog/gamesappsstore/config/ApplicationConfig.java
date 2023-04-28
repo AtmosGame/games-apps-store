@@ -20,7 +20,7 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return userRepository::getByUsername;
+        return userRepository::getByJwtToken;
     }
 
     @Bean

@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.models.user.enums;
+package id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums;
 
 import com.google.common.collect.Sets;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -6,7 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static id.ac.ui.cs.advprog.gamesappsstore.models.user.enums.UserPermission.*;
+import static id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserPermission.*;
 
 public enum UserRole {
     ADMIN(Sets.newHashSet(

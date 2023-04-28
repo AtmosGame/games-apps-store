@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.models.user.enums;
+package id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums;
 
 public enum UserPermission {
     APPDATA_READ("app_data:read"),
