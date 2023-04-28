@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.verification;
 
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
@@ -58,8 +59,11 @@ public class VerificationService {
         appDataRepository.save(appData);
     }
 
-    public void requestReverification(Long id) {
+    public void requestReverification(Integer userId, Long id) {
         AppData appData = getAppOrNotFound(id);
+        if (!appData.getUserId().equals(userId)) {
+            throw new UnauthorizedException("User is not the app's owner");
+        }
         AppDataVerification verification = new AppDataVerification(appData);
         verification.requestReverification();
         appDataRepository.save(appData);

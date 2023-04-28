@@ -10,24 +10,24 @@ import static id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserPermissio
 
 public enum UserRole {
     ADMIN(Sets.newHashSet(
-            APPDATA_READ,
-            APPDATA_CREATE,
-            APPDATA_UPDATE,
-            APPDATA_DELETE,
+            APP_DATA_READ,
+            APP_DATA_CREATE,
+            APP_DATA_UPDATE,
+            APP_DATA_DELETE,
             VERIFICATION_READ,
-            VERIFICATION_UPDATE
+            VERIFICATION_VERIFY,
+            VERIFICATION_REJECT
     )),
     DEVELOPER(Sets.newHashSet(
-            APPDATA_READ,
-            APPDATA_CREATE,
-            APPDATA_UPDATE,
-            APPDATA_DELETE,
+            APP_DATA_READ,
+            APP_DATA_CREATE,
+            APP_DATA_UPDATE,
+            APP_DATA_DELETE,
             VERIFICATION_READ,
-            VERIFICATION_UPDATE
+            VERIFICATION_REQUEST_REVERIFICATION
     )),
     USER(Sets.newHashSet(
-            APPDATA_READ,
-            VERIFICATION_READ
+            APP_DATA_READ
     ));
 
     private final Set<UserPermission> permissions;

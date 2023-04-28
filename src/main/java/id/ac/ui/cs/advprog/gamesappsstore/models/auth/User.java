@@ -12,10 +12,14 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
+    @NonNull
     private Integer id;
+    @NonNull
     private String username;
+    @NonNull
     private UserRole role;
     private String profilePicture;
+    @NonNull
     private Boolean active;
 
     public User(Integer id, UserRole role) {

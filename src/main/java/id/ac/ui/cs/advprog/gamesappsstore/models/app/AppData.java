@@ -21,6 +21,7 @@ public class AppData {
     @GeneratedValue
     private Long id;
     private String name;
+    private Integer userId;
     private String imageUrl;
     private String description;
     private String installerUrl;

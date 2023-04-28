@@ -6,13 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserRepository {
-    public User getByUsername(String username) {
-        // TODO: Throw UserNotFoundException
-        return null;
-    }
+    private UserDetailsAPICall userDetailsAPICall = new UserDetailsAPICall();
+
     public User getByJwtToken(String jwtToken) {
-        UserDetailsAPICall userDetailsAPICall = new UserDetailsAPICall();
-        userDetailsAPICall.setup(jwtToken);
-        return userDetailsAPICall.execute();
+        return userDetailsAPICall.execute(jwtToken);
     }
 }

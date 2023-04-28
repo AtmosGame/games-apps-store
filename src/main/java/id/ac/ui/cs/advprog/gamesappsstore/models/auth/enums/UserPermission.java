@@ -1,12 +1,14 @@
 package id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums;
 
 public enum UserPermission {
-    APPDATA_READ("app_data:read"),
-    APPDATA_CREATE("app_data:create"),
-    APPDATA_UPDATE("app_data:update"),
-    APPDATA_DELETE("app_data:delete"),
+    APP_DATA_READ("app_data:read"),
+    APP_DATA_CREATE("app_data:create"),
+    APP_DATA_UPDATE("app_data:update"),
+    APP_DATA_DELETE("app_data:delete"),
     VERIFICATION_READ("verification:read"),
-    VERIFICATION_UPDATE("verification:update");
+    VERIFICATION_VERIFY("verification:verify"),
+    VERIFICATION_REJECT("verification:reject"),
+    VERIFICATION_REQUEST_REVERIFICATION("verification:request_reverification");
 
     private final String permission;
 

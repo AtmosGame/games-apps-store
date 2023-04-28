@@ -3,17 +3,17 @@ package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import id.ac.ui.cs.advprog.gamesappsstore.core.api.APICall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
+import lombok.NonNull;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-public class ShareURLAPICall extends APICall<String, String, String> {
-    public static final String ENDPOINT = "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings";
+public class ShareURLAPICall {
+    public static final String ENDPOINT = "https://api.dropbox.com/2/sharing/create_shared_link_with_settings";
 
     private String accessToken;
 
@@ -23,23 +23,28 @@ public class ShareURLAPICall extends APICall<String, String, String> {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public void setup(String accessToken, String path) {
+    public void setup(@NonNull String accessToken, @NonNull String path) {
         this.accessToken = accessToken;
         this.path = path;
     }
 
-    @Override
-    public HttpHeaders getHeaders() {
+    public String execute() {
         if (accessToken == null) throw new NoSetupException();
+        HttpHeaders headers = getHeaders();
+        String body = getBody();
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = getResponse(request);
+        return processResponse(response);
+    }
+
+    private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;
     }
 
-    @Override
-    public String getBody() {
-        if (accessToken == null) throw new NoSetupException();
+    private String getBody() {
         return "{"
             + "\"path\":\"" + path + "\","
             + "\"settings\": {"
@@ -51,8 +56,7 @@ public class ShareURLAPICall extends APICall<String, String, String> {
             + "}";
     }
 
-    @Override
-    public ResponseEntity<String> getResponse(HttpEntity<String> request) {
+    private ResponseEntity<String> getResponse(HttpEntity<String> request) {
         return restTemplate.postForEntity(
                 ENDPOINT,
                 request,
@@ -60,8 +64,7 @@ public class ShareURLAPICall extends APICall<String, String, String> {
         );
     }
 
-    @Override
-    public String processResponse(ResponseEntity<String> response) {
+    private String processResponse(ResponseEntity<String> response) {
         JsonNode json;
         try {
             json = objectMapper.readTree(response.getBody());
