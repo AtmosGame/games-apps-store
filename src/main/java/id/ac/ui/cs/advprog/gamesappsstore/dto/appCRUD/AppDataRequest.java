@@ -1,10 +1,10 @@
-package id.ac.ui.cs.advprog.gamesappsstore.dto.app;
+package id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
+@Builder
 public class AppDataRequest {
     private String appName;
     private MultipartFile imageFile;

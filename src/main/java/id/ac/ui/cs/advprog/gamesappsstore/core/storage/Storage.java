@@ -26,9 +26,9 @@ public class Storage {
         String accessToken = accessTokenAPICall.execute();
 
         uploadFileAPICall.setup(accessToken, path, file);
-        uploadFileAPICall.execute();
+        String newPath = uploadFileAPICall.execute();
 
-        shareURLAPICall.setup(accessToken, path);
+        shareURLAPICall.setup(accessToken, newPath);
         return shareURLAPICall.execute();
     }
 }
