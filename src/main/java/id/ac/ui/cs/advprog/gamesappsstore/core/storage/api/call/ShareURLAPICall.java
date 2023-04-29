@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
+package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.call;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-public class ShareURLAPICall {
+public class ShareURLAPICall implements StorageAPICall {
     public static final String ENDPOINT = "https://api.dropbox.com/2/sharing/create_shared_link_with_settings";
 
     private String accessToken;

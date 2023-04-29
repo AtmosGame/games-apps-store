@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
+package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.call;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
 
-public class UploadFileAPICall {
+public class UploadFileAPICall implements StorageAPICall {
     public static final String ENDPOINT = "https://api.dropbox.com/2/files/upload";
 
     private String accessToken;

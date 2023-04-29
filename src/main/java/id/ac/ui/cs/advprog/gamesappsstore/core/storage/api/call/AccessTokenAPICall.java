@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
+package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.call;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,7 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-public class AccessTokenAPICall {
+public class AccessTokenAPICall implements StorageAPICall {
     private static final String ENDPOINT = "https://api.dropbox.com/oauth2/token";
 
     private String refreshToken;
