@@ -118,39 +118,4 @@ class UserDetailsAPICallTest {
             userDetailsAPICall.execute(null);
         });
     }
-
-//    @Test
-//    void whenTokensInvalidTest() {
-//        String expectedResponse = """
-//                {
-//                  "error_summary": "other/...",
-//                  "error": {
-//                    ".tag": "other"
-//                  }
-//                }
-//                """;
-//
-//        Mockito.when(restTemplate.postForEntity(
-//                any(String.class),
-//                any(HttpEntity.class),
-//                eq(String.class)
-//        )).thenReturn(new ResponseEntity<>(expectedResponse, HttpStatusCode.valueOf(200)));
-//        Assertions.assertThrows(ServiceUnavailableException.class, () -> {
-//            accessTokenAPICall.execute();
-//        });
-//    }
-//
-//    @Test
-//    void whenResponseInvalid() {
-//        String expectedResponse = "{";
-//
-//        Mockito.when(restTemplate.postForEntity(
-//                any(String.class),
-//                any(HttpEntity.class),
-//                eq(String.class)
-//        )).thenReturn(new ResponseEntity<>(expectedResponse, HttpStatusCode.valueOf(200)));
-//        Assertions.assertThrows(ServiceUnavailableException.class, () -> {
-//            accessTokenAPICall.execute();
-//        });
-//    }
 }
