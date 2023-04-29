@@ -36,7 +36,7 @@ public class UploadFileAPICall extends APICall<byte[], String, String> {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         headers.set("Dropbox-API-Arg", "{"
-                + "\"autorename\":false,"
+                + "\"autorename\":true,"
                 + "\"mode\":\"add\","
                 + "\"mute\":false,"
                 + "\"path\":" + "\"" + path + "\","

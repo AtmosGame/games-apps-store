@@ -4,7 +4,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import org.springframework.stereotype.Component;
 
 @Component
-public abstract class AppDataValidatorChain {
+public abstract class AppDataValidatorChain  {
     private AppDataValidatorChain next;
 
     public AppDataValidatorChain linkWith(AppDataValidatorChain next) {
@@ -14,7 +14,7 @@ public abstract class AppDataValidatorChain {
 
     public abstract boolean validate(AppData appData);
 
-    protected boolean checkNext(AppData appData){
+    protected boolean checkNext(AppData appData) {
         if (next == null) {
             return true;
         }
