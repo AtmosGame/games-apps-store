@@ -38,15 +38,19 @@ public class AppCRUDImpl implements AppCRUD {
         if(file == null){
             throw new EmptyFormException("file");
         }
-        InputStream inputStream =  new BufferedInputStream(file.getInputStream());
-        String fileId = file.getOriginalFilename();
-        String path = "/file/" + fileId;
-        String test = storage.uploadFile(inputStream, path);
+//        InputStream inputStream =  new BufferedInputStream(file.getInputStream());
+//        String fileId = file.getOriginalFilename();
+//        String path = "/file/" + fileId;
+//        String test = storage.uploadFile(inputStream, path);
+        String test = "google.com";
         return test;
     }
 
     @Override
     public AppData create(AppDataRequest appDataRequest) throws IOException {
+        System.out.println(appDataRequest.getAppName());
+        System.out.println(appDataRequest.getImageFile());
+        System.out.println(appDataRequest.getInstallerFile());
         var appData = AppData.builder()
                 .name(appDataRequest.getAppName())
                 .imageUrl(storeFile(appDataRequest.getImageFile()))
