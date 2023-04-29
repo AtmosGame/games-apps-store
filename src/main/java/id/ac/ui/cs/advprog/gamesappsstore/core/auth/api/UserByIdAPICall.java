@@ -10,22 +10,21 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-public class UserDetailsAPICall {
-    private static final String ENDPOINT = "http://localhost:8000/auth/current";
+public class UserByIdAPICall {
+    private static final String ENDPOINT = "http://localhost:8000/users/";
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    public User execute(@NonNull String jwtToken) {
-        HttpHeaders headers = getHeaders(jwtToken);
+    public User execute(@NonNull Integer id) {
+        HttpHeaders headers = getHeaders();
         MultiValueMap<String, String> body = getBody();
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-        ResponseEntity<String> response = getResponse(request);
+        ResponseEntity<String> response = getResponse(request, id);
         return processResponse(response);
     }
 
-    private HttpHeaders getHeaders(String jwtToken) {
+    private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", jwtToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;
     }
@@ -34,9 +33,9 @@ public class UserDetailsAPICall {
         return new LinkedMultiValueMap<>();
     }
 
-    private ResponseEntity<String> getResponse(HttpEntity<MultiValueMap<String, String>> request) {
+    private ResponseEntity<String> getResponse(HttpEntity<MultiValueMap<String, String>> request, Integer id) {
         return restTemplate.exchange(
-                ENDPOINT,
+                ENDPOINT + id,
                 HttpMethod.GET,
                 request,
                 String.class
@@ -46,12 +45,12 @@ public class UserDetailsAPICall {
     private User processResponse(ResponseEntity<String> response) {
         var jsonNode = APICallUtils.stringToJsonNode(
                 response.getBody(),
-                "Error on authentication"
+                "Error on storage authentication"
         );
         var userDetailsResponse = APICallUtils.jsonNodeToObject(
                 jsonNode,
                 UserDetailsResponse.class,
-                "Error on authentication"
+                "Error on storage authentication"
         );
         return User.builder()
                 .id(userDetailsResponse.getId())
@@ -61,9 +60,6 @@ public class UserDetailsAPICall {
                 .active(userDetailsResponse.getActive())
                 .build();
     }
-
-
-
     private UserRole stringToUserRole(String roleString) {
         switch (roleString) {
             case "admin" -> {

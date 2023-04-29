@@ -22,11 +22,6 @@ public class User implements UserDetails {
     @NonNull
     private Boolean active;
 
-    public User(Integer id, UserRole role) {
-        this.id = id;
-        this.role = role;
-    }
-
     public boolean isAdmin() {
         return this.role.equals(UserRole.ADMIN);
     }

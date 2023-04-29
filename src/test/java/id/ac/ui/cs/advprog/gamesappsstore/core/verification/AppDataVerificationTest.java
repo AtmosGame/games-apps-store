@@ -75,8 +75,16 @@ class AppDataVerificationTest {
         appDataRepository.save(appData2);
         appDataRepository.save(appData3);
 
-        admin = new User(1, UserRole.ADMIN);
-        customer = new User(2, UserRole.USER);
+        admin = User.builder()
+                .id(1)
+                .username("adminos")
+                .role(UserRole.ADMIN)
+                .build();
+        customer = User.builder()
+                .id(2)
+                .username("customos")
+                .role(UserRole.USER)
+                .build();
     }
 
     @Test

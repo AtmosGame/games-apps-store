@@ -9,6 +9,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailRes
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VerificationService {
     private final AppDataRepository appDataRepository;
+    private final UserRepository userRepository;
 
     public List<AppData> findAllVerifiedApps() {
         return appDataRepository.findByVerificationStatus(VerificationStatus.VERIFIED);
@@ -44,7 +46,7 @@ public class VerificationService {
     }
 
     public void verify(Integer adminId, Long id) {
-        User admin = new User(adminId, UserRole.ADMIN);
+        User admin = userRepository.getById(adminId);
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.verify(admin);
@@ -52,7 +54,7 @@ public class VerificationService {
     }
 
     public void reject(Integer adminId, Long id) {
-        User admin = new User(adminId, UserRole.ADMIN);
+        User admin = userRepository.getById(adminId);
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.reject(admin);
