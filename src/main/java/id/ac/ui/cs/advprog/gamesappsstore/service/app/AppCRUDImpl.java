@@ -38,12 +38,9 @@ public class AppCRUDImpl implements AppCRUD {
         if(file == null){
             throw new EmptyFormException("file");
         }
-        System.out.println("File " + file.getOriginalFilename());
         InputStream inputStream =  new BufferedInputStream(file.getInputStream());
         String fileId = file.getOriginalFilename();
         String path = "/file/" + fileId;
-        System.out.println("path :" + path);
-        System.out.println("InputStream " + inputStream);
         String test = storage.uploadFile(inputStream, path);
         return test;
     }
