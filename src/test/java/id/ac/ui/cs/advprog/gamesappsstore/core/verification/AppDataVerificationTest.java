@@ -79,11 +79,13 @@ class AppDataVerificationTest {
                 .id(1)
                 .username("adminos")
                 .role(UserRole.ADMIN)
+                .active(true)
                 .build();
         customer = User.builder()
                 .id(2)
                 .username("customos")
                 .role(UserRole.USER)
+                .active(true)
                 .build();
     }
 

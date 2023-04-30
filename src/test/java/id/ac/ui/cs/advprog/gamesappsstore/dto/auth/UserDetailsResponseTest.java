@@ -123,23 +123,6 @@ class UserDetailsResponseTest {
     }
 
     @Test
-    void setNullTest() {
-        var builder = UserDetailsResponse.builder();
-        Assertions.assertThrows(NullPointerException.class, () -> {
-            builder.id(null);
-        });
-        Assertions.assertThrows(NullPointerException.class, () -> {
-            builder.active(null);
-        });
-        Assertions.assertThrows(NullPointerException.class, () -> {
-            builder.username(null);
-        });
-        Assertions.assertThrows(NullPointerException.class, () -> {
-            builder.role(null);
-        });
-    }
-
-    @Test
     void builderToStringTest() {
         String expected = "UserDetailsResponse.UserDetailsResponseBuilder("
             + "id=3, username=x, role=user, profilePicture=https://google.com/, "

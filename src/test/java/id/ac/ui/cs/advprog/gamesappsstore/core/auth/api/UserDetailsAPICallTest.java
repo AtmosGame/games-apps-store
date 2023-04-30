@@ -30,15 +30,17 @@ class UserDetailsAPICallTest {
 
     @Test
     void whenUserUserTest() {
-        UserDetailsResponse expectedResponse3 = UserDetailsResponse.builder()
-                .id(3)
-                .username("eheez")
-                .role("user")
-                .bio("bio")
-                .applications("applications")
-                .active(true)
-                .profilePicture("https://google.com")
-                .build();
+        String expectedResponse = """
+                {
+                  "id": 3,
+                  "username": "eheez",
+                  "role": "user",
+                  "profilePicture": "https://google.com",
+                  "bio": "bio",
+                  "applications": "applications",
+                  "active": true
+                }
+                """;
         User user3 = User.builder()
                 .id(3)
                 .username("eheez")
@@ -50,23 +52,25 @@ class UserDetailsAPICallTest {
                 any(String.class),
                 eq(HttpMethod.GET),
                 any(HttpEntity.class),
-                eq(UserDetailsResponse.class)
-        )).thenReturn(new ResponseEntity<>(expectedResponse3, HttpStatusCode.valueOf(200)));
+                eq(String.class)
+        )).thenReturn(new ResponseEntity<>(expectedResponse, HttpStatusCode.valueOf(200)));
         User user = userDetailsAPICall.execute(jwtToken);
         Assertions.assertEquals(user3, user);
     }
 
     @Test
     void whenUserDeveloperTest() {
-        UserDetailsResponse expectedResponse1 = UserDetailsResponse.builder()
-                .id(1)
-                .username("ehee")
-                .role("developer")
-                .bio("bio")
-                .applications("applications")
-                .active(true)
-                .profilePicture("https://google.com")
-                .build();
+        String expectedResponse = """
+                {
+                  "id": 1,
+                  "username": "ehee",
+                  "role": "developer",
+                  "profilePicture": "https://google.com",
+                  "bio": "bio",
+                  "applications": "applications",
+                  "active": true
+                }
+                """;
         User user1 = User.builder()
                 .id(1)
                 .username("ehee")
@@ -78,23 +82,25 @@ class UserDetailsAPICallTest {
                 any(String.class),
                 eq(HttpMethod.GET),
                 any(HttpEntity.class),
-                eq(UserDetailsResponse.class)
-        )).thenReturn(new ResponseEntity<>(expectedResponse1, HttpStatusCode.valueOf(200)));
+                eq(String.class)
+        )).thenReturn(new ResponseEntity<>(expectedResponse, HttpStatusCode.valueOf(200)));
         User user = userDetailsAPICall.execute(jwtToken);
         Assertions.assertEquals(user1, user);
     }
 
     @Test
     void whenUserAdminTest() {
-        UserDetailsResponse expectedResponse2 = UserDetailsResponse.builder()
-                .id(2)
-                .username("ehees")
-                .role("admin")
-                .bio("bio")
-                .applications("applications")
-                .active(true)
-                .profilePicture("https://google.com")
-                .build();
+        String expectedResponse = """
+                {
+                  "id": 2,
+                  "username": "ehees",
+                  "role": "admin",
+                  "profilePicture": "https://google.com",
+                  "bio": "bio",
+                  "applications": "applications",
+                  "active": true
+                }
+                """;
         User user2 = User.builder()
                 .id(2)
                 .username("ehees")
@@ -106,8 +112,8 @@ class UserDetailsAPICallTest {
                 any(String.class),
                 eq(HttpMethod.GET),
                 any(HttpEntity.class),
-                eq(UserDetailsResponse.class)
-        )).thenReturn(new ResponseEntity<>(expectedResponse2, HttpStatusCode.valueOf(200)));
+                eq(String.class)
+        )).thenReturn(new ResponseEntity<>(expectedResponse, HttpStatusCode.valueOf(200)));
         User user = userDetailsAPICall.execute(jwtToken);
         Assertions.assertEquals(user2, user);
     }
