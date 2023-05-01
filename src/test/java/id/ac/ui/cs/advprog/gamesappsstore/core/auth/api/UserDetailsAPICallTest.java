@@ -1,6 +1,5 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.auth.api;
 
-import id.ac.ui.cs.advprog.gamesappsstore.dto.auth.UserDetailsResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import org.junit.jupiter.api.Assertions;
@@ -10,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.ArgumentMatchers.*;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class UserDetailsAPICallTest {
     private final String jwtToken = "Bearer aisojasoifjas.dsfsdjifsdofj";
@@ -26,7 +28,8 @@ class UserDetailsAPICallTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private UserDetailsAPICall userDetailsAPICall = new UserDetailsAPICall();
+    @Autowired
+    private UserDetailsAPICall userDetailsAPICall;
 
     @Test
     void whenUserUserTest() {

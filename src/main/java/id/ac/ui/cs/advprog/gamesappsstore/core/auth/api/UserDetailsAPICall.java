@@ -4,14 +4,20 @@ import id.ac.ui.cs.advprog.gamesappsstore.dto.auth.UserDetailsResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.utils.APICallUtils;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+@Component
+@NoArgsConstructor
 public class UserDetailsAPICall {
-    private static final String ENDPOINT = "http://localhost:8000/auth/current";
+    @Value("${atmos.microservices.auth_admin.url}/auth/current")
+    private String endPoint;
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -36,7 +42,7 @@ public class UserDetailsAPICall {
 
     private ResponseEntity<String> getResponse(HttpEntity<MultiValueMap<String, String>> request) {
         return restTemplate.exchange(
-                ENDPOINT,
+                endPoint,
                 HttpMethod.GET,
                 request,
                 String.class
@@ -61,8 +67,6 @@ public class UserDetailsAPICall {
                 .active(userDetailsResponse.getActive())
                 .build();
     }
-
-
 
     private UserRole stringToUserRole(String roleString) {
         switch (roleString) {

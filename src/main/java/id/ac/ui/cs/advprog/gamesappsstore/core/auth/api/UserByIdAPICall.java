@@ -4,14 +4,20 @@ import id.ac.ui.cs.advprog.gamesappsstore.dto.auth.UserDetailsResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.utils.APICallUtils;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+@Component
+@NoArgsConstructor
 public class UserByIdAPICall {
-    private static final String ENDPOINT = "http://localhost:8000/users/";
+    @Value("${atmos.microservices.auth_admin.url}/users/")
+    private String endPoint;
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -35,7 +41,7 @@ public class UserByIdAPICall {
 
     private ResponseEntity<String> getResponse(HttpEntity<MultiValueMap<String, String>> request, Integer id) {
         return restTemplate.exchange(
-                ENDPOINT + id,
+                endPoint + id,
                 HttpMethod.GET,
                 request,
                 String.class
