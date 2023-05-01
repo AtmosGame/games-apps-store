@@ -5,17 +5,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+@RequiredArgsConstructor
 public class AccessTokenAPICall implements StorageAPICall {
-    private static final String ENDPOINT = "https://api.dropbox.com/oauth2/token";
+    private final String endPoint;
 
     private String refreshToken;
     private String appKey;
@@ -70,7 +75,7 @@ public class AccessTokenAPICall implements StorageAPICall {
 
     private ResponseEntity<String> getResponse(HttpEntity<MultiValueMap<String, String>> request) {
         return restTemplate.postForEntity(
-                ENDPOINT,
+                endPoint,
                 request,
                 String.class
         );

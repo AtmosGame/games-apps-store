@@ -34,7 +34,7 @@ class ShareURLAPICallTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private ShareURLAPICall shareURLAPICall = new ShareURLAPICall();
+    private ShareURLAPICall shareURLAPICall = new ShareURLAPICall("apahayo");
 
     @BeforeEach
     void setup() {
@@ -174,7 +174,7 @@ class ShareURLAPICallTest {
 
     @Test
     void noSetupTest() {
-        ShareURLAPICall shareURLAPICall1 = new ShareURLAPICall();
+        ShareURLAPICall shareURLAPICall1 = new ShareURLAPICall("apahayo");
         Assertions.assertThrows(NoSetupException.class, shareURLAPICall1::execute);
     }
 }

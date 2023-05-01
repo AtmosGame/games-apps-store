@@ -6,17 +6,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.PayloadTooLargeException;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
 
+@RequiredArgsConstructor
 public class UploadFileAPICall implements StorageAPICall {
-    public static final String ENDPOINT = "https://api.dropbox.com/2/files/upload";
+    private final String endPoint;
 
     private String accessToken;
     private String path;
@@ -65,7 +70,7 @@ public class UploadFileAPICall implements StorageAPICall {
 
     private ResponseEntity<String> getResponse(HttpEntity<byte[]> request) {
         return restTemplate.postForEntity(
-                ENDPOINT,
+                endPoint,
                 request,
                 String.class
         );
