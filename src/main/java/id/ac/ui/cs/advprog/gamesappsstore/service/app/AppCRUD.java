@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface AppCRUD {
     String storeFile(MultipartFile file) throws IOException;
-    AppData create(AppDataRequest appDataRequest) throws IOException;
+    AppData create(long userId, AppDataRequest appDataRequest) throws IOException;
     AppData updateProfile(Long id, AppProfileUpdate appProfileUpdate) throws IOException;
     AppData updateInstaller(Long id, AppInstallerUpdate appInstallerUpdate) throws IOException;
     AppData updateImage(Long id, AppImageUpdate appImageUpdate) throws IOException;

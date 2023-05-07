@@ -20,6 +20,7 @@ public class AppData {
     @Id
     @GeneratedValue
     private Long id;
+    private Long userId;
     private String name;
     private String imageUrl;
     private String description;
