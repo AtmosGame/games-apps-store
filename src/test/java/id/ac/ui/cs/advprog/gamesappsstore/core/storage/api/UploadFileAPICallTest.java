@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
 
+import id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.call.UploadFileAPICall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.PayloadTooLargeException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
@@ -23,7 +24,6 @@ import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class UploadFileAPICallTest {
-    private final String accessToken = "ini.access.tokennya";
     private final String path = "/Homework/math/Prime_Numbers.txt";
     private final InputStream file = new ByteArrayInputStream("File String".getBytes());
 
@@ -35,6 +35,7 @@ class UploadFileAPICallTest {
 
     @BeforeEach
     void setup() {
+        String accessToken = "ini.access.tokennya";
         uploadFileAPICall.setup(accessToken, path, file);
     }
 
@@ -145,7 +146,6 @@ class UploadFileAPICallTest {
     @Test
     void noSetupTest() {
         UploadFileAPICall uploadFileAPICall1 = new UploadFileAPICall();
-        Assertions.assertThrows(NoSetupException.class, uploadFileAPICall1::getHeaders);
-        Assertions.assertThrows(NoSetupException.class, uploadFileAPICall1::getBody);
+        Assertions.assertThrows(NoSetupException.class, uploadFileAPICall1::execute);
     }
 }

@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
 
+import id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.call.AccessTokenAPICall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import org.junit.jupiter.api.Assertions;
@@ -19,9 +20,6 @@ import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccessTokenAPICallTest {
-    private final String refreshToken = "EE";
-    private final String appKey = "OO";
-    private final String appSecret = "HEE";
 
     @Mock
     private RestTemplate restTemplate;
@@ -31,6 +29,9 @@ class AccessTokenAPICallTest {
 
     @BeforeEach
     void setup() {
+        String refreshToken = "EE";
+        String appKey = "OO";
+        String appSecret = "HEE";
         accessTokenAPICall.setup(refreshToken, appKey, appSecret);
     }
 
@@ -95,6 +96,6 @@ class AccessTokenAPICallTest {
     @Test
     void noSetupTest() {
         AccessTokenAPICall accessTokenAPICall1 = new AccessTokenAPICall();
-        Assertions.assertThrows(NoSetupException.class, accessTokenAPICall1::getBody);
+        Assertions.assertThrows(NoSetupException.class, accessTokenAPICall1::execute);
     }
 }

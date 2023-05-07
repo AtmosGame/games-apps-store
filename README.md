@@ -1,6 +1,12 @@
+![coverage](https://gitlab.cs.ui.ac.id/AdvProg/reguler-2023/mahasiswa/kelas-a/2106653602-Eduardus-Tjitrahardja-/atmos/store/badges/main/coverage.svg)
+
 # Atmos - Games and Apps Store
 
 ## Description
+Games and apps store microservice for Atmos.
+
+- 🌐 [Deployment](http://34.87.155.107/)
+- 📄 [Sonar Analysis](https://sonarcloud.io/summary/new_code?id=GAMES_APPS_STORE&branch=main)
 
 ## Installation
 1. Clone the repository

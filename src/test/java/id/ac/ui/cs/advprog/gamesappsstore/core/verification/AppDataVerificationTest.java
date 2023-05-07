@@ -1,8 +1,8 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.verification;
 
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.models.user.User;
-import id.ac.ui.cs.advprog.gamesappsstore.models.user.enums.UserRole;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.AppDataVerificationState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.UnverifiedState;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.states.VerifiedState;
@@ -34,6 +34,7 @@ class AppDataVerificationTest {
         AppData appData1 = AppData.builder()
                 .id(1L)
                 .name("App 1")
+                .userId(2)
                 .imageUrl("https://image.com/app1")
                 .installerUrl("https://storage.com/app1")
                 .description("The first app")
@@ -46,6 +47,7 @@ class AppDataVerificationTest {
         AppData appData2 = AppData.builder()
                 .id(2L)
                 .name("App 2")
+                .userId(2)
                 .imageUrl("https://image.com/app2")
                 .installerUrl("https://storage.com/app2")
                 .description("The second app")
@@ -58,6 +60,7 @@ class AppDataVerificationTest {
         AppData appData3 = AppData.builder()
                 .id(3L)
                 .name("App 3")
+                .userId(2)
                 .imageUrl("https://image.com/app3")
                 .installerUrl("https://storage.com/app3")
                 .description("The third app")
@@ -72,8 +75,18 @@ class AppDataVerificationTest {
         appDataRepository.save(appData2);
         appDataRepository.save(appData3);
 
-        admin = new User(1, UserRole.ADMINISTRATOR);
-        customer = new User(2, UserRole.CUSTOMER);
+        admin = User.builder()
+                .id(1)
+                .username("adminos")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+        customer = User.builder()
+                .id(2)
+                .username("customos")
+                .role(UserRole.USER)
+                .active(true)
+                .build();
     }
 
     @Test

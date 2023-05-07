@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.verification;
 
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
@@ -34,6 +35,7 @@ class VerificationServiceTest {
         AppData appData1 = AppData.builder()
                 .id(1L)
                 .name("App 1")
+                .userId(2)
                 .imageUrl("https://image.com/app1")
                 .installerUrl("https://storage.com/app1")
                 .description("The first app")
@@ -46,6 +48,7 @@ class VerificationServiceTest {
         AppData appData2 = AppData.builder()
                 .id(2L)
                 .name("App 2")
+                .userId(2)
                 .imageUrl("https://image.com/app2")
                 .installerUrl("https://storage.com/app2")
                 .description("The second app")
@@ -58,6 +61,7 @@ class VerificationServiceTest {
         AppData appData3 = AppData.builder()
                 .id(3L)
                 .name("App 3")
+                .userId(2)
                 .imageUrl("https://image.com/app3")
                 .installerUrl("https://storage.com/app3")
                 .description("The third app")
@@ -114,7 +118,7 @@ class VerificationServiceTest {
             verificationService.reject(1, 4L);
         });
         Assertions.assertThrows(AppDataNotFoundException.class, () -> {
-            verificationService.requestReverification(4L);
+            verificationService.requestReverification(2, 4L);
         });
         Assertions.assertThrows(AppDataNotFoundException.class, () -> {
             verificationService.getAppDetail(4L);
@@ -144,13 +148,20 @@ class VerificationServiceTest {
     }
 
     @Test
-    void requestReverification() {
-        verificationService.requestReverification(3L);
+    void requestReverificationOwner() {
+        verificationService.requestReverification(2, 3L);
 
         var appDataOptional = appDataRepository.findById(3L);
         Assertions.assertTrue(appDataOptional.isPresent());
         AppData appData = appDataOptional.get();
         Assertions.assertEquals(VerificationStatus.UNVERIFIED, appData.getVerificationStatus());
-        Assertions.assertEquals(null, appData.getVerificationAdminId());
+        Assertions.assertNull(appData.getVerificationAdminId());
+    }
+
+    @Test
+    void requestReverificationNotOwner() {
+        Assertions.assertThrows(UnauthorizedException.class, () -> {
+            verificationService.requestReverification(3, 3L);
+        });
     }
 }

@@ -1,7 +1,7 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
 
+import id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.call.ShareURLAPICall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.PayloadTooLargeException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,18 +11,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Properties;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
+@ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
+@TestPropertySource("classpath:application-test.properties")
+@Import(Properties.class)
 class ShareURLAPICallTest {
-    private final String accessToken = "ini.access.tokennya";
-    private final String path = "/Homework/math/Prime_Numbers.txt";
 
     @Mock
     private RestTemplate restTemplate;
@@ -32,6 +38,8 @@ class ShareURLAPICallTest {
 
     @BeforeEach
     void setup() {
+        String accessToken = "ini.access.tokennya";
+        String path = "/Homework/math/Prime_Numbers.txt";
         shareURLAPICall.setup(accessToken, path);
     }
 
@@ -167,7 +175,6 @@ class ShareURLAPICallTest {
     @Test
     void noSetupTest() {
         ShareURLAPICall shareURLAPICall1 = new ShareURLAPICall();
-        Assertions.assertThrows(NoSetupException.class, shareURLAPICall1::getHeaders);
-        Assertions.assertThrows(NoSetupException.class, shareURLAPICall1::getBody);
+        Assertions.assertThrows(NoSetupException.class, shareURLAPICall1::execute);
     }
 }
