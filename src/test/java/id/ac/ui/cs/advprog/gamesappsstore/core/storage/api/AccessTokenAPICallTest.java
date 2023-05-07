@@ -25,7 +25,7 @@ class AccessTokenAPICallTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private AccessTokenAPICall accessTokenAPICall = new AccessTokenAPICall();
+    private AccessTokenAPICall accessTokenAPICall = new AccessTokenAPICall("apahayo");
 
     @BeforeEach
     void setup() {
@@ -95,7 +95,7 @@ class AccessTokenAPICallTest {
 
     @Test
     void noSetupTest() {
-        AccessTokenAPICall accessTokenAPICall1 = new AccessTokenAPICall();
+        AccessTokenAPICall accessTokenAPICall1 = new AccessTokenAPICall("apahayo");
         Assertions.assertThrows(NoSetupException.class, accessTokenAPICall1::execute);
     }
 }

@@ -31,7 +31,7 @@ class UploadFileAPICallTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private UploadFileAPICall uploadFileAPICall = new UploadFileAPICall();
+    private UploadFileAPICall uploadFileAPICall = new UploadFileAPICall("apahayo");
 
     @BeforeEach
     void setup() {
@@ -145,7 +145,7 @@ class UploadFileAPICallTest {
 
     @Test
     void noSetupTest() {
-        UploadFileAPICall uploadFileAPICall1 = new UploadFileAPICall();
+        UploadFileAPICall uploadFileAPICall1 = new UploadFileAPICall("apahayo");
         Assertions.assertThrows(NoSetupException.class, uploadFileAPICall1::execute);
     }
 }
