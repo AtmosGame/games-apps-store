@@ -11,6 +11,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppProfileUpdate;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.notification.AppDeveloperRepository;
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppCRUD;
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppCRUDImpl;
 import org.aspectj.lang.annotation.Before;
@@ -44,6 +45,8 @@ class AppCRUDTest {
     Storage storage;
     @Mock
     AppDataRepository appDataRepository;
+    @Mock
+    AppDeveloperRepository appDeveloperRepository;
 
     AppDataRequest submitRequest;
     AppProfileUpdate appProfileUpdate;
