@@ -20,8 +20,8 @@ public class AppData {
     @Id
     @GeneratedValue
     private Long id;
-    private Long userId;
     private String name;
+    private Integer userId;
     private String imageUrl;
     private String description;
     private String installerUrl;

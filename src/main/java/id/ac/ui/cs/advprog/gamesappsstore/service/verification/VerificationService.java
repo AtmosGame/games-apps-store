@@ -1,13 +1,15 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.verification;
 
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.models.user.User;
-import id.ac.ui.cs.advprog.gamesappsstore.models.user.enums.UserRole;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VerificationService {
     private final AppDataRepository appDataRepository;
+    private final UserRepository userRepository;
 
     public List<AppData> findAllVerifiedApps() {
         return appDataRepository.findByVerificationStatus(VerificationStatus.VERIFIED);
@@ -43,7 +46,7 @@ public class VerificationService {
     }
 
     public void verify(Integer adminId, Long id) {
-        User admin = new User(adminId, UserRole.ADMINISTRATOR);
+        User admin = userRepository.getById(adminId);
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.verify(admin);
@@ -51,15 +54,18 @@ public class VerificationService {
     }
 
     public void reject(Integer adminId, Long id) {
-        User admin = new User(adminId, UserRole.ADMINISTRATOR);
+        User admin = userRepository.getById(adminId);
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.reject(admin);
         appDataRepository.save(appData);
     }
 
-    public void requestReverification(Long id) {
+    public void requestReverification(Integer userId, Long id) {
         AppData appData = getAppOrNotFound(id);
+        if (!appData.getUserId().equals(userId)) {
+            throw new UnauthorizedException("User is not the app's owner");
+        }
         AppDataVerification verification = new AppDataVerification(appData);
         verification.requestReverification();
         appDataRepository.save(appData);

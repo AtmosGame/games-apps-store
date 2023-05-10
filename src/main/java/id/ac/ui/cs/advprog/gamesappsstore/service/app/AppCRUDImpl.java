@@ -48,7 +48,7 @@ public class AppCRUDImpl implements AppCRUD {
     }
 
     @Override
-    public AppData create(long userId, AppDataRequest appDataRequest) throws IOException {
+    public AppData create(Integer userId, AppDataRequest appDataRequest) throws IOException {
         var appData = AppData.builder()
                 .userId(userId)
                 .name(appDataRequest.getAppName())
@@ -70,8 +70,10 @@ public class AppCRUDImpl implements AppCRUD {
     }
 
     @Override
-    public AppData updateProfile(Long id, AppProfileUpdate appProfileUpdate) throws IOException{
+    public AppData updateProfile(Long id, AppProfileUpdate appProfileUpdate, Integer userId) throws IOException{
         AppData appData = findById(id);
+        checkUserAuthorization(appData, userId);
+
         appData.setDescription(appProfileUpdate.getDescription());
         appData.setName(appProfileUpdate.getAppName());
         appData.setPrice(appProfileUpdate.getPrice());
@@ -81,53 +83,45 @@ public class AppCRUDImpl implements AppCRUD {
     }
 
     @Override
-    public AppData updateInstaller(Long id, AppInstallerUpdate appInstallerUpdate) throws IOException{
-        if(isAppDoesNotExist(id)){
-            throw new AppDataDoesNotExistException();
-        }
-        else{
-            AppData appData = appDataRepository.findById(id).get();
-            String bfrVersion = appData.getVersion();
-            appData.setInstallerUrl(storeFile(appInstallerUpdate.getInstallerFile()));
-            appData.setVersion(appInstallerUpdate.getVersion());
+    public AppData updateInstaller(Long id, AppInstallerUpdate appInstallerUpdate, Integer userId) throws IOException {
+        AppData appData = findById(id);
+        checkUserAuthorization(appData, userId);
 
-            appIntallerValidator.validate(appData, bfrVersion);
-            return appDataRepository.save(appData);
-        }
+        String bfrVersion = appData.getVersion();
+        appData.setInstallerUrl(storeFile(appInstallerUpdate.getInstallerFile()));
+        appData.setVersion(appInstallerUpdate.getVersion());
+
+        appIntallerValidator.validate(appData, bfrVersion);
+        return appDataRepository.save(appData);
     }
 
     @Override
-    public AppData updateImage(Long id, AppImageUpdate appImageUpdate) throws IOException{
-        if(isAppDoesNotExist(id)){
-            throw new AppDataDoesNotExistException();
-        }
-        else{
-            AppData appData = appDataRepository.findById(id).get();
-            appData.setImageUrl(storeFile(appImageUpdate.getImageFile()));
-            appDataValidator.validate(appData);
-            return appDataRepository.save(appData);
-        }
+    public AppData updateImage(Long id, AppImageUpdate appImageUpdate, Integer userId) throws IOException{
+        AppData appData = findById(id);
+        checkUserAuthorization(appData, userId);
+
+        appData.setImageUrl(storeFile(appImageUpdate.getImageFile()));
+        appDataValidator.validate(appData);
+        return appDataRepository.save(appData);
     }
+
     @Override
-    public AppData findById(Long id) throws IOException{
+    public void delete(Long id, Integer userId) throws IOException {
+        AppData appData = findById(id);
+        checkUserAuthorization(appData, userId);
+        appDataRepository.deleteById(id);
+    }
+
+    @Override
+    public AppData findById(Long id) throws IOException {
         Optional<AppData> appData = appDataRepository.findById(id);
-        if(isAppDoesNotExist(id)) {
+        if(appData.isEmpty()) {
             throw new AppDataDoesNotExistException();
-        }
-        else{
+        } else {
             return appData.get();
         }
     }
 
-    @Override
-    public void delete(Long id)throws IOException{
-        if(isAppDoesNotExist(id)){
-            throw new AppDataDoesNotExistException();
-        }
-        else{
-            appDataRepository.deleteById(String.valueOf(id));
-        }
-    }
     @Override
     public List<AppData> findAllVerifiedApps() {
         return appDataRepository.findByVerificationStatus(VerificationStatus.VERIFIED);
@@ -136,6 +130,12 @@ public class AppCRUDImpl implements AppCRUD {
     @Override
     public List<AppData> findAllUnverifiedApps() {
         return appDataRepository.findByVerificationStatusIsNull();
+    }
+
+    private void checkUserAuthorization(AppData app, Integer userId) {
+        if (!app.getUserId().equals(userId)) {
+            throw new UnauthorizedException("User is not authorized");
+        }
     }
 
     private boolean isAppDoesNotExist(Long id) {

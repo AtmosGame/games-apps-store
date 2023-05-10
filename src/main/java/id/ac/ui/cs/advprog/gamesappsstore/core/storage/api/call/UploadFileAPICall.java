@@ -1,38 +1,51 @@
-package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
+package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.call;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import id.ac.ui.cs.advprog.gamesappsstore.core.api.APICall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.PayloadTooLargeException;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
 
-public class UploadFileAPICall extends APICall<byte[], String, String> {
-    public static final String ENDPOINT = "https://content.dropboxapi.com/2/files/upload";
+@RequiredArgsConstructor
+public class UploadFileAPICall implements StorageAPICall {
+    private final String endPoint;
 
     private String accessToken;
     private String path;
     private InputStream file;
+
     private RestTemplate restTemplate = new RestTemplate();
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public void setup(String accessToken, String path, InputStream file) {
+    public void setup(@NonNull String accessToken, @NonNull String path, @NonNull InputStream file) {
         this.accessToken = accessToken;
         this.path = path;
         this.file = file;
     }
 
-    @Override
-    public HttpHeaders getHeaders() {
+    public String execute() {
         if (accessToken == null) throw new NoSetupException();
+        HttpHeaders headers = getHeaders();
+        byte[] body = getBody();
+        HttpEntity<byte[]> request = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = getResponse(request);
+        return processResponse(response);
+    }
+
+    private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         headers.set("Dropbox-API-Arg", "{"
@@ -47,9 +60,7 @@ public class UploadFileAPICall extends APICall<byte[], String, String> {
         return headers;
     }
 
-    @Override
-    public byte[] getBody() {
-        if (accessToken == null) throw new NoSetupException();
+    private byte[] getBody() {
         try {
             return file.readAllBytes();
         } catch (Exception e) {
@@ -57,17 +68,15 @@ public class UploadFileAPICall extends APICall<byte[], String, String> {
         }
     }
 
-    @Override
-    public ResponseEntity<String> getResponse(HttpEntity<byte[]> request) {
+    private ResponseEntity<String> getResponse(HttpEntity<byte[]> request) {
         return restTemplate.postForEntity(
-                ENDPOINT,
+                endPoint,
                 request,
                 String.class
         );
     }
 
-    @Override
-    public String processResponse(ResponseEntity<String> response) {
+    private String processResponse(ResponseEntity<String> response) {
         JsonNode json;
         try {
             json = objectMapper.readTree(response.getBody());

@@ -1,21 +1,26 @@
-package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
+package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.call;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import id.ac.ui.cs.advprog.gamesappsstore.core.api.APICall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-public class AccessTokenAPICall extends APICall<MultiValueMap<String, String>, String, String> {
-    public static final String ENDPOINT = "https://api.dropbox.com/oauth2/token";
+@RequiredArgsConstructor
+public class AccessTokenAPICall implements StorageAPICall {
+    private final String endPoint;
 
     private String refreshToken;
     private String appKey;
@@ -24,22 +29,28 @@ public class AccessTokenAPICall extends APICall<MultiValueMap<String, String>, S
     private RestTemplate restTemplate = new RestTemplate();
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public void setup(String refreshToken, String appKey, String appSecret) {
+    public void setup(@NonNull String refreshToken, @NonNull String appKey, @NonNull String appSecret) {
         this.refreshToken = refreshToken;
         this.appKey = appKey;
         this.appSecret = appSecret;
     }
 
-    @Override
-    public HttpHeaders getHeaders() {
+    public String execute() {
+        if (refreshToken == null) throw new NoSetupException();
+        HttpHeaders headers = getHeaders();
+        MultiValueMap<String, String> body = getBody();
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = getResponse(request);
+        return processResponse(response);
+    }
+
+    private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         return headers;
     }
 
-    @Override
-    public MultiValueMap<String, String> getBody() {
-        if (refreshToken == null) throw new NoSetupException();
+    private MultiValueMap<String, String> getBody() {
         MultiValueMap<String, String> request = new LinkedMultiValueMap<>();
         request.add("refresh_token", this.refreshToken);
         request.add("grant_type", "refresh_token");
@@ -48,8 +59,7 @@ public class AccessTokenAPICall extends APICall<MultiValueMap<String, String>, S
         return request;
     }
 
-    @Override
-    public String processResponse(ResponseEntity<String> response) {
+    private String processResponse(ResponseEntity<String> response) {
         String jsonString = response.getBody();
         JsonNode json;
         try {
@@ -63,10 +73,9 @@ public class AccessTokenAPICall extends APICall<MultiValueMap<String, String>, S
         else throw new ServiceUnavailableException("Error on storage authentication");
     }
 
-    @Override
-    public ResponseEntity<String> getResponse(HttpEntity<MultiValueMap<String, String>> request) {
+    private ResponseEntity<String> getResponse(HttpEntity<MultiValueMap<String, String>> request) {
         return restTemplate.postForEntity(
-                ENDPOINT,
+                endPoint,
                 request,
                 String.class
         );

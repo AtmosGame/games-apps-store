@@ -3,6 +3,7 @@ package id.ac.ui.cs.advprog.gamesappsstore.controller.app;
 import id.ac.ui.cs.advprog.gamesappsstore.controller.app.SearchController;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.SearchServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
@@ -19,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class SearchControllerTest {
     @Mock
@@ -27,6 +28,8 @@ class SearchControllerTest {
 
     @InjectMocks
     private SearchController searchController;
+    @Mock
+    AppDataRepository appDataRepository;
 
     AppData appData1;
     AppData appData2;
@@ -70,6 +73,9 @@ class SearchControllerTest {
                 .verificationAdminId(1)
                 .verificationDate(new Date())
                 .build();
+        appDataRepository.save(appData1);
+        appDataRepository.save(appData2);
+        appDataRepository.save(appData3);
     }
 
     @Test

@@ -12,11 +12,11 @@ import java.util.List;
 
 public interface AppCRUD {
     String storeFile(MultipartFile file) throws IOException;
-    AppData create(long userId, AppDataRequest appDataRequest) throws IOException;
-    AppData updateProfile(Long id, AppProfileUpdate appProfileUpdate) throws IOException;
-    AppData updateInstaller(Long id, AppInstallerUpdate appInstallerUpdate) throws IOException;
-    AppData updateImage(Long id, AppImageUpdate appImageUpdate) throws IOException;
-    void delete(Long id) throws IOException;
+    AppData create(Integer userId, AppDataRequest appDataRequest) throws IOException;
+    AppData updateProfile(Long id, AppProfileUpdate appProfileUpdate, Integer userId) throws IOException;
+    AppData updateInstaller(Long id, AppInstallerUpdate appInstallerUpdate, Integer userId) throws IOException;
+    AppData updateImage(Long id, AppImageUpdate appImageUpdate, Integer userId) throws IOException;
+    void delete(Long id, Integer userId) throws IOException;
     AppData findById(Long id) throws IOException;
 
     List<AppData> findAllVerifiedApps();
