@@ -1,4 +1,5 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.app;
+import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppDataValidator;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppIntallerValidator;
@@ -11,6 +12,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData.AppDataDoesNotE
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData.EmptyFormException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.notification.AppDeveloperRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +30,7 @@ public class AppCRUDImpl implements AppCRUD {
     private AppDataValidator appDataValidator = new AppDataValidator();
     private AppIntallerValidator appIntallerValidator = new AppIntallerValidator();
     private final AppDataRepository appDataRepository;
-
+    private final AppDeveloperRepository appDeveloperRepository;
     public List<AppData> getAllAppData(){
         return appDataRepository.findAll();
     }
@@ -59,6 +61,11 @@ public class AppCRUDImpl implements AppCRUD {
                 .build();
 
         appDataValidator.validate(appData);
+
+        AppDev appDev = AppDev.builder()
+                .appId(appData.getId())
+                .build();
+        appDeveloperRepository.save(appDev);
         return appDataRepository.save(appData);
     }
 
