@@ -4,6 +4,8 @@ import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.StatusResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.service.verification.VerificationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +17,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +32,10 @@ import static org.mockito.ArgumentMatchers.*;
 class VerificationControllerTest {
     @Mock
     private VerificationService verificationService;
+    @Mock
+    private SecurityContext securityContext;
+    @Mock
+    private Authentication authentication;
 
     @InjectMocks
     private VerificationController verificationController;
@@ -37,13 +46,25 @@ class VerificationControllerTest {
 
     Date date2;
 
+    User user;
+
     @BeforeEach
     void setup() {
+        user = User.builder()
+                .id(2)
+                .username("ehee")
+                .role(UserRole.DEVELOPER)
+                .profilePicture("")
+                .active(true)
+                .build();
+        SecurityContextHolder.setContext(securityContext);
+
         date2 = new Date();
 
         appData1 = AppData.builder()
                 .id(1L)
                 .name("App 1")
+                .userId(2)
                 .imageUrl("https://image.com/app1")
                 .installerUrl("https://storage.com/app1")
                 .description("The first app")
@@ -56,6 +77,7 @@ class VerificationControllerTest {
         appData2 = AppData.builder()
                 .id(2L)
                 .name("App 2")
+                .userId(2)
                 .imageUrl("https://image.com/app2")
                 .installerUrl("https://storage.com/app2")
                 .description("The second app")
@@ -68,6 +90,7 @@ class VerificationControllerTest {
         appData3 = AppData.builder()
                 .id(3L)
                 .name("App 3")
+                .userId(2)
                 .imageUrl("https://image.com/app3")
                 .installerUrl("https://storage.com/app3")
                 .description("The third app")
@@ -122,6 +145,8 @@ class VerificationControllerTest {
                 .doNothing()
                 .when(verificationService)
                 .verify(isA(Integer.class), isA(Long.class));
+        Mockito.when(authentication.getPrincipal()).thenReturn(user);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         ResponseEntity<StatusResponse> response = verificationController.verifyApp(1L);
         StatusResponse statusResponse = response.getBody();
         Assertions.assertNotNull(statusResponse);
@@ -134,6 +159,8 @@ class VerificationControllerTest {
                 .doNothing()
                 .when(verificationService)
                 .reject(isA(Integer.class), isA(Long.class));
+        Mockito.when(authentication.getPrincipal()).thenReturn(user);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         ResponseEntity<StatusResponse> response = verificationController.rejectApp(1L);
         StatusResponse statusResponse = response.getBody();
         assert statusResponse != null;
@@ -145,7 +172,9 @@ class VerificationControllerTest {
         Mockito
                 .doNothing()
                 .when(verificationService)
-                .requestReverification(isA(Long.class));
+                .requestReverification(isA(Integer.class), isA(Long.class));
+        Mockito.when(authentication.getPrincipal()).thenReturn(user);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         ResponseEntity<StatusResponse> response = verificationController.requestReverificationApp(1L);
         StatusResponse statusResponse = response.getBody();
         assert statusResponse != null;

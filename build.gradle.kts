@@ -24,6 +24,8 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("com.google.guava:guava:31.1-jre")
 	implementation("com.fasterxml.jackson.core:jackson-databind")
 	implementation("org.apache.commons:commons-lang3")
 	compileOnly("org.projectlombok:lombok")
@@ -31,6 +33,7 @@ dependencies {
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
 	runtimeOnly("org.postgresql:postgresql")
 }
 
