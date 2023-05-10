@@ -27,7 +27,10 @@ public enum UserRole {
             VERIFICATION_REQUEST_REVERIFICATION
     )),
     USER(Sets.newHashSet(
-            APP_DATA_READ
+            APP_DATA_READ,
+            CART_READ,
+            CART_ADD,
+            CART_DELETE
     ));
 
     private final Set<UserPermission> permissions;
