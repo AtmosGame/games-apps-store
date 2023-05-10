@@ -18,7 +18,7 @@ import java.util.List;
 @Controller
 @RestController
 @RequiredArgsConstructor
-public class AppRegistrationController {
+public class AppCRUDController {
     private final VerificationService verificationService;
     private final AppCRUD appRegistrationService;
 
@@ -33,8 +33,8 @@ public class AppRegistrationController {
 
     @PostMapping("/submit")
     public ResponseEntity<AppData> submitForm(Model model, @ModelAttribute AppDataRequest request) throws IOException {
-        System.out.println(request);
-        AppData response = appRegistrationService.create(request);
+        long userIdDummy = 1;
+        AppData response = appRegistrationService.create(userIdDummy, request);
         return ResponseEntity.ok(response);
     }
 

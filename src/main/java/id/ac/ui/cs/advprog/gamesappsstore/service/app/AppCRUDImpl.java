@@ -46,8 +46,9 @@ public class AppCRUDImpl implements AppCRUD {
     }
 
     @Override
-    public AppData create(AppDataRequest appDataRequest) throws IOException {
+    public AppData create(long userId, AppDataRequest appDataRequest) throws IOException {
         var appData = AppData.builder()
+                .userId(userId)
                 .name(appDataRequest.getAppName())
                 .imageUrl(storeFile(appDataRequest.getImageFile()))
                 .installerUrl(storeFile(appDataRequest.getInstallerFile()))
