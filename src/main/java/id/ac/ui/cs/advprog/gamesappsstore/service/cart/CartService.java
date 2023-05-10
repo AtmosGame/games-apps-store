@@ -22,6 +22,11 @@ public class CartService {
     @Autowired
     private AppDataRepository appDataRepository;
 
+    public boolean isAppInCart(Long appId, String jwtToken) {
+        AppData app = getAppOrNotFound(appId);
+        return isAppInCartAPICall.execute(app, jwtToken);
+    }
+
     public void addAppToCart(Long appId, String username, String jwtToken) {
         AppData app = getAppOrNotFound(appId);
 
