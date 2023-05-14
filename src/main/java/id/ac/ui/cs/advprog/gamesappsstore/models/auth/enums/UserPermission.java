@@ -8,7 +8,10 @@ public enum UserPermission {
     VERIFICATION_READ("verification:read"),
     VERIFICATION_VERIFY("verification:verify"),
     VERIFICATION_REJECT("verification:reject"),
-    VERIFICATION_REQUEST_REVERIFICATION("verification:request_reverification");
+    VERIFICATION_REQUEST_REVERIFICATION("verification:request_reverification"),
+    CART_READ("cart:read"),
+    CART_ADD("cart:add"),
+    CART_DELETE("cart:delete");
 
     private final String permission;
 

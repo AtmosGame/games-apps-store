@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class DescriptionValidator extends AppDataValidatorChain {
     @Override
     public boolean validate(AppData appData){
-        if(appData.getDescription() == null){
+        if(appData.getDescription() == null || appData.getDescription().equals("")){
             throw new EmptyFormException("Deskripsi");
         }
 
