@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.app;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppDataValidator;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppIntallerValidator;

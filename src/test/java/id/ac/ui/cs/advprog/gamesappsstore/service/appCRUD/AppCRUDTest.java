@@ -9,11 +9,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppProfileUpdate;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
-<<<<<<< src/test/java/id/ac/ui/cs/advprog/gamesappsstore/service/appCRUD/AppCRUDTest.java
 import id.ac.ui.cs.advprog.gamesappsstore.repository.notification.AppDeveloperRepository;
-import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppCRUD;
-=======
->>>>>>> src/test/java/id/ac/ui/cs/advprog/gamesappsstore/service/appCRUD/AppCRUDTest.java
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppCRUDImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

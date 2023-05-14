@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Component
 @NoArgsConstructor
 public class StorageAPICallCreator {
-    @Value("${atmos.storage.url}/oauth2/token")
+    @Value("https://api.dropbox.com/oauth2/token")
     private String accessTokenEndPoint;
 
-    @Value("${atmos.storage.url}/2/files/upload")
+    @Value("https://content.dropboxapi.com/2/files/upload")
     private String uploadFileEndPoint;
 
-    @Value("${atmos.storage.url}/2/sharing/create_shared_link_with_settings")
+    @Value("https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings")
     private String shareURLEndPoint;
 
     public StorageAPICall create(String type) {
