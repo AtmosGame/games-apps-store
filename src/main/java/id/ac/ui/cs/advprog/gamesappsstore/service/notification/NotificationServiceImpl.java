@@ -2,6 +2,9 @@ package id.ac.ui.cs.advprog.gamesappsstore.service.notification;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.Subscriber;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.AppDevDoesNotExistException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.SubscriberAlreadySubscribeExepction;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.SubscriberDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.notification.AppDeveloperRepository;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.notification.NotificationDataRepository;
@@ -11,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,11 +30,11 @@ public class NotificationServiceImpl implements  NotificationService{
                 .appId((long)1)
                 .build();
         appDeveloperRepository.save(dev);
-//        Subscriber sub = Subscriber.builder()
-//                .userId((long)1)
-//                .appDev(null)
-//                .build();
-//        subscriberRepository.save(sub);
+        Subscriber sub = Subscriber.builder()
+                .userId((long)1)
+                .appDev(null)
+                .build();
+        subscriberRepository.save(sub);
     }
 
     @Override
@@ -61,9 +63,9 @@ public class NotificationServiceImpl implements  NotificationService{
     }
 
     @Override
-    public void handleNewBroadcast(Long appDevId, String message) {
+    public NotificationData handleNewBroadcast(Long appDevId, String message) {
         Optional<AppDev> dev = appDeveloperRepository.findById(appDevId);
-        if(!dev.isEmpty()){
+        if(dev.isPresent()){
             NotificationData notificationData = NotificationData.builder()
                     .subjectId(dev.get().getId())
                     .description(message)
@@ -71,17 +73,18 @@ public class NotificationServiceImpl implements  NotificationService{
                     .subscriber(new ArrayList<>())
                     .build();
 
-            System.out.println("WOY BUG");
-            System.out.println(notificationData.getSubscriber());
             dev.get().notifySubscriber(notificationData);
-            notificationDataRepository.save(notificationData);
+            return notificationDataRepository.save(notificationData);
+        }
+        else{
+            throw new AppDevDoesNotExistException();
         }
     }
 
     @Override
-    public void handleSubscribe(Long appDevId, Long userId) {
+    public Subscriber handleSubscribe(Long appDevId, Long userId) {
         Optional<AppDev> dev = appDeveloperRepository.findById(appDevId);
-        if(!dev.isEmpty()){
+        if(dev.isPresent()){
             Optional<Subscriber> sub = subscriberRepository.findByAppDevAndUserId(dev.get(), userId);
             if(sub.isEmpty()){
                 Subscriber subscriber = Subscriber
@@ -90,20 +93,32 @@ public class NotificationServiceImpl implements  NotificationService{
                         .notifications(new ArrayList<>())
                         .build();
                 dev.get().addSubscriber(subscriber);
-                subscriberRepository.save(subscriber);
+                return subscriberRepository.save(subscriber);
             }
+            else{
+                throw new SubscriberAlreadySubscribeExepction();
+            }
+        }
+        else{
+            throw new AppDevDoesNotExistException();
         }
     }
 
     @Override
     public void handleUnsubscribe(Long appDevId, Long userId) {
         Optional<AppDev> dev = appDeveloperRepository.findById(appDevId);
-        if(!dev.isEmpty()){
+        if(dev.isPresent()){
             Optional<Subscriber> sub = subscriberRepository.findByAppDevAndUserId(dev.get(), userId);
-            if(!sub.isEmpty()){
+            if(sub.isPresent()){
                 dev.get().removeSubscriber(sub.get());
                 subscriberRepository.deleteById(sub.get().getId());
             }
+            else{
+                throw new SubscriberDoesNotExistException();
+            }
+        }
+        else{
+            throw new AppDevDoesNotExistException();
         }
     }
 }

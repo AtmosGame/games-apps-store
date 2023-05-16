@@ -1,19 +1,17 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.app;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppProfileUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppCRUD;
 import id.ac.ui.cs.advprog.gamesappsstore.service.verification.VerificationService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;

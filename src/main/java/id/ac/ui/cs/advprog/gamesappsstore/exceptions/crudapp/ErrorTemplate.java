@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData;
+package id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp;
 
 import org.springframework.http.HttpStatus;
 
