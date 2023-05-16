@@ -2,11 +2,11 @@ package id.ac.ui.cs.advprog.gamesappsstore.service.appCRUD;
 
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppProfileUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData.*;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.notification.AppDeveloperRepository;
@@ -153,7 +153,10 @@ class AppCRUDTest {
     @Test
     void testValidationWithNullInstaller() throws IOException {
         AppDataRequest nullInstaller = submitRequest;
-        nullInstaller.setInstallerFile(null);
+        nullInstaller.setInstallerFile(new MockMultipartFile(
+                "emptyFile",  // filename
+                new byte[0]   // content as an empty byte array
+        ));
         Assertions.assertThrows(EmptyFormException.class, () ->{
             appCRUD.create(1, nullInstaller);
         });
@@ -181,7 +184,6 @@ class AppCRUDTest {
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
 
         AppData appData1 = appCRUD.create(1, submitRequest);
-        System.out.println(appData1.getId());
         AppData result = appCRUD.findById((long)1);
         Assertions.assertEquals(result, appData1);
     }
