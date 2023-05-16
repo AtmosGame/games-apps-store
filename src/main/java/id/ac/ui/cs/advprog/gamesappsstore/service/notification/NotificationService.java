@@ -12,7 +12,7 @@ public interface NotificationService {
     List<Subscriber> getAllSubscribers();
     List<NotificationData> getAllNotification();
     List<NotificationData> getNotificationByUserId(Long userId);
-    void handleNewBroadcast(Long appDevId, String message);
-    void handleSubscribe(Long appDevId, Long userId);
+    NotificationData handleNewBroadcast(Long appDevId, String message);
+    Subscriber handleSubscribe(Long appDevId, Long userId);
     void handleUnsubscribe(Long appDevId, Long userId);
 }

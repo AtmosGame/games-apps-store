@@ -3,14 +3,14 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppDataValidator;
-import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppIntallerValidator;
+import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppInstallerValidator;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppProfileUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData.AppDataDoesNotExistException;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData.EmptyFormException;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.EmptyFormException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.notification.AppDeveloperRepository;
@@ -29,7 +29,7 @@ import java.util.Optional;
 public class AppCRUDImpl implements AppCRUD {
     private final Storage storage;
     private AppDataValidator appDataValidator = new AppDataValidator();
-    private AppIntallerValidator appIntallerValidator = new AppIntallerValidator();
+    private AppInstallerValidator appInstallerValidator = new AppInstallerValidator();
     private final AppDataRepository appDataRepository;
     private final AppDeveloperRepository appDeveloperRepository;
     public List<AppData> getAllAppData(){
@@ -38,14 +38,13 @@ public class AppCRUDImpl implements AppCRUD {
 
     @Override
     public String storeFile(MultipartFile file) throws IOException {
-        if(file == null){
+        if(file.isEmpty()){
             throw new EmptyFormException("file");
         }
         InputStream inputStream =  new BufferedInputStream(file.getInputStream());
         String fileId = file.getOriginalFilename();
         String path = "/file/" + fileId;
-        String test = storage.uploadFile(inputStream, path);
-        return test;
+        return storage.uploadFile(inputStream, path);
     }
 
     @Override
@@ -62,12 +61,12 @@ public class AppCRUDImpl implements AppCRUD {
                 .build();
 
         appDataValidator.validate(appData);
-
+        AppData ret = appDataRepository.save(appData);
         AppDev appDev = AppDev.builder()
                 .appId(appData.getId())
                 .build();
         appDeveloperRepository.save(appDev);
-        return appDataRepository.save(appData);
+        return ret;
     }
 
     @Override
@@ -92,7 +91,7 @@ public class AppCRUDImpl implements AppCRUD {
         appData.setInstallerUrl(storeFile(appInstallerUpdate.getInstallerFile()));
         appData.setVersion(appInstallerUpdate.getVersion());
 
-        appIntallerValidator.validate(appData, bfrVersion);
+        appInstallerValidator.validate(appData, bfrVersion);
         return appDataRepository.save(appData);
     }
 
@@ -139,7 +138,4 @@ public class AppCRUDImpl implements AppCRUD {
         }
     }
 
-    private boolean isAppDoesNotExist(Long id) {
-        return appDataRepository.findById(id).isEmpty();
-    }
 }

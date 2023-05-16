@@ -2,7 +2,6 @@ package id.ac.ui.cs.advprog.gamesappsstore.controller.notification;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.Subscriber;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppImageUpdate;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.BrodcastRequest;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.SubAndUnsubRequest;
 import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
@@ -25,7 +24,7 @@ public class NotificationController {
     @GetMapping("/dummy")
     public ResponseEntity<String> pangilDUummy() {
         notificationService.dummy();
-        return ResponseEntity.ok(String.format("aman gimang"));
+        return ResponseEntity.ok("aman gimang");
     }
     @GetMapping("/all-appDeveloper")
     public ResponseEntity<List<AppDev>> getAllDeveloper() {
@@ -44,20 +43,20 @@ public class NotificationController {
     }
 
     @PostMapping("/subscribe")
-    public ResponseEntity<String> subscribe(Model model, @ModelAttribute SubAndUnsubRequest request) {
-        notificationService.handleSubscribe(request.getAppDevId(), (long)1);
-        return ResponseEntity.ok(String.format("aman gimang"));
+    public ResponseEntity<Subscriber> subscribe(Model model, @ModelAttribute SubAndUnsubRequest request) {
+        Subscriber response = notificationService.handleSubscribe(request.getAppDevId(), (long)1);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/unsubscribe")
     public ResponseEntity<String> unsubscribe(Model model, @ModelAttribute SubAndUnsubRequest request) {
         notificationService.handleUnsubscribe((request.getAppDevId()), (long)1);
-        return ResponseEntity.ok(String.format("aman gimang"));
+        return ResponseEntity.ok(String.format("User dengan id %d mengunsubscribe App dengan id %d", (long)1, request.getAppDevId()));
     }
 
     @PostMapping("/broadcast")
-    public ResponseEntity<String> broadcast(Model model, @ModelAttribute BrodcastRequest request) {
-        notificationService.handleNewBroadcast((request.getAppDevId()), request.getMessage());
-        return ResponseEntity.ok(String.format("aman gimang"));
+    public ResponseEntity<NotificationData> broadcast(Model model, @ModelAttribute BrodcastRequest request) {
+        NotificationData response = notificationService.handleNewBroadcast((request.getAppDevId()), request.getMessage());
+        return ResponseEntity.ok(response);
     }
 }

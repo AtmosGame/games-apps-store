@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD;
+package id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
