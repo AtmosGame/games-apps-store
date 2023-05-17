@@ -6,7 +6,6 @@ import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppCRUD;
-import id.ac.ui.cs.advprog.gamesappsstore.service.verification.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @RestController

@@ -2,7 +2,6 @@ package id.ac.ui.cs.advprog.gamesappsstore.controller.app;
 
 import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailFullResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppDetailServiceImpl;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
