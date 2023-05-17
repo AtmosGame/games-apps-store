@@ -21,6 +21,11 @@ public class VerificationController {
     @Autowired
     private VerificationService verificationService;
 
+    @GetMapping("/all")
+    public ResponseEntity<List<AppData>> getAllVerifiedApps() {
+        List<AppData> response = verificationService.findAllVerifiedApps();
+        return ResponseEntity.ok(response);
+    }
     @GetMapping
     public ResponseEntity<List<AppData>> getAllUnverifiedApps() {
         List<AppData> response = verificationService.findAllUnverifiedApps();
