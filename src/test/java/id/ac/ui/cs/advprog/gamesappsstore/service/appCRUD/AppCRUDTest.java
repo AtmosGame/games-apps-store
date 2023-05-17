@@ -283,7 +283,7 @@ class AppCRUDTest {
         appProfileUpdate.setAppName("");
 
         Assertions.assertThrows(EmptyFormException.class, () -> {
-            appCRUD.updateProfile(appDataBfr.getId(), appProfileUpdate, 1);
+            appCRUD.updateProfile(1L, appProfileUpdate, 1);
         });
     }
 
