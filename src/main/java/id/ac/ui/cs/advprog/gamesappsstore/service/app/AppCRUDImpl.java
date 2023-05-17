@@ -98,7 +98,7 @@ public class AppCRUDImpl implements AppCRUD {
         Optional<AppDev> appDev = appDeveloperRepository.findByAppId(id);
         if(appDev.isPresent()){
             notificationService.handleNewBroadcast(
-                    appDeveloperRepository.findByAppId(id).get().getAppId(),
+                    appDev.get().getAppId(),
                     String.format("Aplikasi %s melakukan pembaruan menjadi versi %s", appData.getName(), appData.getVersion())
             );
         }
