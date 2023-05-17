@@ -11,7 +11,13 @@ public enum UserPermission {
     VERIFICATION_REQUEST_REVERIFICATION("verification:request_reverification"),
     CART_READ("cart:read"),
     CART_ADD("cart:add"),
-    CART_DELETE("cart:delete");
+    CART_DELETE("cart:delete"),
+    NOTIFICATION_SUBSCRIBE("notification:subscribe"),
+    NOTIFICATION_UNSUBSCRIBE("notification:unsubscribe"),
+    NOTIFICATION_BROADCAST("notification:broadcast"),
+    NOTIFICATION_GET_NOTIF_BY_ID("notification:get_notification_by_id");
+
+
 
     private final String permission;
 

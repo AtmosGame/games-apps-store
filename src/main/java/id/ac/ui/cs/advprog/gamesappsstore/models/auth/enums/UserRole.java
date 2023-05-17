@@ -24,13 +24,17 @@ public enum UserRole {
             APP_DATA_UPDATE,
             APP_DATA_DELETE,
             VERIFICATION_READ,
-            VERIFICATION_REQUEST_REVERIFICATION
+            VERIFICATION_REQUEST_REVERIFICATION,
+            NOTIFICATION_BROADCAST
     )),
     USER(Sets.newHashSet(
             APP_DATA_READ,
             CART_READ,
             CART_ADD,
-            CART_DELETE
+            CART_DELETE,
+            NOTIFICATION_SUBSCRIBE,
+            NOTIFICATION_UNSUBSCRIBE,
+            NOTIFICATION_GET_NOTIF_BY_ID
     ));
 
     private final Set<UserPermission> permissions;
