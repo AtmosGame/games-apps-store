@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.app;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.AppDevDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppDataValidator;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppInstallerValidator;
@@ -94,10 +95,17 @@ public class AppCRUDImpl implements AppCRUD {
         appData.setVersion(appInstallerUpdate.getVersion());
 
         appInstallerValidator.validate(appData, bfrVersion);
-        notificationService.handleNewBroadcast(
-                appDeveloperRepository.findByAppId(id).get().getAppId(),
-                String.format("Aplikasi %s melakukan pembaruan menjadi versi %s", appData.getName(), appData.getVersion())
-                );
+        Optional<AppDev> appDev = appDeveloperRepository.findByAppId(id);
+        if(appDev.isPresent()){
+            notificationService.handleNewBroadcast(
+                    appDeveloperRepository.findByAppId(id).get().getAppId(),
+                    String.format("Aplikasi %s melakukan pembaruan menjadi versi %s", appData.getName(), appData.getVersion())
+            );
+        }
+        else{
+            throw new AppDevDoesNotExistException();
+        }
+
         return appDataRepository.save(appData);
     }
 
