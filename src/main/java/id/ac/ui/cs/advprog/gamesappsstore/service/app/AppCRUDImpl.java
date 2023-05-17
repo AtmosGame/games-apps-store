@@ -14,6 +14,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.EmptyFormException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.notification.AppDeveloperRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,7 @@ public class AppCRUDImpl implements AppCRUD {
     private AppInstallerValidator appInstallerValidator = new AppInstallerValidator();
     private final AppDataRepository appDataRepository;
     private final AppDeveloperRepository appDeveloperRepository;
+    private final NotificationService notificationService;
     public List<AppData> getAllAppData(){
         return appDataRepository.findAll();
     }
@@ -92,6 +94,10 @@ public class AppCRUDImpl implements AppCRUD {
         appData.setVersion(appInstallerUpdate.getVersion());
 
         appInstallerValidator.validate(appData, bfrVersion);
+        notificationService.handleNewBroadcast(
+                appDeveloperRepository.findByAppId(id).get().getAppId(),
+                String.format("Aplikasi %s melakukan pembaruan menjadi versi %s", appData.getName(), appData.getVersion())
+                );
         return appDataRepository.save(appData);
     }
 

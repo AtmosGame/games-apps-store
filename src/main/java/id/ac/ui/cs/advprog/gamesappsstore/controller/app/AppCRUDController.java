@@ -21,15 +21,7 @@ import java.util.List;
 @RestController
 public class AppCRUDController {
     @Autowired
-    private VerificationService verificationService;
-    @Autowired
     private AppCRUD appRegistrationService;
-
-    @GetMapping("/all")
-    public ResponseEntity<List<AppData>> getAllVerifiedApps() {
-        List<AppData> response = verificationService.findAllVerifiedApps();
-        return ResponseEntity.ok(response);
-    }
 
     @PostMapping("/submit")
     @PreAuthorize("hasAuthority('app_data:create')")

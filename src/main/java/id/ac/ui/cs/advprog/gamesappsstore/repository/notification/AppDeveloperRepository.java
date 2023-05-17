@@ -16,4 +16,7 @@ public interface AppDeveloperRepository extends JpaRepository<AppDev, Long> {
     @NonNull
     Optional<AppDev> findById(@NonNull Long id);
 
+    @NonNull
+    Optional<AppDev> findByAppId(@NonNull Long id);
+
 }

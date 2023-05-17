@@ -25,19 +25,6 @@ public class NotificationServiceImpl implements  NotificationService{
     private final NotificationDataRepository notificationDataRepository;
 
     @Override
-    public void dummy(){
-        AppDev dev = AppDev.builder()
-                .appId((long)1)
-                .build();
-        appDeveloperRepository.save(dev);
-        Subscriber sub = Subscriber.builder()
-                .userId((long)1)
-                .appDev(null)
-                .build();
-        subscriberRepository.save(sub);
-    }
-
-    @Override
     public List<AppDev> getAllAppDeveloper() {
         return appDeveloperRepository.findAll();
     }
