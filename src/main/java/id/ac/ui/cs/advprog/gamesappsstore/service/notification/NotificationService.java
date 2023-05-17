@@ -7,7 +7,6 @@ import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
 import java.util.List;
 
 public interface NotificationService {
-    void dummy();
     List<AppDev> getAllAppDeveloper();
     List<Subscriber> getAllSubscribers();
     List<NotificationData> getAllNotification();

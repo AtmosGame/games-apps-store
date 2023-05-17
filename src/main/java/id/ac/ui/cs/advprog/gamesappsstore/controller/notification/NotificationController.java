@@ -4,10 +4,13 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.Subscriber;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.BrodcastRequest;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.SubAndUnsubRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
 import id.ac.ui.cs.advprog.gamesappsstore.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +24,6 @@ import java.util.List;
 public class NotificationController {
     private final NotificationService notificationService;
 
-    @GetMapping("/dummy")
-    public ResponseEntity<String> pangilDUummy() {
-        notificationService.dummy();
-        return ResponseEntity.ok("aman gimang");
-    }
     @GetMapping("/all-appDeveloper")
     public ResponseEntity<List<AppDev>> getAllDeveloper() {
         List<AppDev> response = notificationService.getAllAppDeveloper();
@@ -42,21 +40,40 @@ public class NotificationController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/all-notification-by-id")
+    @PreAuthorize("hasAuthority('notification:get_notification_by_id')")
+    public ResponseEntity<List<NotificationData>> getNotificationByUserId(){
+        Integer userId = getCurrentUser().getId();
+        List<NotificationData> response = notificationService.getNotificationByUserId((long)userId);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/subscribe")
+    @PreAuthorize("hasAuthority('notification:subscribe')")
     public ResponseEntity<Subscriber> subscribe(Model model, @ModelAttribute SubAndUnsubRequest request) {
-        Subscriber response = notificationService.handleSubscribe(request.getAppDevId(), (long)1);
+        Integer userId = getCurrentUser().getId();
+        Subscriber response = notificationService.handleSubscribe(request.getAppDevId(), (long)userId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/unsubscribe")
+    @PreAuthorize("hasAuthority('notification:unsubscribe')")
     public ResponseEntity<String> unsubscribe(Model model, @ModelAttribute SubAndUnsubRequest request) {
-        notificationService.handleUnsubscribe((request.getAppDevId()), (long)1);
-        return ResponseEntity.ok(String.format("User dengan id %d mengunsubscribe App dengan id %d", (long)1, request.getAppDevId()));
+        Integer userId = getCurrentUser().getId();
+        notificationService.handleUnsubscribe((request.getAppDevId()), (long)userId);
+        return ResponseEntity.ok(String.format("User dengan id %d mengunsubscribe App dengan id %d", (long)userId, request.getAppDevId()));
     }
 
     @PostMapping("/broadcast")
+    @PreAuthorize("hasAuthority('notification:broadcast')")
     public ResponseEntity<NotificationData> broadcast(Model model, @ModelAttribute BrodcastRequest request) {
         NotificationData response = notificationService.handleNewBroadcast((request.getAppDevId()), request.getMessage());
         return ResponseEntity.ok(response);
+    }
+
+    private static User getCurrentUser() {
+        return ((User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal());
     }
 }
