@@ -1,36 +1,32 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.appCRUD;
 
+import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppDataValidator;
-import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppIntallerValidator;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppProfileUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData.*;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
+import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
-import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppCRUD;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.notification.AppDeveloperRepository;
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppCRUDImpl;
-import org.aspectj.lang.annotation.Before;
+import id.ac.ui.cs.advprog.gamesappsstore.service.notification.NotificationServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Lookup;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.plaf.multi.MultiOptionPaneUI;
-import javax.swing.plaf.multi.MultiPanelUI;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -44,6 +40,10 @@ class AppCRUDTest {
     Storage storage;
     @Mock
     AppDataRepository appDataRepository;
+    @Mock
+    AppDeveloperRepository appDeveloperRepository;
+    @Mock
+    NotificationServiceImpl notificationService;
 
     AppDataRequest submitRequest;
     AppProfileUpdate appProfileUpdate;
@@ -91,7 +91,7 @@ class AppCRUDTest {
 
         appData = AppData.builder()
                 .id((long)1)
-                .userId((long)1)
+                .userId(1)
                 .name("MyApp")
                 .imageUrl(appCRUD.storeFile(imagePng))
                 .description("This is a great app for all your needs")
@@ -123,7 +123,7 @@ class AppCRUDTest {
     }
 
     @Test
-    void testValidationWithInvalidVersionFormat() throws IOException {
+    void testValidationWithInvalidVersionFormat() {
         AppDataRequest invalidVersion = submitRequest;
         invalidVersion.setVersion("1/0/0");
         Assertions.assertThrows(InvalidVersionException.class, () ->{
@@ -159,9 +159,50 @@ class AppCRUDTest {
     }
 
     @Test
+    void testValidationWithNullDescription() throws IOException {
+        AppDataRequest nullDesc = submitRequest;
+        nullDesc.setDescription(null);
+        Assertions.assertThrows(EmptyFormException.class, () ->{
+            appCRUD.create(1, nullDesc);
+        });
+    }
+
+    @Test
+    void testValidationWithEmptyDescription() throws IOException {
+        AppDataRequest emptyDesc = submitRequest;
+        String emptyDescription = "";
+        emptyDesc.setDescription(emptyDescription);
+        Assertions.assertThrows(EmptyFormException.class, () ->{
+            appCRUD.create(1, emptyDesc);
+        });
+    }
+
+    @Test
+    void findAllApp()throws IOException{
+        List<AppData> dummyList = new ArrayList<>();
+        dummyList.add(appData);
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
+        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+            var appData1 = invocation.getArgument(0, AppData.class);
+            appData1.setId((long)1);
+            return appData1;
+        });
+        when(appDataRepository.findAll()).thenReturn(dummyList);
+
+        appCRUD.create(1, submitRequest);
+        List<AppData> searchResults = appCRUD.getAllAppData();
+        Assertions.assertEquals(1, searchResults.size());
+    }
+    @Test
     void testValidationWithNullInstaller() throws IOException {
         AppDataRequest nullInstaller = submitRequest;
-        nullInstaller.setInstallerFile(null);
+        nullInstaller.setInstallerFile(new MockMultipartFile(
+                "emptyFile",  // filename
+                new byte[0]   // content as an empty byte array
+        ));
         Assertions.assertThrows(EmptyFormException.class, () ->{
             appCRUD.create(1, nullInstaller);
         });
@@ -189,7 +230,6 @@ class AppCRUDTest {
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
 
         AppData appData1 = appCRUD.create(1, submitRequest);
-        System.out.println(appData1.getId());
         AppData result = appCRUD.findById((long)1);
         Assertions.assertEquals(result, appData1);
     }
@@ -214,9 +254,12 @@ class AppCRUDTest {
         });
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
 
+        appProfileUpdate.setAppName("negus");
         AppData appDataBfr = appCRUD.create(1, submitRequest);
-        AppData result = appCRUD.updateProfile(appDataBfr.getId(), appProfileUpdate);
+        AppData result = appCRUD.updateProfile(appDataBfr.getId(), appProfileUpdate, 1);
         AppData appData1 = appDataBfr;
+
+        appProfileUpdate.setAppName("negus");
         appData1.setName(appProfileUpdate.getAppName());
         appData1.setDescription(appProfileUpdate.getDescription());
         appData1.setPrice(appProfileUpdate.getPrice());
@@ -224,9 +267,72 @@ class AppCRUDTest {
     }
 
     @Test
+    void updateProfileEmpty() throws IOException{
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
+        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+            var appData1 = invocation.getArgument(0, AppData.class);
+            appData1.setId((long)1);
+            return appData1;
+        });
+        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
+        AppData appDataBfr = appCRUD.create(1, submitRequest);
+        appProfileUpdate.setAppName("");
+
+        Assertions.assertThrows(EmptyFormException.class, () -> {
+            appCRUD.updateProfile(appDataBfr.getId(), appProfileUpdate, 1);
+        });
+    }
+
+    @Test
     void updateProfileDoesNotExist() throws IOException{
         Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
-            appCRUD.updateProfile((long)1, appProfileUpdate);
+            appCRUD.updateProfile((long)1, appProfileUpdate, 1);
+        });
+    }
+
+    @Test
+    void updatePriceNull() throws IOException{
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
+        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+            var appData1 = invocation.getArgument(0, AppData.class);
+            appData1.setId((long)1);
+            return appData1;
+        });
+        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
+        appCRUD.create(1, submitRequest);
+
+        appProfileUpdate.setPrice(null);
+        Assertions.assertThrows(EmptyFormException.class, () -> {
+            appCRUD.updateProfile((long)1, appProfileUpdate, 1);
+        });
+    }
+
+    @Test
+    void updatePriceReallyBig() throws IOException{
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
+        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+            var appData1 = invocation.getArgument(0, AppData.class);
+            appData1.setId((long)1);
+            return appData1;
+        });
+        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
+        appCRUD.create(1, submitRequest);
+
+        appProfileUpdate.setPrice( 1_0000_0000_000.0);
+        Assertions.assertThrows(PriceRangeException.class, () -> {
+            appCRUD.updateProfile((long)1, appProfileUpdate, 1);
         });
     }
 
@@ -243,8 +349,11 @@ class AppCRUDTest {
         });
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
 
+        MultipartFile newImage = new MockMultipartFile("image", "image.png",
+                "image", "gambar apa tu man".getBytes());
+        submitRequest.setImageFile(newImage);
         AppData appDataBfr = appCRUD.create(1, submitRequest);
-        AppData result = appCRUD.updateImage((long)appDataBfr.getId(), appImageUpdate);
+        AppData result = appCRUD.updateImage((long)appDataBfr.getId(), appImageUpdate, 1);
         AppData appData1 = appDataBfr;
         appData1.setImageUrl(result.getImageUrl());
         Assertions.assertEquals(result, appData1);
@@ -253,12 +362,26 @@ class AppCRUDTest {
     @Test
     void updateImageDoesNotExist() throws IOException{
         Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
-            appCRUD.updateImage((long)1, appImageUpdate);
+            appCRUD.updateImage((long)1, appImageUpdate, 1);
         });
     }
 
     @Test
     void updateInstaller() throws IOException{
+        NotificationData notificationData = NotificationData.builder()
+                .id(1L)
+                .subjectId(1L)
+                .description("Terdapat Update pada Aplikasi ANDA")
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .subscriber(new ArrayList<>())
+                .build();
+
+        AppDev appDev = AppDev.builder()
+                .id(1L)
+                .appId((long)1)
+                .subscribers(new ArrayList<>())
+                .build();
+
         when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
             String temp = ".com";
             return invocation.getArgument(1, String.class) + temp;
@@ -269,9 +392,11 @@ class AppCRUDTest {
             return appData1;
         });
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+        when(appDeveloperRepository.findByAppId(any(Long.class))).thenReturn(Optional.of(appDev));
+        when(notificationService.handleNewBroadcast(any(Long.class), any(String.class))).thenReturn(notificationData);
 
         AppData appDataBfr = appCRUD.create(1, submitRequest);
-        AppData result = appCRUD.updateInstaller((long)appDataBfr.getId(), appInstallerUpdate);
+        AppData result = appCRUD.updateInstaller((long)appDataBfr.getId(), appInstallerUpdate, 1);
         AppData appData1 = appDataBfr;
         appData1.setVersion(appInstallerUpdate.getVersion());
         appData1.setInstallerUrl(result.getInstallerUrl());
@@ -280,8 +405,12 @@ class AppCRUDTest {
 
     @Test
     void updateInstallerDoesNotExist() throws IOException{
+        MultipartFile emptyFile = new MockMultipartFile(
+                "emptyFile",  // filename
+                new byte[0]);
+        appInstallerUpdate.setInstallerFile(emptyFile);
         Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
-            appCRUD.updateInstaller((long)100, appInstallerUpdate);
+            appCRUD.updateInstaller((long)100, appInstallerUpdate, 1);
         });
     }
     @Test
@@ -301,8 +430,46 @@ class AppCRUDTest {
         AppInstallerUpdate appInstallerUpdate1 = appInstallerUpdate;
         appInstallerUpdate1.setVersion("0.0.1");
         Assertions.assertThrows(GreaterVersionException.class, () -> {
-            appCRUD.updateInstaller((long)1, appInstallerUpdate1);
+            appCRUD.updateInstaller((long)1, appInstallerUpdate1, 1);
         });
+    }
+
+    @Test
+    void updateInstallerVersionSame() throws IOException{
+        NotificationData notificationData = NotificationData.builder()
+                .id(1L)
+                .subjectId(1L)
+                .description("Terdapat Update pada Aplikasi ANDA")
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .subscriber(new ArrayList<>())
+                .build();
+
+        AppDev appDev = AppDev.builder()
+                .id(1L)
+                .appId((long)1)
+                .subscribers(new ArrayList<>())
+                .build();
+
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
+        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+            var appData1 = invocation.getArgument(0, AppData.class);
+            appData1.setId((long)1);
+            return appData1;
+        });
+        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+        when(appDeveloperRepository.findByAppId(any(Long.class))).thenReturn(Optional.of(appDev));
+        when(notificationService.handleNewBroadcast(any(Long.class), any(String.class))).thenReturn(notificationData);
+
+        AppData appDataBfr = appCRUD.create(1, submitRequest);
+        appInstallerUpdate.setVersion("1.0.0");
+        AppData result = appCRUD.updateInstaller((long)appDataBfr.getId(), appInstallerUpdate, 1);
+        AppData appData1 = appDataBfr;
+        appData1.setVersion(appInstallerUpdate.getVersion());
+        appData1.setInstallerUrl(result.getInstallerUrl());
+        Assertions.assertEquals(result, appData1);
     }
 
     @Test
@@ -319,15 +486,15 @@ class AppCRUDTest {
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
 
         appCRUD.create(1, submitRequest);
-        appCRUD.delete((long)1);
-        verify(appDataRepository, atLeastOnce()).deleteById(any(String.class));
+        appCRUD.delete((long)1, 1);
+        verify(appDataRepository, atLeastOnce()).deleteById(any(Long.class));
 
     }
 
     @Test
     void deleteAndNotFound() throws IOException{
         Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
-            appCRUD.delete((long)1);
+            appCRUD.delete((long)1, 1);
         });
     }
 }

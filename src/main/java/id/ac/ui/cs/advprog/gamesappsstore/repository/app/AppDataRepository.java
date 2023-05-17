@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AppDataRepository extends JpaRepository<AppData, String> {
+public interface AppDataRepository extends JpaRepository<AppData, Long> {
     @NonNull
     List<AppData> findAll();
 

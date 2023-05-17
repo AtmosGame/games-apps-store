@@ -1,16 +1,20 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.app;
+import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppDataValidator;
-import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppIntallerValidator;
+import id.ac.ui.cs.advprog.gamesappsstore.core.app.validator.AppInstallerValidator;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appCRUD.AppProfileUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData.AppDataDoesNotExistException;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.CRUDAppData.EmptyFormException;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.EmptyFormException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.notification.AppDeveloperRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,27 +30,27 @@ import java.util.Optional;
 public class AppCRUDImpl implements AppCRUD {
     private final Storage storage;
     private AppDataValidator appDataValidator = new AppDataValidator();
-    private AppIntallerValidator appIntallerValidator = new AppIntallerValidator();
+    private AppInstallerValidator appInstallerValidator = new AppInstallerValidator();
     private final AppDataRepository appDataRepository;
-
+    private final AppDeveloperRepository appDeveloperRepository;
+    private final NotificationService notificationService;
     public List<AppData> getAllAppData(){
         return appDataRepository.findAll();
     }
 
     @Override
     public String storeFile(MultipartFile file) throws IOException {
-        if(file == null){
+        if(file.isEmpty()){
             throw new EmptyFormException("file");
         }
         InputStream inputStream =  new BufferedInputStream(file.getInputStream());
         String fileId = file.getOriginalFilename();
         String path = "/file/" + fileId;
-        String test = storage.uploadFile(inputStream, path);
-        return test;
+        return storage.uploadFile(inputStream, path);
     }
 
     @Override
-    public AppData create(long userId, AppDataRequest appDataRequest) throws IOException {
+    public AppData create(Integer userId, AppDataRequest appDataRequest) throws IOException {
         var appData = AppData.builder()
                 .userId(userId)
                 .name(appDataRequest.getAppName())
@@ -59,12 +63,19 @@ public class AppCRUDImpl implements AppCRUD {
                 .build();
 
         appDataValidator.validate(appData);
-        return appDataRepository.save(appData);
+        AppData ret = appDataRepository.save(appData);
+        AppDev appDev = AppDev.builder()
+                .appId(appData.getId())
+                .build();
+        appDeveloperRepository.save(appDev);
+        return ret;
     }
 
     @Override
-    public AppData updateProfile(Long id, AppProfileUpdate appProfileUpdate) throws IOException{
+    public AppData updateProfile(Long id, AppProfileUpdate appProfileUpdate, Integer userId) throws IOException{
         AppData appData = findById(id);
+        checkUserAuthorization(appData, userId);
+
         appData.setDescription(appProfileUpdate.getDescription());
         appData.setName(appProfileUpdate.getAppName());
         appData.setPrice(appProfileUpdate.getPrice());
@@ -74,53 +85,49 @@ public class AppCRUDImpl implements AppCRUD {
     }
 
     @Override
-    public AppData updateInstaller(Long id, AppInstallerUpdate appInstallerUpdate) throws IOException{
-        if(isAppDoesNotExist(id)){
-            throw new AppDataDoesNotExistException();
-        }
-        else{
-            AppData appData = appDataRepository.findById(id).get();
-            String bfrVersion = appData.getVersion();
-            appData.setInstallerUrl(storeFile(appInstallerUpdate.getInstallerFile()));
-            appData.setVersion(appInstallerUpdate.getVersion());
+    public AppData updateInstaller(Long id, AppInstallerUpdate appInstallerUpdate, Integer userId) throws IOException {
+        AppData appData = findById(id);
+        checkUserAuthorization(appData, userId);
 
-            appIntallerValidator.validate(appData, bfrVersion);
-            return appDataRepository.save(appData);
-        }
+        String bfrVersion = appData.getVersion();
+        appData.setInstallerUrl(storeFile(appInstallerUpdate.getInstallerFile()));
+        appData.setVersion(appInstallerUpdate.getVersion());
+
+        appInstallerValidator.validate(appData, bfrVersion);
+        notificationService.handleNewBroadcast(
+                appDeveloperRepository.findByAppId(id).get().getAppId(),
+                String.format("Aplikasi %s melakukan pembaruan menjadi versi %s", appData.getName(), appData.getVersion())
+                );
+        return appDataRepository.save(appData);
     }
 
     @Override
-    public AppData updateImage(Long id, AppImageUpdate appImageUpdate) throws IOException{
-        if(isAppDoesNotExist(id)){
-            throw new AppDataDoesNotExistException();
-        }
-        else{
-            AppData appData = appDataRepository.findById(id).get();
-            appData.setImageUrl(storeFile(appImageUpdate.getImageFile()));
-            appDataValidator.validate(appData);
-            return appDataRepository.save(appData);
-        }
+    public AppData updateImage(Long id, AppImageUpdate appImageUpdate, Integer userId) throws IOException{
+        AppData appData = findById(id);
+        checkUserAuthorization(appData, userId);
+
+        appData.setImageUrl(storeFile(appImageUpdate.getImageFile()));
+        appDataValidator.validate(appData);
+        return appDataRepository.save(appData);
     }
+
     @Override
-    public AppData findById(Long id) throws IOException{
+    public void delete(Long id, Integer userId) throws IOException {
+        AppData appData = findById(id);
+        checkUserAuthorization(appData, userId);
+        appDataRepository.deleteById(id);
+    }
+
+    @Override
+    public AppData findById(Long id) throws IOException {
         Optional<AppData> appData = appDataRepository.findById(id);
-        if(isAppDoesNotExist(id)) {
+        if(appData.isEmpty()) {
             throw new AppDataDoesNotExistException();
-        }
-        else{
+        } else {
             return appData.get();
         }
     }
 
-    @Override
-    public void delete(Long id)throws IOException{
-        if(isAppDoesNotExist(id)){
-            throw new AppDataDoesNotExistException();
-        }
-        else{
-            appDataRepository.deleteById(String.valueOf(id));
-        }
-    }
     @Override
     public List<AppData> findAllVerifiedApps() {
         return appDataRepository.findByVerificationStatus(VerificationStatus.VERIFIED);
@@ -131,7 +138,10 @@ public class AppCRUDImpl implements AppCRUD {
         return appDataRepository.findByVerificationStatusIsNull();
     }
 
-    private boolean isAppDoesNotExist(Long id) {
-        return appDataRepository.findById(id).isEmpty();
+    private void checkUserAuthorization(AppData app, Integer userId) {
+        if (!app.getUserId().equals(userId)) {
+            throw new UnauthorizedException("User is not authorized");
+        }
     }
+
 }
