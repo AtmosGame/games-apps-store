@@ -12,7 +12,7 @@ public class APICallUtils {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readTree(jsonString);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new ServiceUnavailableException(errorMessage);
         }
     }
@@ -21,7 +21,7 @@ public class APICallUtils {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.treeToValue(jsonNode, valueType);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new ServiceUnavailableException(errorMessage);
         }
     }
