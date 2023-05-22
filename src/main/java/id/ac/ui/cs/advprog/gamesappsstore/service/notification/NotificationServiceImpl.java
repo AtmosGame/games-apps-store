@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +44,9 @@ public class NotificationServiceImpl implements  NotificationService{
         for(Subscriber subscriber : allSubwithUserId){
             notificationDataList.addAll(subscriber.getNotifications());
         }
+
+        Collections.sort(notificationDataList, Comparator.comparing(NotificationData::getTimestamp));
+        Collections.reverse(notificationDataList);
         return notificationDataList;
     }
 
