@@ -419,12 +419,19 @@ class AppCRUDTest {
             String temp = ".com";
             return invocation.getArgument(1, String.class) + temp;
         });
+        AppDev appDev = AppDev.builder()
+                .id(1L)
+                .appId((long)1)
+                .subscribers(new ArrayList<>())
+                .build();
+
         when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
             var appData1 = invocation.getArgument(0, AppData.class);
             appData1.setId((long)1);
             return appData1;
         });
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
 
         appCRUD.create(1, submitRequest);
         AppInstallerUpdate appInstallerUpdate1 = appInstallerUpdate;
@@ -464,7 +471,7 @@ class AppCRUDTest {
         when(notificationService.handleNewBroadcast(any(Long.class), any(String.class))).thenReturn(notificationData);
 
         AppData appDataBfr = appCRUD.create(1, submitRequest);
-        appInstallerUpdate.setVersion("1.0.0");
+        appInstallerUpdate.setVersion("1.0.1");
         AppData result = appCRUD.updateInstaller((long)appDataBfr.getId(), appInstallerUpdate, 1);
         AppData appData1 = appDataBfr;
         appData1.setVersion(appInstallerUpdate.getVersion());

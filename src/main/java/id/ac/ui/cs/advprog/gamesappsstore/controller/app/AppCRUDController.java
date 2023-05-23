@@ -21,6 +21,8 @@ public class AppCRUDController {
     @Autowired
     private AppCRUD appRegistrationService;
 
+    @GetMapping
+
     @PostMapping("/submit")
     @PreAuthorize("hasAuthority('app_data:create')")
     public ResponseEntity<AppData> submitForm(@ModelAttribute AppDataRequest request) throws IOException {
