@@ -25,6 +25,7 @@ public class AppInstallerValidator {
             if(!versionNumber.get(i).equals(beforeVersionNumber.get(i))){
                 if(versionNumber.get(i) < beforeVersionNumber.get(i)){
                     isValid = false;
+                    break;
                 }
                 else{
                     isValid = true;
