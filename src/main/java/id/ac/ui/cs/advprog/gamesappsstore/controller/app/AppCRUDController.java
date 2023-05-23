@@ -1,9 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.app;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppCRUD;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RestController
@@ -21,6 +19,11 @@ public class AppCRUDController {
     @Autowired
     private AppCRUD appRegistrationService;
 
+    @GetMapping("/all")
+    public ResponseEntity<List<AppDetailResponseStatus>> getAll() {
+        List<AppDetailResponseStatus> appDetailResponseStatusList = appRegistrationService.findAllApp();
+        return ResponseEntity.ok(appDetailResponseStatusList);
+    }
     @PostMapping("/submit")
     @PreAuthorize("hasAuthority('app_data:create')")
     public ResponseEntity<AppData> submitForm(@ModelAttribute AppDataRequest request) throws IOException {
@@ -40,9 +43,17 @@ public class AppCRUDController {
     }
 
     @GetMapping ("/{id}")
-    public ResponseEntity<AppData> getApp(@PathVariable Long id) throws IOException {
-        AppData response = appRegistrationService.findById(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<AppDetailResponseStatus> getApp(@PathVariable Long id) throws IOException {
+        AppData appData = appRegistrationService.findById(id);
+        return ResponseEntity.ok(AppDetailResponseStatus.builder()
+                .id(appData.getId())
+                .name(appData.getName())
+                .imageUrl(appData.getImageUrl())
+                .description(appData.getDescription())
+                .version(appData.getVersion())
+                .price(appData.getPrice())
+                .verificationStatus(appData.getVerificationStatus())
+                .build());
     }
 
     @PutMapping ("/{id}/installer")
