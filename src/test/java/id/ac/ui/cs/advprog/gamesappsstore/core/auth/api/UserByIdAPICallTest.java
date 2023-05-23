@@ -21,15 +21,13 @@ import static org.mockito.ArgumentMatchers.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-class UserDetailsAPICallTest {
-    private final String jwtToken = "Bearer aisojasoifjas.dsfsdjifsdofj";
-
+class UserByIdAPICallTest {
     @Mock
     private RestTemplate restTemplate;
 
     @InjectMocks
     @Autowired
-    private UserDetailsAPICall userDetailsAPICall;
+    private UserByIdAPICall userByIdAPICall;
 
     @Test
     void whenUserTest() {
@@ -44,7 +42,7 @@ class UserDetailsAPICallTest {
                   "active": true
                 }
                 """;
-        User user3 = User.builder()
+        User expectedUser = User.builder()
                 .id(3)
                 .username("eheez")
                 .role(UserRole.USER)
@@ -57,46 +55,16 @@ class UserDetailsAPICallTest {
                 any(HttpEntity.class),
                 eq(String.class)
         )).thenReturn(new ResponseEntity<>(expectedResponse, HttpStatusCode.valueOf(200)));
-        User user = userDetailsAPICall.execute(jwtToken);
-        Assertions.assertEquals(user3, user);
-    }
-
-    @Test
-    void whenDeveloperTest() {
-        String expectedResponse = """
-                {
-                  "id": 1,
-                  "username": "ehee",
-                  "role": "DEVELOPER",
-                  "profilePicture": "https://google.com",
-                  "bio": "bio",
-                  "applications": "applications",
-                  "active": true
-                }
-                """;
-        User user1 = User.builder()
-                .id(1)
-                .username("ehee")
-                .role(UserRole.DEVELOPER)
-                .active(true)
-                .profilePicture("https://google.com")
-                .build();
-        Mockito.when(restTemplate.exchange(
-                any(String.class),
-                eq(HttpMethod.GET),
-                any(HttpEntity.class),
-                eq(String.class)
-        )).thenReturn(new ResponseEntity<>(expectedResponse, HttpStatusCode.valueOf(200)));
-        User user = userDetailsAPICall.execute(jwtToken);
-        Assertions.assertEquals(user1, user);
+        User user = userByIdAPICall.execute(3);
+        Assertions.assertEquals(expectedUser, user);
     }
 
     @Test
     void whenAdminTest() {
         String expectedResponse = """
                 {
-                  "id": 2,
-                  "username": "ehees",
+                  "id": 3,
+                  "username": "eheez",
                   "role": "ADMIN",
                   "profilePicture": "https://google.com",
                   "bio": "bio",
@@ -104,9 +72,9 @@ class UserDetailsAPICallTest {
                   "active": true
                 }
                 """;
-        User user2 = User.builder()
-                .id(2)
-                .username("ehees")
+        User expectedUser = User.builder()
+                .id(3)
+                .username("eheez")
                 .role(UserRole.ADMIN)
                 .active(true)
                 .profilePicture("https://google.com")
@@ -117,14 +85,44 @@ class UserDetailsAPICallTest {
                 any(HttpEntity.class),
                 eq(String.class)
         )).thenReturn(new ResponseEntity<>(expectedResponse, HttpStatusCode.valueOf(200)));
-        User user = userDetailsAPICall.execute(jwtToken);
-        Assertions.assertEquals(user2, user);
+        User user = userByIdAPICall.execute(3);
+        Assertions.assertEquals(expectedUser, user);
+    }
+
+    @Test
+    void whenDeveloperTest() {
+        String expectedResponse = """
+                {
+                  "id": 3,
+                  "username": "eheez",
+                  "role": "DEVELOPER",
+                  "profilePicture": "https://google.com",
+                  "bio": "bio",
+                  "applications": "applications",
+                  "active": true
+                }
+                """;
+        User expectedUser = User.builder()
+                .id(3)
+                .username("eheez")
+                .role(UserRole.DEVELOPER)
+                .active(true)
+                .profilePicture("https://google.com")
+                .build();
+        Mockito.when(restTemplate.exchange(
+                any(String.class),
+                eq(HttpMethod.GET),
+                any(HttpEntity.class),
+                eq(String.class)
+        )).thenReturn(new ResponseEntity<>(expectedResponse, HttpStatusCode.valueOf(200)));
+        User user = userByIdAPICall.execute(3);
+        Assertions.assertEquals(expectedUser, user);
     }
 
     @Test
     void whenNullExecuteTest() {
         Assertions.assertThrows(NullPointerException.class, () -> {
-            userDetailsAPICall.execute(null);
+            userByIdAPICall.execute(null);
         });
     }
 }

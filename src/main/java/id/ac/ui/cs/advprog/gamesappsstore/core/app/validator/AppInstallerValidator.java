@@ -20,13 +20,15 @@ public class AppInstallerValidator {
         ArrayList<Integer> versionNumber = stringToList(currentVersion);
         ArrayList<Integer> beforeVersionNumber = stringToList(beforeVersion);
 
-        boolean isValid = true;
+        boolean isValid = false;
         for(int i = 0; i < versionNumber.size(); i++){
             if(!versionNumber.get(i).equals(beforeVersionNumber.get(i))){
                 if(versionNumber.get(i) < beforeVersionNumber.get(i)){
                     isValid = false;
+                    break;
                 }
                 else{
+                    isValid = true;
                     break;
                 }
             }

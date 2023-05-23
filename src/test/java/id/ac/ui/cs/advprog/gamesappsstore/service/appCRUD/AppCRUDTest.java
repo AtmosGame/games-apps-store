@@ -283,7 +283,7 @@ class AppCRUDTest {
         appProfileUpdate.setAppName("");
 
         Assertions.assertThrows(EmptyFormException.class, () -> {
-            appCRUD.updateProfile(appDataBfr.getId(), appProfileUpdate, 1);
+            appCRUD.updateProfile(1L, appProfileUpdate, 1);
         });
     }
 
@@ -413,8 +413,14 @@ class AppCRUDTest {
             appCRUD.updateInstaller((long)100, appInstallerUpdate, 1);
         });
     }
+
     @Test
     void versionNotGreater() throws IOException{
+        AppDev appDev = AppDev.builder()
+                .id(1L)
+                .appId((long)1)
+                .subscribers(new ArrayList<>())
+                .build();
         when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
             String temp = ".com";
             return invocation.getArgument(1, String.class) + temp;
@@ -425,6 +431,9 @@ class AppCRUDTest {
             return appData1;
         });
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+        when(appDeveloperRepository.findByAppId(any(Long.class))).thenReturn(Optional.of(appDev));
+
+
 
         appCRUD.create(1, submitRequest);
         AppInstallerUpdate appInstallerUpdate1 = appInstallerUpdate;
@@ -464,7 +473,7 @@ class AppCRUDTest {
         when(notificationService.handleNewBroadcast(any(Long.class), any(String.class))).thenReturn(notificationData);
 
         AppData appDataBfr = appCRUD.create(1, submitRequest);
-        appInstallerUpdate.setVersion("1.0.0");
+        appInstallerUpdate.setVersion("1.0.1");
         AppData result = appCRUD.updateInstaller((long)appDataBfr.getId(), appInstallerUpdate, 1);
         AppData appData1 = appDataBfr;
         appData1.setVersion(appInstallerUpdate.getVersion());
@@ -474,6 +483,11 @@ class AppCRUDTest {
 
     @Test
     void deleteAndFound() throws IOException{
+        AppDev appDev = AppDev.builder()
+                .id(1L)
+                .appId((long)1)
+                .subscribers(new ArrayList<>())
+                .build();
         when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
             String temp = ".com";
             return invocation.getArgument(1, String.class) + temp;
@@ -484,6 +498,7 @@ class AppCRUDTest {
             return appData1;
         });
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
 
         appCRUD.create(1, submitRequest);
         appCRUD.delete((long)1, 1);

@@ -42,10 +42,6 @@ public class IsAppOwnedAPICall {
         return headers;
     }
 
-    private MultiValueMap<String, String> getBody() {
-        return new LinkedMultiValueMap<>();
-    }
-
     private ResponseEntity<String> getResponse(HttpEntity<CheckPurchasedRequest> request) {
         return restTemplate.exchange(
                 endPoint,

@@ -1,25 +1,26 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.verification;
 
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
-import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class VerificationService {
-    private final AppDataRepository appDataRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    private AppDataRepository appDataRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public List<AppData> findAllVerifiedApps() {
         return appDataRepository.findByVerificationStatus(VerificationStatus.VERIFIED);
@@ -47,6 +48,7 @@ public class VerificationService {
 
     public void verify(Integer adminId, Long id) {
         User admin = userRepository.getById(adminId);
+        System.out.println(admin);
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.verify(admin);
@@ -74,7 +76,7 @@ public class VerificationService {
     private AppData getAppOrNotFound(Long id) {
         var appData = appDataRepository.findById(id);
         if (appData.isEmpty()) {
-            throw new AppDataNotFoundException(id);
+            throw new AppDataDoesNotExistException();
         }
         return appData.get();
     }

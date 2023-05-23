@@ -1,15 +1,22 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.verification;
 
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.user.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +30,10 @@ class VerificationServiceTest {
     @Autowired
     private AppDataRepository appDataRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
     @Autowired
     private VerificationService verificationService;
 
@@ -111,22 +122,33 @@ class VerificationServiceTest {
 
     @Test
     void appNotFound() {
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             verificationService.verify(1, 4L);
         });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             verificationService.reject(1, 4L);
         });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             verificationService.requestReverification(2, 4L);
         });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             verificationService.getAppDetail(4L);
         });
     }
 
     @Test
     void verifyApp() {
+        User user = User.builder()
+                .id(1)
+                .username("eheez")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+
+        Mockito
+                .when(userRepository.getById(ArgumentMatchers.any(Integer.class)))
+                .thenReturn(user);
+
         verificationService.verify(1, 1L);
 
         var appDataOptional = appDataRepository.findById(1L);
@@ -138,6 +160,17 @@ class VerificationServiceTest {
 
     @Test
     void rejectApp() {
+        User user = User.builder()
+                .id(1)
+                .username("eheez")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+
+        Mockito
+                .when(userRepository.getById(ArgumentMatchers.any(Integer.class)))
+                .thenReturn(user);
+
         verificationService.reject(1, 1L);
 
         var appDataOptional = appDataRepository.findById(1L);
