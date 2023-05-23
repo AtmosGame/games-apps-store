@@ -1,5 +1,8 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.app;
 
+import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailValidationRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailValidationResponse;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailFullResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
@@ -16,6 +19,21 @@ public class AppDetailServiceImpl implements AppDetailService {
     public AppDetailFullResponse getAppDetailbyId(Long id){
         Optional<AppData> appData = appDataRepository.findById(id);
         return appData.map(this::createAppDetailResponse).orElse(null);
+    }
+
+    public AppDetailValidationResponse validateApp(AppDetailValidationRequest request) {
+        var appDataOptional = appDataRepository.findById(request.getId());
+        if (appDataOptional.isEmpty()) {
+            throw new AppDataDoesNotExistException();
+        }
+        AppData appData = appDataOptional.get();
+        if (!appData.getName().equals(request.getName())) {
+            return new AppDetailValidationResponse(false);
+        }
+        if (!appData.getPrice().equals(request.getPrice())) {
+            return new AppDetailValidationResponse(false);
+        }
+        return new AppDetailValidationResponse(true);
     }
 
     public AppDetailFullResponse createAppDetailResponse(AppData appData){
