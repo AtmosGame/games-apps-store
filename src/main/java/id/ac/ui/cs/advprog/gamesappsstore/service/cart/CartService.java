@@ -3,8 +3,8 @@ package id.ac.ui.cs.advprog.gamesappsstore.service.cart;
 import id.ac.ui.cs.advprog.gamesappsstore.core.cart.api.DeleteCartAPICall;
 import id.ac.ui.cs.advprog.gamesappsstore.core.cart.api.IsAppInCartAPICall;
 import id.ac.ui.cs.advprog.gamesappsstore.core.cart.api.UpdateCartAPICall;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppInCartException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.cart.AppInCartException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class CartService {
     private AppData getAppOrNotFound(Long appId) {
         var appOptional = appDataRepository.findById(appId);
         if (appOptional.isEmpty()) {
-            throw new AppDataNotFoundException(appId);
+            throw new AppDataDoesNotExistException();
         }
         return appOptional.get();
     }

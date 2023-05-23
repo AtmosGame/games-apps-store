@@ -1,9 +1,9 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.verification;
 
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import org.junit.jupiter.api.Assertions;
@@ -111,16 +111,16 @@ class VerificationServiceTest {
 
     @Test
     void appNotFound() {
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             verificationService.verify(1, 4L);
         });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             verificationService.reject(1, 4L);
         });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             verificationService.requestReverification(2, 4L);
         });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             verificationService.getAppDetail(4L);
         });
     }

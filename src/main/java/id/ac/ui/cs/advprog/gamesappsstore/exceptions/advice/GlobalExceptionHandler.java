@@ -1,5 +1,11 @@
 package id.ac.ui.cs.advprog.gamesappsstore.exceptions.advice;
 
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ForbiddenMethodCall;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.auth.UserNotFoundException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.cart.AppInCartException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.*;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.AppDevDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.SubscriberAlreadySubscribeExepction;
@@ -18,7 +24,9 @@ public class GlobalExceptionHandler {
             LongDescriptionException.class, PriceRangeException.class,
             AppDataDoesNotExistException.class, GreaterVersionException.class,
             AppDevDoesNotExistException.class, SubscriberAlreadySubscribeExepction.class,
-            SubscriberDoesNotExistException.class})
+            SubscriberDoesNotExistException.class, UserNotFoundException.class,
+            AppInCartException.class, PayloadTooLargeException.class, ForbiddenMethodCall.class,
+            NoSetupException.class, ServiceUnavailableException.class, UnauthorizedException.class})
     public ResponseEntity<Object> errorException(Exception exception) {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
         ErrorTemplate baseException = new ErrorTemplate(
