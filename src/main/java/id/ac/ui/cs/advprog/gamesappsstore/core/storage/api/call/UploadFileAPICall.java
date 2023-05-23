@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.PayloadTooLargeException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.PayloadTooLargeException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;

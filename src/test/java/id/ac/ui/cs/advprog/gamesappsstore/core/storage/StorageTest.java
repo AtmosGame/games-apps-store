@@ -37,7 +37,8 @@ class StorageTest {
     void uploadFileTest() {
         String accessToken = "ini.access.tokennya";
         String path = "/Test/Hehe.txt";
-        String expectedUrl = "https://storage.com/test/hehe.txt";
+        String expectedUrl1 = "https://storage.com/test/hehe.txt";
+        String expectedUrl2 = "https://storage.com/test/hehe.txt?raw=1";
 
         InputStream file = new ByteArrayInputStream("Test Upload File".getBytes());
 
@@ -46,8 +47,8 @@ class StorageTest {
         Mockito.when(storageAPICallCreator.create("share_url")).thenReturn(shareURLAPICall);
         Mockito.when(accessTokenAPICall.execute()).thenReturn(accessToken);
         Mockito.when(uploadFileAPICall.execute()).thenReturn(path);
-        Mockito.when(shareURLAPICall.execute()).thenReturn(expectedUrl);
+        Mockito.when(shareURLAPICall.execute()).thenReturn(expectedUrl1);
         String url = storage.uploadFile(file, path);
-        Assertions.assertEquals(expectedUrl, url);
+        Assertions.assertEquals(expectedUrl2, url);
     }
 }
