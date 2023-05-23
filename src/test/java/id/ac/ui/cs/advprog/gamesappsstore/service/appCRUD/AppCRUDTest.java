@@ -413,24 +413,26 @@ class AppCRUDTest {
             appCRUD.updateInstaller((long)100, appInstallerUpdate, 1);
         });
     }
+
     @Test
     void versionNotGreater() throws IOException{
-        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
-            String temp = ".com";
-            return invocation.getArgument(1, String.class) + temp;
-        });
         AppDev appDev = AppDev.builder()
                 .id(1L)
                 .appId((long)1)
                 .subscribers(new ArrayList<>())
                 .build();
-
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
         when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
             var appData1 = invocation.getArgument(0, AppData.class);
             appData1.setId((long)1);
             return appData1;
         });
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+        when(appDeveloperRepository.findByAppId(any(Long.class))).thenReturn(Optional.of(appDev));
+
 
 
         appCRUD.create(1, submitRequest);
@@ -481,6 +483,11 @@ class AppCRUDTest {
 
     @Test
     void deleteAndFound() throws IOException{
+        AppDev appDev = AppDev.builder()
+                .id(1L)
+                .appId((long)1)
+                .subscribers(new ArrayList<>())
+                .build();
         when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
             String temp = ".com";
             return invocation.getArgument(1, String.class) + temp;
@@ -491,6 +498,7 @@ class AppCRUDTest {
             return appData1;
         });
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
 
         appCRUD.create(1, submitRequest);
         appCRUD.delete((long)1, 1);

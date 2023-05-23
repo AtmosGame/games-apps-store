@@ -1,9 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.app;
 
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
@@ -131,9 +128,18 @@ class AppCRUDControllerTest {
 
     @Test
     void getAppTest() throws IOException {
-        AppData expected = appData;
 
         when(appCRUD.findById(any(Long.class))).thenReturn(appData);
+
+        AppDetailResponseStatus expected = AppDetailResponseStatus.builder()
+                .id(appData.getId())
+                .name(appData.getName())
+                .imageUrl(appData.getImageUrl())
+                .description(appData.getDescription())
+                .version(appData.getVersion())
+                .price(appData.getPrice())
+                .verificationStatus(appData.getVerificationStatus())
+                .build();
 
         var response = appCRUDController.getApp(1L);
         Assertions.assertEquals(expected, response.getBody());
