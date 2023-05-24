@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @NoArgsConstructor
 public class UpdateCartAPICall {
-    @Value("${atmos.microservices.payment.url}/cart")
+    @Value("${atmos.microservices.payment.url}/api/v1/cart")
     private String endPoint;
 
     private RestTemplate restTemplate = new RestTemplate();
