@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.auth.api;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.auth.UserDetailsResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
@@ -16,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @NoArgsConstructor
 public class UserDetailsAPICall {
-    @Value("${atmos.microservices.auth_admin.url}/auth/current")
+    @Value("${atmos.microservices.auth_admin.url}/v1/user/current")
     private String endPoint;
 
     private RestTemplate restTemplate = new RestTemplate();
@@ -54,6 +55,7 @@ public class UserDetailsAPICall {
                 response.getBody(),
                 "Error on authentication"
         );
+        ((ObjectNode) jsonNode).remove("reportList");
         var userDetailsResponse = APICallUtils.jsonNodeToObject(
                 jsonNode,
                 UserDetailsResponse.class,
