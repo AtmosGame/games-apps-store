@@ -1,6 +1,5 @@
 package id.ac.ui.cs.advprog.gamesappsstore.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
