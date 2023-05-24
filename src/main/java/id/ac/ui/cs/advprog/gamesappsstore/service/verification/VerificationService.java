@@ -8,6 +8,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
+import id.ac.ui.cs.advprog.gamesappsstore.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

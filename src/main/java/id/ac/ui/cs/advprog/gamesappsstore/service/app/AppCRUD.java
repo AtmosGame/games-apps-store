@@ -1,6 +1,5 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.app;
 
-import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +17,4 @@ public interface AppCRUD {
     AppData findById(Long id) throws IOException;
     List<AppDetailResponseStatus> findAllApp();
 
-    List<AppData> findAllVerifiedApps();
-    List<AppData> findAllUnverifiedApps();
 }
