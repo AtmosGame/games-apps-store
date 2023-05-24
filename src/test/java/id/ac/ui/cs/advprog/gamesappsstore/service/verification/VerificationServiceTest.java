@@ -8,15 +8,11 @@ import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
-import id.ac.ui.cs.advprog.gamesappsstore.repository.user.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,9 +25,6 @@ import java.util.List;
 class VerificationServiceTest {
     @Autowired
     private AppDataRepository appDataRepository;
-
-    @Mock
-    private UserRepository userRepository;
 
     @InjectMocks
     @Autowired
@@ -122,14 +115,21 @@ class VerificationServiceTest {
 
     @Test
     void appNotFound() {
+        User user = User.builder()
+                .id(1)
+                .username("eheez")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+
         Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
-            verificationService.verify(1, 4L);
+            verificationService.verify(user, 4L);
         });
         Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
-            verificationService.reject(1, 4L);
+            verificationService.reject(user, 4L);
         });
         Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
-            verificationService.requestReverification(2, 4L);
+            verificationService.requestReverification(user, 4L);
         });
         Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             verificationService.getAppDetail(4L);
@@ -145,11 +145,7 @@ class VerificationServiceTest {
                 .active(true)
                 .build();
 
-        Mockito
-                .when(userRepository.getById(ArgumentMatchers.any(Integer.class)))
-                .thenReturn(user);
-
-        verificationService.verify(1, 1L);
+        verificationService.verify(user, 1L);
 
         var appDataOptional = appDataRepository.findById(1L);
         Assertions.assertTrue(appDataOptional.isPresent());
@@ -167,11 +163,7 @@ class VerificationServiceTest {
                 .active(true)
                 .build();
 
-        Mockito
-                .when(userRepository.getById(ArgumentMatchers.any(Integer.class)))
-                .thenReturn(user);
-
-        verificationService.reject(1, 1L);
+        verificationService.reject(user, 1L);
 
         var appDataOptional = appDataRepository.findById(1L);
         Assertions.assertTrue(appDataOptional.isPresent());
@@ -182,7 +174,14 @@ class VerificationServiceTest {
 
     @Test
     void requestReverificationOwner() {
-        verificationService.requestReverification(2, 3L);
+        User user = User.builder()
+                .id(2)
+                .username("eheez")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+
+        verificationService.requestReverification(user, 3L);
 
         var appDataOptional = appDataRepository.findById(3L);
         Assertions.assertTrue(appDataOptional.isPresent());
@@ -193,8 +192,15 @@ class VerificationServiceTest {
 
     @Test
     void requestReverificationNotOwner() {
+        User user = User.builder()
+                .id(1)
+                .username("eheez")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+
         Assertions.assertThrows(UnauthorizedException.class, () -> {
-            verificationService.requestReverification(3, 3L);
+            verificationService.requestReverification(user, 3L);
         });
     }
 }

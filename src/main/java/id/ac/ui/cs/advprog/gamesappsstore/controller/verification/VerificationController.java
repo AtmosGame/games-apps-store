@@ -43,7 +43,7 @@ public class VerificationController {
     @PreAuthorize("hasAuthority('verification:verify')")
     public ResponseEntity<StatusResponse> verifyApp(@PathVariable Long id) {
         User admin = ControllerUtils.getCurrentUser();
-        verificationService.verify(admin.getId(), id);
+        verificationService.verify(admin, id);
         StatusResponse response = new StatusResponse("Verified app with id " + id);
         return ResponseEntity.ok(response);
     }
@@ -52,7 +52,7 @@ public class VerificationController {
     @PreAuthorize("hasAuthority('verification:reject')")
     public ResponseEntity<StatusResponse> rejectApp(@PathVariable Long id) {
         User admin = ControllerUtils.getCurrentUser();
-        verificationService.reject(admin.getId(), id);
+        verificationService.reject(admin, id);
         StatusResponse response = new StatusResponse("Rejected app with id " + id);
         return ResponseEntity.ok(response);
     }
@@ -61,7 +61,7 @@ public class VerificationController {
     @PreAuthorize("hasAuthority('verification:request_reverification')")
     public ResponseEntity<StatusResponse> requestReverificationApp(@PathVariable Long id) {
         User user = ControllerUtils.getCurrentUser();
-        verificationService.requestReverification(user.getId(), id);
+        verificationService.requestReverification(user, id);
         StatusResponse response = new StatusResponse("Requested reverification for app with id " + id);
         return ResponseEntity.ok(response);
     }
