@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.auth.api;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.auth.UserDetailsResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
@@ -53,6 +54,7 @@ public class UserByIdAPICall {
                 response.getBody(),
                 "Error on storage authentication"
         );
+        ((ObjectNode) jsonNode).remove("reportList");
         var userDetailsResponse = APICallUtils.jsonNodeToObject(
                 jsonNode,
                 UserDetailsResponse.class,
