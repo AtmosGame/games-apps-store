@@ -8,8 +8,6 @@ import id.ac.ui.cs.advprog.gamesappsstore.core.verification.AppDataVerification;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
-import id.ac.ui.cs.advprog.gamesappsstore.repository.user.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +17,6 @@ import java.util.List;
 public class VerificationService {
     @Autowired
     private AppDataRepository appDataRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     public List<AppData> findAllVerifiedApps() {
         return appDataRepository.findByVerificationStatus(VerificationStatus.VERIFIED);
@@ -46,25 +42,24 @@ public class VerificationService {
         );
     }
 
-    public void verify(Integer adminId, Long id) {
-        User admin = userRepository.getById(adminId);
+    public void verify(User admin, Long id) {
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.verify(admin);
         appDataRepository.save(appData);
     }
 
-    public void reject(Integer adminId, Long id) {
-        User admin = userRepository.getById(adminId);
+    public void reject(User admin, Long id) {
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.reject(admin);
         appDataRepository.save(appData);
     }
 
-    public void requestReverification(Integer userId, Long id) {
+    public void requestReverification(User user, Long id) {
         AppData appData = getAppOrNotFound(id);
-        if (!appData.getUserId().equals(userId)) {
+        System.out.println("DEBUG: " + appData.getUserId() + " " + user.getId());
+        if (!appData.getUserId().equals(user.getId())) {
             throw new UnauthorizedException("User is not the app's owner");
         }
         AppDataVerification verification = new AppDataVerification(appData);

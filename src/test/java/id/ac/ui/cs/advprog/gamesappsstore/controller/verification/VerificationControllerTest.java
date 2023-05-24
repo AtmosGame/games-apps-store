@@ -144,7 +144,7 @@ class VerificationControllerTest {
         Mockito
                 .doNothing()
                 .when(verificationService)
-                .verify(isA(Integer.class), isA(Long.class));
+                .verify(isA(User.class), isA(Long.class));
         Mockito.when(authentication.getPrincipal()).thenReturn(user);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         ResponseEntity<StatusResponse> response = verificationController.verifyApp(1L);
@@ -158,7 +158,7 @@ class VerificationControllerTest {
         Mockito
                 .doNothing()
                 .when(verificationService)
-                .reject(isA(Integer.class), isA(Long.class));
+                .reject(isA(User.class), isA(Long.class));
         Mockito.when(authentication.getPrincipal()).thenReturn(user);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         ResponseEntity<StatusResponse> response = verificationController.rejectApp(1L);
@@ -172,7 +172,7 @@ class VerificationControllerTest {
         Mockito
                 .doNothing()
                 .when(verificationService)
-                .requestReverification(isA(Integer.class), isA(Long.class));
+                .requestReverification(isA(User.class), isA(Long.class));
         Mockito.when(authentication.getPrincipal()).thenReturn(user);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         ResponseEntity<StatusResponse> response = verificationController.requestReverificationApp(1L);
