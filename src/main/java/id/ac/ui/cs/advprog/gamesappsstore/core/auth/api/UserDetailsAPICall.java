@@ -70,10 +70,10 @@ public class UserDetailsAPICall {
 
     private UserRole stringToUserRole(String roleString) {
         switch (roleString) {
-            case "admin" -> {
+            case "ADMIN" -> {
                 return UserRole.ADMIN;
             }
-            case "developer" -> {
+            case "DEVELOPER" -> {
                 return UserRole.DEVELOPER;
             }
             default -> {

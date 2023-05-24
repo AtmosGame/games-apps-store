@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api;
+package id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.call;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.api.call.UploadFileAPICall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
