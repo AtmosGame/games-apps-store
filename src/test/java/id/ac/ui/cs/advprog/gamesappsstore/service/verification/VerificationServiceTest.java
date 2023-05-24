@@ -1,15 +1,18 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.verification;
 
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailResponse;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.AppDataNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
+import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +26,7 @@ class VerificationServiceTest {
     @Autowired
     private AppDataRepository appDataRepository;
 
+    @InjectMocks
     @Autowired
     private VerificationService verificationService;
 
@@ -111,23 +115,37 @@ class VerificationServiceTest {
 
     @Test
     void appNotFound() {
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
-            verificationService.verify(1, 4L);
+        User user = User.builder()
+                .id(1)
+                .username("eheez")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
+            verificationService.verify(user, 4L);
         });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
-            verificationService.reject(1, 4L);
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
+            verificationService.reject(user, 4L);
         });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
-            verificationService.requestReverification(2, 4L);
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
+            verificationService.requestReverification(user, 4L);
         });
-        Assertions.assertThrows(AppDataNotFoundException.class, () -> {
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             verificationService.getAppDetail(4L);
         });
     }
 
     @Test
     void verifyApp() {
-        verificationService.verify(1, 1L);
+        User user = User.builder()
+                .id(1)
+                .username("eheez")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+
+        verificationService.verify(user, 1L);
 
         var appDataOptional = appDataRepository.findById(1L);
         Assertions.assertTrue(appDataOptional.isPresent());
@@ -138,7 +156,14 @@ class VerificationServiceTest {
 
     @Test
     void rejectApp() {
-        verificationService.reject(1, 1L);
+        User user = User.builder()
+                .id(1)
+                .username("eheez")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+
+        verificationService.reject(user, 1L);
 
         var appDataOptional = appDataRepository.findById(1L);
         Assertions.assertTrue(appDataOptional.isPresent());
@@ -149,7 +174,14 @@ class VerificationServiceTest {
 
     @Test
     void requestReverificationOwner() {
-        verificationService.requestReverification(2, 3L);
+        User user = User.builder()
+                .id(2)
+                .username("eheez")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+
+        verificationService.requestReverification(user, 3L);
 
         var appDataOptional = appDataRepository.findById(3L);
         Assertions.assertTrue(appDataOptional.isPresent());
@@ -160,8 +192,15 @@ class VerificationServiceTest {
 
     @Test
     void requestReverificationNotOwner() {
+        User user = User.builder()
+                .id(1)
+                .username("eheez")
+                .role(UserRole.ADMIN)
+                .active(true)
+                .build();
+
         Assertions.assertThrows(UnauthorizedException.class, () -> {
-            verificationService.requestReverification(3, 3L);
+            verificationService.requestReverification(user, 3L);
         });
     }
 }

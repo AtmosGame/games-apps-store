@@ -1,12 +1,8 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.app;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.AppCRUD;
-import id.ac.ui.cs.advprog.gamesappsstore.service.verification.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,13 +17,18 @@ import java.util.List;
 @RestController
 public class AppCRUDController {
     @Autowired
-    private AppCRUD appRegistrationService;
+    private AppCRUD appCRUD;
 
+    @GetMapping("/all")
+    public ResponseEntity<List<AppDetailResponseStatus>> getAll() {
+        List<AppDetailResponseStatus> appDetailResponseStatusList = appCRUD.findAllApp();
+        return ResponseEntity.ok(appDetailResponseStatusList);
+    }
     @PostMapping("/submit")
     @PreAuthorize("hasAuthority('app_data:create')")
     public ResponseEntity<AppData> submitForm(@ModelAttribute AppDataRequest request) throws IOException {
         Integer userId = getCurrentUser().getId();
-        AppData response = appRegistrationService.create(userId, request);
+        AppData response = appCRUD.create(userId, request);
         return ResponseEntity.ok(response);
     }
 
@@ -37,14 +38,22 @@ public class AppCRUDController {
             @PathVariable Long id,
             @ModelAttribute AppProfileUpdate request) throws IOException {
         Integer userId = getCurrentUser().getId();
-        AppData response = appRegistrationService.updateProfile(id, request, userId);
+        AppData response = appCRUD.updateProfile(id, request, userId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping ("/{id}")
-    public ResponseEntity<AppData> getApp(@PathVariable Long id) throws IOException {
-        AppData response = appRegistrationService.findById(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<AppDetailResponseStatus> getApp(@PathVariable Long id) throws IOException {
+        AppData appData = appCRUD.findById(id);
+        return ResponseEntity.ok(AppDetailResponseStatus.builder()
+                .id(appData.getId())
+                .name(appData.getName())
+                .imageUrl(appData.getImageUrl())
+                .description(appData.getDescription())
+                .version(appData.getVersion())
+                .price(appData.getPrice())
+                .verificationStatus(appData.getVerificationStatus())
+                .build());
     }
 
     @PutMapping ("/{id}/installer")
@@ -53,7 +62,7 @@ public class AppCRUDController {
             @PathVariable Long id,
             @ModelAttribute AppInstallerUpdate request) throws IOException {
         Integer userId = getCurrentUser().getId();
-        AppData response = appRegistrationService.updateInstaller(id, request, userId);
+        AppData response = appCRUD.updateInstaller(id, request, userId);
         return ResponseEntity.ok(response);
     }
 
@@ -63,7 +72,7 @@ public class AppCRUDController {
             @PathVariable Long id,
             @ModelAttribute AppImageUpdate request) throws IOException {
         Integer userId = getCurrentUser().getId();
-        AppData response = appRegistrationService.updateImage(id, request, userId);
+        AppData response = appCRUD.updateImage(id, request, userId);
         return ResponseEntity.ok(response);
     }
 
@@ -71,7 +80,7 @@ public class AppCRUDController {
     @PreAuthorize("hasAuthority('app_data:delete')")
     public ResponseEntity<String> deleteApp(@PathVariable Long id) throws IOException {
         Integer userId = getCurrentUser().getId();
-        appRegistrationService.delete(id, userId);
+        appCRUD.delete(id, userId);
         return ResponseEntity.ok(String.format("Menghapus App dengan id %d", id));
     }
 

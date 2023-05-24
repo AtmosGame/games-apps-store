@@ -32,12 +32,12 @@ class UserDetailsAPICallTest {
     private UserDetailsAPICall userDetailsAPICall;
 
     @Test
-    void whenUserUserTest() {
+    void whenUserTest() {
         String expectedResponse = """
                 {
                   "id": 3,
                   "username": "eheez",
-                  "role": "user",
+                  "role": "USER",
                   "profilePicture": "https://google.com",
                   "bio": "bio",
                   "applications": "applications",
@@ -62,12 +62,12 @@ class UserDetailsAPICallTest {
     }
 
     @Test
-    void whenUserDeveloperTest() {
+    void whenDeveloperTest() {
         String expectedResponse = """
                 {
                   "id": 1,
                   "username": "ehee",
-                  "role": "developer",
+                  "role": "DEVELOPER",
                   "profilePicture": "https://google.com",
                   "bio": "bio",
                   "applications": "applications",
@@ -92,12 +92,12 @@ class UserDetailsAPICallTest {
     }
 
     @Test
-    void whenUserAdminTest() {
+    void whenAdminTest() {
         String expectedResponse = """
                 {
                   "id": 2,
                   "username": "ehees",
-                  "role": "admin",
+                  "role": "ADMIN",
                   "profilePicture": "https://google.com",
                   "bio": "bio",
                   "applications": "applications",

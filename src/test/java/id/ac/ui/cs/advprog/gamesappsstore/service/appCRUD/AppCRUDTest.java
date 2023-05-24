@@ -1,12 +1,10 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.appCRUD;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.*;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.AppDevDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
@@ -18,6 +16,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,8 +33,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AppCRUDTest {
-    @InjectMocks
-    private AppCRUDImpl appCRUD;
+
     @Mock
     Storage storage;
     @Mock
@@ -44,12 +42,15 @@ class AppCRUDTest {
     AppDeveloperRepository appDeveloperRepository;
     @Mock
     NotificationServiceImpl notificationService;
+    @InjectMocks
+    private AppCRUDImpl appCRUD;
 
     AppDataRequest submitRequest;
     AppProfileUpdate appProfileUpdate;
     AppImageUpdate appImageUpdate;
     AppInstallerUpdate appInstallerUpdate;
     AppData appData;
+    AppData appData1;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -100,10 +101,40 @@ class AppCRUDTest {
                 .price(4.99)
                 .verificationStatus(VerificationStatus.UNVERIFIED)
                 .build();
+
+        appData1 = AppData.builder()
+                .id((long)2)
+                .userId(1)
+                .name("helo app")
+                .imageUrl(appCRUD.storeFile(imagePng))
+                .description("This is a great app for all your needs")
+                .installerUrl(appCRUD.storeFile(installerExe))
+                .version("1.0.0")
+                .price(4.99)
+                .verificationStatus(VerificationStatus.UNVERIFIED)
+                .build();
     }
     @AfterEach
     void reset(){
         appDataRepository.deleteAll();
+    }
+
+    @Test
+    void successFindAllApp(){
+
+        List<AppData> appDataListTest = new ArrayList<>();
+        List<AppDetailResponseStatus> appDetailResponseStatusList = new ArrayList<>();
+
+        appDataListTest.add(appData);
+        appDetailResponseStatusList.add(appCRUD.createAppDetailResponseStatus(appData));
+
+        appDataListTest.add(appData1);
+        appDetailResponseStatusList.add(appCRUD.createAppDetailResponseStatus(appData1));
+
+        Mockito.when(appDataRepository.findAll()).thenReturn(appDataListTest);
+
+        var response = appCRUD.findAllApp();
+        Assertions.assertEquals(appDetailResponseStatusList, response);
     }
     @Test
     void testValidationWithValidData() throws IOException {
@@ -157,6 +188,7 @@ class AppCRUDTest {
             appCRUD.create(1, longDesc);
         });
     }
+
 
     @Test
     void testValidationWithNullDescription() throws IOException {
@@ -283,7 +315,7 @@ class AppCRUDTest {
         appProfileUpdate.setAppName("");
 
         Assertions.assertThrows(EmptyFormException.class, () -> {
-            appCRUD.updateProfile(appDataBfr.getId(), appProfileUpdate, 1);
+            appCRUD.updateProfile(1L, appProfileUpdate, 1);
         });
     }
 
@@ -413,6 +445,7 @@ class AppCRUDTest {
             appCRUD.updateInstaller((long)100, appInstallerUpdate, 1);
         });
     }
+
     @Test
     void versionNotGreater() throws IOException{
         when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
@@ -425,6 +458,8 @@ class AppCRUDTest {
             return appData1;
         });
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
+
 
         appCRUD.create(1, submitRequest);
         AppInstallerUpdate appInstallerUpdate1 = appInstallerUpdate;
@@ -464,7 +499,7 @@ class AppCRUDTest {
         when(notificationService.handleNewBroadcast(any(Long.class), any(String.class))).thenReturn(notificationData);
 
         AppData appDataBfr = appCRUD.create(1, submitRequest);
-        appInstallerUpdate.setVersion("1.0.0");
+        appInstallerUpdate.setVersion("1.0.1");
         AppData result = appCRUD.updateInstaller((long)appDataBfr.getId(), appInstallerUpdate, 1);
         AppData appData1 = appDataBfr;
         appData1.setVersion(appInstallerUpdate.getVersion());
@@ -473,7 +508,16 @@ class AppCRUDTest {
     }
 
     @Test
-    void deleteAndFound() throws IOException{
+    void updateInstallerDevDoesNotExist() throws IOException{
+        NotificationData notificationData = NotificationData.builder()
+                .id(1L)
+                .subjectId(1L)
+                .description("Terdapat Update pada Aplikasi ANDA")
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .subscriber(new ArrayList<>())
+                .build();
+
+
         when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
             String temp = ".com";
             return invocation.getArgument(1, String.class) + temp;
@@ -484,6 +528,33 @@ class AppCRUDTest {
             return appData1;
         });
         when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
+        appCRUD.create(1, submitRequest);
+        appInstallerUpdate.setVersion("1.0.1");
+
+        Assertions.assertThrows(AppDevDoesNotExistException.class, () -> {
+            appCRUD.updateInstaller((long)1, appInstallerUpdate, 1);
+        });
+    }
+
+    @Test
+    void deleteAndFound() throws IOException{
+        AppDev appDev = AppDev.builder()
+                .id(1L)
+                .appId((long)1)
+                .subscribers(new ArrayList<>())
+                .build();
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
+        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+            var appData1 = invocation.getArgument(0, AppData.class);
+            appData1.setId((long)1);
+            return appData1;
+        });
+        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
 
         appCRUD.create(1, submitRequest);
         appCRUD.delete((long)1, 1);

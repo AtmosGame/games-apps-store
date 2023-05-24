@@ -7,8 +7,8 @@ public class ControllerUtils {
     private ControllerUtils() {}
 
     public static User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) return null;
+        return (User) authentication.getPrincipal();
     }
 }

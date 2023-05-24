@@ -35,6 +35,12 @@ public class Storage {
 
         ShareURLAPICall shareURLAPICall = (ShareURLAPICall) storageAPICallCreator.create("share_url");
         shareURLAPICall.setup(accessToken, newPath);
-        return shareURLAPICall.execute();
+        String downloadUrl = shareURLAPICall.execute();
+
+        return convertUrlToRaw(downloadUrl) + "?raw=1";
+    }
+
+    private String convertUrlToRaw(String url) {
+        return url.split("\\?")[0];
     }
 }

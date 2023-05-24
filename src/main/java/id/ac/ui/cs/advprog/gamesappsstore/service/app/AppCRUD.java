@@ -1,10 +1,7 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.app;
 
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -18,7 +15,6 @@ public interface AppCRUD {
     AppData updateImage(Long id, AppImageUpdate appImageUpdate, Integer userId) throws IOException;
     void delete(Long id, Integer userId) throws IOException;
     AppData findById(Long id) throws IOException;
+    List<AppDetailResponseStatus> findAllApp();
 
-    List<AppData> findAllVerifiedApps();
-    List<AppData> findAllUnverifiedApps();
 }

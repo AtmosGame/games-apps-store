@@ -1,6 +1,5 @@
 package id.ac.ui.cs.advprog.gamesappsstore.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
@@ -12,7 +11,7 @@ public class APICallUtils {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readTree(jsonString);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new ServiceUnavailableException(errorMessage);
         }
     }
@@ -21,7 +20,7 @@ public class APICallUtils {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.treeToValue(jsonNode, valueType);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new ServiceUnavailableException(errorMessage);
         }
     }

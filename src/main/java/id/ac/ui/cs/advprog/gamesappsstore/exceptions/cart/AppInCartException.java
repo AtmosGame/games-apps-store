@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.gamesappsstore.exceptions;
+package id.ac.ui.cs.advprog.gamesappsstore.exceptions.cart;
 
 public class AppInCartException extends RuntimeException {
     public AppInCartException(Long appId) {

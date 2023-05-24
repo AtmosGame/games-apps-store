@@ -1,9 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.app;
 
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppImageUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppInstallerUpdate;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppProfileUpdate;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.*;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
@@ -24,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -102,6 +101,25 @@ class AppCRUDControllerTest {
                 .build();
 
     }
+
+    @Test
+    void getAllAppTest(){
+        List<AppDetailResponseStatus> appDetailResponseStatusList = new ArrayList<>();
+        appDetailResponseStatusList.add(AppDetailResponseStatus.builder()
+                .id(appData.getId())
+                .name(appData.getName())
+                .imageUrl(appData.getImageUrl())
+                .description(appData.getDescription())
+                .version(appData.getVersion())
+                .price(appData.getPrice())
+                .verificationStatus(appData.getVerificationStatus())
+                .build());
+
+        Mockito.when(appCRUD.findAllApp()).thenReturn(appDetailResponseStatusList);
+
+        var response = appCRUDController.getAll();
+        Assertions.assertEquals(appDetailResponseStatusList, response.getBody());
+    }
     @Test
     void postSubmitTest() throws IOException {
         AppData expected = appData;
@@ -131,9 +149,18 @@ class AppCRUDControllerTest {
 
     @Test
     void getAppTest() throws IOException {
-        AppData expected = appData;
 
         when(appCRUD.findById(any(Long.class))).thenReturn(appData);
+
+        AppDetailResponseStatus expected = AppDetailResponseStatus.builder()
+                .id(appData.getId())
+                .name(appData.getName())
+                .imageUrl(appData.getImageUrl())
+                .description(appData.getDescription())
+                .version(appData.getVersion())
+                .price(appData.getPrice())
+                .verificationStatus(appData.getVerificationStatus())
+                .build();
 
         var response = appCRUDController.getApp(1L);
         Assertions.assertEquals(expected, response.getBody());
