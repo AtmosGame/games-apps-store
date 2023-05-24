@@ -21,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -98,6 +100,25 @@ class AppCRUDControllerTest {
                 .verificationStatus(VerificationStatus.UNVERIFIED)
                 .build();
 
+    }
+
+    @Test
+    void getAllAppTest(){
+        List<AppDetailResponseStatus> appDetailResponseStatusList = new ArrayList<>();
+        appDetailResponseStatusList.add(AppDetailResponseStatus.builder()
+                .id(appData.getId())
+                .name(appData.getName())
+                .imageUrl(appData.getImageUrl())
+                .description(appData.getDescription())
+                .version(appData.getVersion())
+                .price(appData.getPrice())
+                .verificationStatus(appData.getVerificationStatus())
+                .build());
+
+        Mockito.when(appCRUD.findAllApp()).thenReturn(appDetailResponseStatusList);
+
+        var response = appCRUDController.getAll();
+        Assertions.assertEquals(appDetailResponseStatusList, response.getBody());
     }
     @Test
     void postSubmitTest() throws IOException {

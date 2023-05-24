@@ -9,7 +9,6 @@ import id.ac.ui.cs.advprog.gamesappsstore.dto.verification.VerificationDetailRes
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.user.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
