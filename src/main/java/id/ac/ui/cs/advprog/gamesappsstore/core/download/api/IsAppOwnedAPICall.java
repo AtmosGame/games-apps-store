@@ -1,15 +1,12 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.download.api;
 
 import id.ac.ui.cs.advprog.gamesappsstore.dto.download.CheckPurchasedRequest;
-import id.ac.ui.cs.advprog.gamesappsstore.dto.download.CheckPurchasedResponse;
-import id.ac.ui.cs.advprog.gamesappsstore.utils.APICallUtils;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -45,27 +42,23 @@ public class IsAppOwnedAPICall {
     private ResponseEntity<String> getResponse(HttpEntity<CheckPurchasedRequest> request) {
         return restTemplate.exchange(
                 endPoint,
-                HttpMethod.GET,
+                HttpMethod.POST,
                 request,
                 String.class
         );
     }
 
     private boolean processResponse(ResponseEntity<String> response) {
-        var jsonNode = APICallUtils.stringToJsonNode(
-                response.getBody(),
-                "Error on getting ownership data"
-        );
-        var appDownloadResponse = APICallUtils.jsonNodeToObject(
-                jsonNode,
-                CheckPurchasedResponse.class,
-                "Error on getting ownership data"
-        );
-        return isAppOwned(appDownloadResponse);
-    }
+        String responseBody = response.getBody();
+        if (responseBody == null) {
+            throw new ServiceUnavailableException("Error on fetching app ownership");
+        }
 
-    private boolean isAppOwned(CheckPurchasedResponse checkPurchasedResponse) {
-        return checkPurchasedResponse.getIsPurchased();
+        if (responseBody.equals("true")) {
+            return true;
+        } else if (responseBody.equals("false")) {
+            return false;
+        }
+        throw new ServiceUnavailableException("Error on fetching app ownership");
     }
-
 }
