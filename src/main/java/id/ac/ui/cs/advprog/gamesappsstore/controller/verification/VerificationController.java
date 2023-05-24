@@ -17,6 +17,7 @@ import java.util.List;
 @Controller
 @RestController
 @RequestMapping("/verification")
+@CrossOrigin(origins = {"http://localhost:3001", "http://34.87.155.107"})
 public class VerificationController {
     @Autowired
     private VerificationService verificationService;
