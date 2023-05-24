@@ -48,7 +48,6 @@ public class VerificationService {
 
     public void verify(Integer adminId, Long id) {
         User admin = userRepository.getById(adminId);
-        System.out.println(admin);
         AppData appData = getAppOrNotFound(id);
         AppDataVerification verification = new AppDataVerification(appData);
         verification.verify(admin);
