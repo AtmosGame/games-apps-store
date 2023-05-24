@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @NoArgsConstructor
 public class IsAppOwnedAPICall {
-    @Value("${atmos.microservices.payment.url}/check-purchased")
+    @Value("${atmos.microservices.payment.url}/api/v1/check-purchased")
     private String endPoint;
 
     private final RestTemplate restTemplate = new RestTemplate();
