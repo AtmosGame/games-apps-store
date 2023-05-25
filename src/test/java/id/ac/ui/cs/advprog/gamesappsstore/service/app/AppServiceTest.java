@@ -29,6 +29,7 @@ class AppServiceTest {
         AppData appData1 = AppData.builder()
                 .id(1L)
                 .name("App 1")
+                .userId(1)
                 .imageUrl("https://image.com/app1")
                 .installerUrl("https://storage.com/app1")
                 .description("The first app")
@@ -41,6 +42,7 @@ class AppServiceTest {
         AppData appData2 = AppData.builder()
                 .id(2L)
                 .name("App 2")
+                .userId(1)
                 .imageUrl("https://image.com/app2")
                 .installerUrl("https://storage.com/app2")
                 .description("The second app")
@@ -53,6 +55,7 @@ class AppServiceTest {
         AppData appData3 = AppData.builder()
                 .id(3L)
                 .name("App 3")
+                .userId(1)
                 .imageUrl("https://image.com/app3")
                 .installerUrl("https://storage.com/app3")
                 .description("The third app")
@@ -73,6 +76,7 @@ class AppServiceTest {
         AppDetailResponse expected = new AppDetailResponse(
                 2L,
                 "App 2",
+                1,
                 "https://image.com/app2",
                 "The second app",
                 "1.0.0",

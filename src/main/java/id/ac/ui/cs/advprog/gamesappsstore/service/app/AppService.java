@@ -17,6 +17,7 @@ public class AppService {
         return new AppDetailResponse(
                 appData.getId(),
                 appData.getName(),
+                appData.getUserId(),
                 appData.getImageUrl(),
                 appData.getDescription(),
                 appData.getVersion(),

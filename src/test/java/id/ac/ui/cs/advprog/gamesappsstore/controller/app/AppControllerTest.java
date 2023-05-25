@@ -78,6 +78,7 @@ class AppControllerTest {
         AppDetailResponse expected = new AppDetailResponse(
                 2L,
                 "App 2",
+                1,
                 "https://image.com/app2",
                 "The second app",
                 "1.0.0",

@@ -9,6 +9,7 @@ import lombok.Data;
 public class AppDetailResponse {
     private Long id;
     private String name;
+    private Integer userId;
     private String imageUrl;
     private String description;
     private String version;
