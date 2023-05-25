@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,7 +37,7 @@ public class AppCRUDController {
     @PreAuthorize("hasAuthority('app_data:update')")
     public ResponseEntity<AppData> updateProfile(
             @PathVariable Long id,
-            @ModelAttribute AppProfileUpdate request) throws IOException {
+            @RequestBody AppProfileUpdate request) throws IOException {
         Integer userId = getCurrentUser().getId();
         AppData response = appCRUD.updateProfile(id, request, userId);
         return ResponseEntity.ok(response);
@@ -60,7 +61,13 @@ public class AppCRUDController {
     @PreAuthorize("hasAuthority('app_data:update')")
     public ResponseEntity<AppData> updateInstaller(
             @PathVariable Long id,
-            @ModelAttribute AppInstallerUpdate request) throws IOException {
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("version") String version) throws IOException {
+
+        AppInstallerUpdate request = AppInstallerUpdate.builder()
+                .installerFile(file)
+                .version(version)
+                .build();
         Integer userId = getCurrentUser().getId();
         AppData response = appCRUD.updateInstaller(id, request, userId);
         return ResponseEntity.ok(response);
@@ -70,7 +77,10 @@ public class AppCRUDController {
     @PreAuthorize("hasAuthority('app_data:update')")
     public ResponseEntity<AppData> updateImage(
             @PathVariable Long id,
-            @ModelAttribute AppImageUpdate request) throws IOException {
+            @RequestParam("file") MultipartFile file) throws IOException {
+        AppImageUpdate request = AppImageUpdate.builder()
+                .imageFile(file)
+                .build();
         Integer userId = getCurrentUser().getId();
         AppData response = appCRUD.updateImage(id, request, userId);
         return ResponseEntity.ok(response);
