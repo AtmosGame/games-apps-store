@@ -174,7 +174,7 @@ class AppCRUDControllerTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         when(appCRUD.updateInstaller(any(Long.class),any(AppInstallerUpdate.class), any(Integer.class))).thenReturn(appData);
 
-        var response = appCRUDController.updateInstaller(1L, appInstallerUpdate);
+        var response = appCRUDController.updateInstaller(1L, appInstallerUpdate.getInstallerFile(), appInstallerUpdate.getVersion());
         Assertions.assertEquals(expected, response.getBody());
     }
 
@@ -186,7 +186,7 @@ class AppCRUDControllerTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         when(appCRUD.updateImage(any(Long.class),any(AppImageUpdate.class), any(Integer.class))).thenReturn(appData);
 
-        var response = appCRUDController.updateImage(1L, appImageUpdate);
+        var response = appCRUDController.updateImage(1L, appImageUpdate.getImageFile());
         Assertions.assertEquals(expected, response.getBody());
     }
     @Test

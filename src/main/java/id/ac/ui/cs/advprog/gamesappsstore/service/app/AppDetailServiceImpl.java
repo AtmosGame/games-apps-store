@@ -44,6 +44,7 @@ public class AppDetailServiceImpl implements AppDetailService {
                 .description(appData.getDescription())
                 .version(appData.getVersion())
                 .price(appData.getPrice())
+                .verificationStatus(appData.getVerificationStatus())
                 .build();
     }
 }
