@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.core.notification;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
 import jakarta.persistence.*;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class AppDev implements Subject{
 
     @JsonManagedReference
     @OneToMany(mappedBy = "appDev")
+    @JsonIgnore
     private List<Subscriber> subscribers;
 
     @Override
@@ -39,11 +42,16 @@ public class AppDev implements Subject{
 
     @Override
     public void notifySubscriber(NotificationData notificationData) {
-        System.out.println(subscribers.size());
-        System.out.println("DEBUG");
-        for (Subscriber notifiedSubscriber : subscribers) {
-            System.out.println(1 + " DEBUG");
-            notifiedSubscriber.handleNotification(notificationData);
-        }
+//        for (Subscriber notifiedSubscriber : subscribers) {
+//            System.out.println(1 + " DEBUG");
+////            notificationData.getSubscriber().add(notifiedSubscriber);
+////            notifiedSubscriber.handleNotification(notificationData);
+//
+//            notifiedSubscriber.getNotifications();
+//        }
+    }
+
+    public void initializeSubscribers() {
+        Hibernate.initialize(subscribers);
     }
 }

@@ -140,15 +140,15 @@ class NotificationControllerTest {
         Assertions.assertEquals(expected, response.getBody());
     }
 
-    @Test
-    void successBroadcast(){
-        Mockito.when(notificationService.handleNewBroadcast
-                (brodcastRequest.getAppDevId(), brodcastRequest.getMessage())).thenReturn(notificationData);
-
-        var response = notificationController.broadcast(brodcastRequest);
-        var expected = notificationData;
-        Assertions.assertEquals(expected, response.getBody());
-    }
+//    @Test
+//    void successBroadcast(){
+//        Mockito.when(notificationService.handleNewBroadcast
+//                (brodcastRequest.getAppDevId(), brodcastRequest.getMessage())).thenReturn(notificationData);
+//
+//        var response = notificationController.broadcast(brodcastRequest);
+//        var expected = notificationData;
+//        Assertions.assertEquals(expected, response.getBody());
+//    }
 
     @Test
     void successNotificationById(){

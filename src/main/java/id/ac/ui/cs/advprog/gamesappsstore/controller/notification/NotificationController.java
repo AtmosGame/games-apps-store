@@ -65,9 +65,9 @@ public class NotificationController {
 
     @PostMapping("/broadcast")
     @PreAuthorize("hasAuthority('notification:broadcast')")
-    public ResponseEntity<NotificationData> broadcast(@RequestBody BrodcastRequest request) {
-        NotificationData response = notificationService.handleNewBroadcast((request.getAppDevId()), request.getMessage());
-        return ResponseEntity.ok(response);
+    public ResponseEntity<String> broadcast(@RequestBody BrodcastRequest request) {
+        notificationService.handleNewBroadcast((request.getAppDevId()), request.getMessage());
+        return ResponseEntity.ok("Broadcasted message");
     }
 
     private static User getCurrentUser() {

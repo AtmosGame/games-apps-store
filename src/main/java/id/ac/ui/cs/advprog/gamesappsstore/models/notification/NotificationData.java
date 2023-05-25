@@ -8,6 +8,7 @@ import lombok.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(of = "id")
@@ -23,9 +24,9 @@ public class NotificationData {
     private Long subjectId;
     private String description;
     private Timestamp timestamp;
-    @ManyToMany(mappedBy = "notifications")
+    @ManyToOne
     @JsonIgnore
-    private List<Subscriber> subscriber = new ArrayList<>();
+    private Subscriber subscriber;
 }
 
 

@@ -100,6 +100,7 @@ public class AppCRUDImpl implements AppCRUD {
 
     @Override
     public AppData updateInstaller(Long id, AppInstallerUpdate appInstallerUpdate, Integer userId) throws IOException {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         AppData appData = findById(id);
         checkUserAuthorization(appData, userId);
@@ -121,7 +122,7 @@ public class AppCRUDImpl implements AppCRUD {
                     // Handle exception
                     e.printStackTrace();
                 }
-            });
+            }, executorService);
         }
         else{
             throw new AppDevDoesNotExistException();
