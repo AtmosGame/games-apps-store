@@ -24,6 +24,9 @@ Games and apps store microservice for Atmos.
 - Ikhlasul Akmal Hanif
 - Raspati Mahatma Kurnia Dharmatmaja
 
+## Profiling
+ristek.link/games-profiling-doc
+
 ## References
 - https://www.dropbox.com/developers/documentation/http/documentation
 - https://stackoverflow.com/questions/50171616/how-to-do-post-request-with-raw-data-via-spring-rest-template
