@@ -70,6 +70,7 @@ public class AppCRUDImpl implements AppCRUD {
         appDataValidator.validate(appData);
         AppData ret = appDataRepository.save(appData);
         AppDev appDev = AppDev.builder()
+                .id(ret.getId())
                 .appId(appData.getId())
                 .build();
         appDeveloperRepository.save(appDev);
@@ -102,7 +103,7 @@ public class AppCRUDImpl implements AppCRUD {
         Optional<AppDev> appDev = appDeveloperRepository.findByAppId(id);
         if(appDev.isPresent()){
             notificationService.handleNewBroadcast(
-                    appDev.get().getAppId(),
+                    appDev.get().getId(),
                     String.format("Aplikasi %s melakukan pembaruan menjadi versi %s", appData.getName(), appData.getVersion())
             );
         }
