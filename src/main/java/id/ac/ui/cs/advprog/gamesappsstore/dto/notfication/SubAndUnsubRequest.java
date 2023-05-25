@@ -1,15 +1,10 @@
 package id.ac.ui.cs.advprog.gamesappsstore.dto.notfication;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SubAndUnsubRequest {
     private Long appDevId;
-    public SubAndUnsubRequest(Long appDevId){
-        this.appDevId = appDevId;
-    }
 }

@@ -58,7 +58,6 @@ public class VerificationService {
 
     public void requestReverification(User user, Long id) {
         AppData appData = getAppOrNotFound(id);
-        System.out.println("DEBUG: " + appData.getUserId() + " " + user.getId());
         if (!appData.getUserId().equals(user.getId())) {
             throw new UnauthorizedException("User is not the app's owner");
         }

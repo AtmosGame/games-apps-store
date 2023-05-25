@@ -50,7 +50,7 @@ public class NotificationController {
 
     @PostMapping("/subscribe")
     @PreAuthorize("hasAuthority('notification:subscribe')")
-    public ResponseEntity<Subscriber> subscribe(Model model, @ModelAttribute SubAndUnsubRequest request) {
+    public ResponseEntity<Subscriber> subscribe(@RequestBody SubAndUnsubRequest request) {
         Integer userId = getCurrentUser().getId();
         Subscriber response = notificationService.handleSubscribe(request.getAppDevId(), (long)userId);
         return ResponseEntity.ok(response);
@@ -58,7 +58,7 @@ public class NotificationController {
 
     @PostMapping("/unsubscribe")
     @PreAuthorize("hasAuthority('notification:unsubscribe')")
-    public ResponseEntity<String> unsubscribe(Model model, @ModelAttribute SubAndUnsubRequest request) {
+    public ResponseEntity<String> unsubscribe(@RequestBody SubAndUnsubRequest request) {
         Integer userId = getCurrentUser().getId();
         notificationService.handleUnsubscribe((request.getAppDevId()), (long)userId);
         return ResponseEntity.ok(String.format("User dengan id %d mengunsubscribe App dengan id %d", (long)userId, request.getAppDevId()));
@@ -66,7 +66,7 @@ public class NotificationController {
 
     @PostMapping("/broadcast")
     @PreAuthorize("hasAuthority('notification:broadcast')")
-    public ResponseEntity<NotificationData> broadcast(Model model, @ModelAttribute BrodcastRequest request) {
+    public ResponseEntity<NotificationData> broadcast(@RequestBody BrodcastRequest request) {
         NotificationData response = notificationService.handleNewBroadcast((request.getAppDevId()), request.getMessage());
         return ResponseEntity.ok(response);
     }
