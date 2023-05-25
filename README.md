@@ -25,7 +25,7 @@ Games and apps store microservice for Atmos.
 - Raspati Mahatma Kurnia Dharmatmaja
 
 ## Profiling
-ristek.link/games-profiling-doc
+- [ristek.link/games-profiling-doc](url)
 
 ## References
 - https://www.dropbox.com/developers/documentation/http/documentation
