@@ -34,7 +34,8 @@ public enum UserRole {
             CART_DELETE,
             NOTIFICATION_SUBSCRIBE,
             NOTIFICATION_UNSUBSCRIBE,
-            NOTIFICATION_GET_NOTIF_BY_ID
+            NOTIFICATION_GET_NOTIF_BY_ID,
+            SEARCH_GET
     ));
 
     private final Set<UserPermission> permissions;
