@@ -67,14 +67,14 @@ class IsAppInCartAPICallTest {
                             "appId": 1,
                             "appName": "Fate/Grand Order",
                             "appPrice": 2.0,
-                            "appDate": "2022-10-10"
+                            "addDate": "2022-10-10"
                         },
                         {
                             "id": 2,
                             "appId": 2,
                             "appName": "Fate/Grand Order 2",
                             "appPrice": 4.0,
-                            "appDate": "2021-10-10"
+                            "addDate": "2021-10-10"
                         }
                     ]
                 }
@@ -101,14 +101,14 @@ class IsAppInCartAPICallTest {
                             "appId": 4,
                             "appName": "Fate/Grand Order",
                             "appPrice": 2.0,
-                            "appDate": "2022-10-10"
+                            "addDate": "2022-10-10"
                         },
                         {
                             "id": 2,
                             "appId": 2,
                             "appName": "Fate/Grand Order 2",
                             "appPrice": 4.0,
-                            "appDate": "2021-10-10"
+                            "addDate": "2021-10-10"
                         }
                     ]
                 }

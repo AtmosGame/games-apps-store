@@ -52,6 +52,7 @@ public class UpdateCartAPICall {
     }
 
     private void processResponse(ResponseEntity<String> response) {
+        System.out.println(response);
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new ServiceUnavailableException("Error on updating cart");
         }
