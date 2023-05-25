@@ -24,21 +24,6 @@ public class NotificationServiceImpl implements  NotificationService{
     private final NotificationDataRepository notificationDataRepository;
 
     @Override
-    public List<AppDev> getAllAppDeveloper() {
-        return appDeveloperRepository.findAll();
-    }
-
-    @Override
-    public List<Subscriber> getAllSubscribers() {
-        return subscriberRepository.findAll();
-    }
-
-    @Override
-    public List<NotificationData> getAllNotification() {
-        return notificationDataRepository.findAll();
-    }
-
-    @Override
     public List<NotificationData> getNotificationByUserId(Long userId) {
         var subscriberList = subscriberRepository.findByUserId(userId);
         if (subscriberList.isEmpty()) {

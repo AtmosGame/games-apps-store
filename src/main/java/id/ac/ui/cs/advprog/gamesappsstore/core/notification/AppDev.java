@@ -39,19 +39,4 @@ public class AppDev implements Subject{
            subscriber.setAppDev(null);
        }
     }
-
-    @Override
-    public void notifySubscriber(NotificationData notificationData) {
-//        for (Subscriber notifiedSubscriber : subscribers) {
-//            System.out.println(1 + " DEBUG");
-////            notificationData.getSubscriber().add(notifiedSubscriber);
-////            notifiedSubscriber.handleNotification(notificationData);
-//
-//            notifiedSubscriber.getNotifications();
-//        }
-    }
-
-    public void initializeSubscribers() {
-        Hibernate.initialize(subscribers);
-    }
 }

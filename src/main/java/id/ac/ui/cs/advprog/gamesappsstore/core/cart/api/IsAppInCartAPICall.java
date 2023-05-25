@@ -50,7 +50,6 @@ public class IsAppInCartAPICall {
     }
 
     private boolean processResponse(ResponseEntity<String> response, AppData app) {
-        System.out.println("DEBUG: " + response.getBody());
         var jsonNode = APICallUtils.stringToJsonNode(
                 response.getBody(),
                 "Error on getting cart data"

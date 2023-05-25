@@ -93,11 +93,6 @@ public class AppCRUDImpl implements AppCRUD {
         return appDataRepository.save(appData);
     }
 
-    private void broadcastBasedOnInstaller(Long appDevId, String message){
-        notificationService.handleNewBroadcast(appDevId, message);
-    }
-
-
     @Override
     public AppData updateInstaller(Long id, AppInstallerUpdate appInstallerUpdate, Integer userId) throws IOException {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -127,8 +122,7 @@ public class AppCRUDImpl implements AppCRUD {
         else{
             throw new AppDevDoesNotExistException();
         }
-        AppData ret = appDataRepository.save(appData);
-        return ret;
+        return appDataRepository.save(appData);
     }
 
 

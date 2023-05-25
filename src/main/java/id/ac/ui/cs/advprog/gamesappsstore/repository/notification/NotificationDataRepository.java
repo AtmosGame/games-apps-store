@@ -18,7 +18,4 @@ public interface NotificationDataRepository extends JpaRepository<NotificationDa
     Optional<NotificationData> findById(@NonNull Long id);
 
     List<NotificationData> findBySubscriber(Subscriber subscriber);
-
-//    @NonNull
-//    Optional<List<NotificationData>> findBySubscriber(@NonNull Subscriber subscriber);
 }

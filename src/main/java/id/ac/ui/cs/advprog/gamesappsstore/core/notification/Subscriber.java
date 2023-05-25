@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.Hibernate;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @EqualsAndHashCode(of = "id")
@@ -29,12 +26,4 @@ public class Subscriber implements Observer{
     private AppDev appDev;
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<NotificationData> notifications;
-
-    @Override
-    public void handleNotification(NotificationData notificationData) {
-        System.out.println(2 + " DEBUG");
-        notifications.add(notificationData);
-//        notificationData.getSubscriber().add(this);
-    }
-
 }

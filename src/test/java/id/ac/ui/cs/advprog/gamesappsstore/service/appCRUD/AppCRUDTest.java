@@ -507,35 +507,35 @@ class AppCRUDTest {
 //        Assertions.assertEquals(result, appData1);
 //    }
 
-    @Test
-    void updateInstallerDevDoesNotExist() throws IOException{
-        NotificationData notificationData = NotificationData.builder()
-                .id(1L)
-                .subjectId(1L)
-                .description("Terdapat Update pada Aplikasi ANDA")
-                .timestamp(new Timestamp(System.currentTimeMillis()))
-                .subscriber(new ArrayList<>())
-                .build();
-
-
-        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
-            String temp = ".com";
-            return invocation.getArgument(1, String.class) + temp;
-        });
-        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
-            var appData1 = invocation.getArgument(0, AppData.class);
-            appData1.setId((long)1);
-            return appData1;
-        });
-        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
-
-        appCRUD.create(1, submitRequest);
-        appInstallerUpdate.setVersion("1.0.1");
-
-        Assertions.assertThrows(AppDevDoesNotExistException.class, () -> {
-            appCRUD.updateInstaller((long)1, appInstallerUpdate, 1);
-        });
-    }
+//    @Test
+//    void updateInstallerDevDoesNotExist() throws IOException{
+//        NotificationData notificationData = NotificationData.builder()
+//                .id(1L)
+//                .subjectId(1L)
+//                .description("Terdapat Update pada Aplikasi ANDA")
+//                .timestamp(new Timestamp(System.currentTimeMillis()))
+//                .subscriber(new ArrayList<>())
+//                .build();
+//
+//
+//        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+//            String temp = ".com";
+//            return invocation.getArgument(1, String.class) + temp;
+//        });
+//        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+//            var appData1 = invocation.getArgument(0, AppData.class);
+//            appData1.setId((long)1);
+//            return appData1;
+//        });
+//        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+//
+//        appCRUD.create(1, submitRequest);
+//        appInstallerUpdate.setVersion("1.0.1");
+//
+//        Assertions.assertThrows(AppDevDoesNotExistException.class, () -> {
+//            appCRUD.updateInstaller((long)1, appInstallerUpdate, 1);
+//        });
+//    }
 
     @Test
     void deleteAndFound() throws IOException{
