@@ -36,7 +36,7 @@ public class AppCRUDController {
     @PreAuthorize("hasAuthority('app_data:update')")
     public ResponseEntity<AppData> updateProfile(
             @PathVariable Long id,
-            @ModelAttribute AppProfileUpdate request) throws IOException {
+            @RequestBody AppProfileUpdate request) throws IOException {
         Integer userId = getCurrentUser().getId();
         AppData response = appCRUD.updateProfile(id, request, userId);
         return ResponseEntity.ok(response);
@@ -60,7 +60,7 @@ public class AppCRUDController {
     @PreAuthorize("hasAuthority('app_data:update')")
     public ResponseEntity<AppData> updateInstaller(
             @PathVariable Long id,
-            @ModelAttribute AppInstallerUpdate request) throws IOException {
+            @RequestBody AppInstallerUpdate request) throws IOException {
         Integer userId = getCurrentUser().getId();
         AppData response = appCRUD.updateInstaller(id, request, userId);
         return ResponseEntity.ok(response);
@@ -70,7 +70,7 @@ public class AppCRUDController {
     @PreAuthorize("hasAuthority('app_data:update')")
     public ResponseEntity<AppData> updateImage(
             @PathVariable Long id,
-            @ModelAttribute AppImageUpdate request) throws IOException {
+            @RequestBody AppImageUpdate request) throws IOException {
         Integer userId = getCurrentUser().getId();
         AppData response = appCRUD.updateImage(id, request, userId);
         return ResponseEntity.ok(response);
