@@ -41,11 +41,30 @@ public class NotificationServiceImpl implements  NotificationService{
     @Override
     public List<NotificationData> getNotificationByUserId(Long userId) {
         var subscriberList = subscriberRepository.findByUserId(userId);
-        if (subscriberList.size() == 0) {
+        if (subscriberList.isEmpty()) {
             throw new UserNotFoundException("User not found");
         }
         var subscriber = subscriberList.get(0);
-        return notificationDataRepository.findBySubscriber(subscriber);
+        var notifications = notificationDataRepository.findBySubscriber(subscriber);
+        notifications.sort(Comparator.comparing(NotificationData::getTimestamp));
+        Collections.reverse(notifications);
+        return notifications;
+    }
+
+    @Override
+    public boolean handleIsSubscribed(Long appDevId, Long userId) {
+        var dev = appDeveloperRepository.findById(appDevId);
+        if (dev.isEmpty()) {
+            throw new AppDevDoesNotExistException();
+        }
+        var appDev = dev.get();
+        var subscribers = appDev.getSubscribers();
+        for (Subscriber subscriber : subscribers) {
+            if (subscriber.getUserId().equals(userId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

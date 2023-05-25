@@ -12,6 +12,7 @@ public interface NotificationService {
     List<NotificationData> getAllNotification();
     List<NotificationData> getNotificationByUserId(Long userId);
     void handleNewBroadcast(Long appDevId, String message);
+    boolean handleIsSubscribed(Long appDevId, Long userId);
     Subscriber handleSubscribe(Long appDevId, Long userId);
     void handleUnsubscribe(Long appDevId, Long userId);
 }

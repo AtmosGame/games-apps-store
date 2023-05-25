@@ -3,6 +3,7 @@ package id.ac.ui.cs.advprog.gamesappsstore.controller.notification;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.Subscriber;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.BrodcastRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.IsSubscribedResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.SubAndUnsubRequest;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
@@ -23,20 +24,12 @@ import java.util.List;
 public class NotificationController {
     private final NotificationService notificationService;
 
-    @GetMapping("/all-appDeveloper")
-    public ResponseEntity<List<AppDev>> getAllDeveloper() {
-        List<AppDev> response = notificationService.getAllAppDeveloper();
-        return ResponseEntity.ok(response);
-    }
-    @GetMapping("/all-subscriber")
-    public ResponseEntity<List<Subscriber>> getAllSubscriber() {
-        List<Subscriber> response = notificationService.getAllSubscribers();
-        return ResponseEntity.ok(response);
-    }
-    @GetMapping("/all-notification")
-    public ResponseEntity<List<NotificationData>> getAllNotification() {
-        List<NotificationData> response = notificationService.getAllNotification();
-        return ResponseEntity.ok(response);
+    @GetMapping("/is-subscribed/{id}")
+    @PreAuthorize("hasAuthority('notification:subscribe')")
+    public ResponseEntity<IsSubscribedResponse> isSubscribed(@PathVariable Long id) {
+        Integer userId = getCurrentUser().getId();
+        var response = notificationService.handleIsSubscribed(id, (long) userId);
+        return ResponseEntity.ok(new IsSubscribedResponse(response));
     }
 
     @GetMapping("/all-notification-by-id")
@@ -61,13 +54,6 @@ public class NotificationController {
         Integer userId = getCurrentUser().getId();
         notificationService.handleUnsubscribe((request.getAppDevId()), (long)userId);
         return ResponseEntity.ok(String.format("User dengan id %d mengunsubscribe App dengan id %d", (long)userId, request.getAppDevId()));
-    }
-
-    @PostMapping("/broadcast")
-    @PreAuthorize("hasAuthority('notification:broadcast')")
-    public ResponseEntity<String> broadcast(@RequestBody BrodcastRequest request) {
-        notificationService.handleNewBroadcast((request.getAppDevId()), request.getMessage());
-        return ResponseEntity.ok("Broadcasted message");
     }
 
     private static User getCurrentUser() {
