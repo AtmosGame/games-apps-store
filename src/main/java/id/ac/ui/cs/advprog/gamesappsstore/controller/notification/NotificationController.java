@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/notification")
+@CrossOrigin(origins = {"http://localhost:3001", "http://localhost:3000", "https://atmos1.vercel.app", "https://atmos1.vercel.app/"})
 public class NotificationController {
     private final NotificationService notificationService;
 
