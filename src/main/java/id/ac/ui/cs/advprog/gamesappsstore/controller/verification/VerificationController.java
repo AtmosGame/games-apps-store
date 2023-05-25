@@ -28,6 +28,7 @@ public class VerificationController {
         return ResponseEntity.ok(response);
     }
     @GetMapping
+    @PreAuthorize("hasAuthority('verification:read')")
     public ResponseEntity<List<AppData>> getAllUnverifiedApps() {
         List<AppData> response = verificationService.findAllUnverifiedApps();
         return ResponseEntity.ok(response);
