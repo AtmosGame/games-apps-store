@@ -18,7 +18,6 @@ import java.util.List;
 @Table(name="_developer")
 public class AppDev implements Subject{
     @Id
-    @GeneratedValue
     private Long id;
     private Long appId;
 
