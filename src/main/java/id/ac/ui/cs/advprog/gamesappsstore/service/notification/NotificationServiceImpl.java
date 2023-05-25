@@ -52,7 +52,7 @@ public class NotificationServiceImpl implements  NotificationService{
 
     @Override
     public NotificationData handleNewBroadcast(Long appDevId, String message) {
-        Optional<AppDev> dev = appDeveloperRepository.findById(appDevId);
+        Optional<AppDev> dev = appDeveloperRepository.findByIdWithSubscribers(appDevId);
         if(dev.isPresent()){
             NotificationData notificationData = NotificationData.builder()
                     .subjectId(dev.get().getId())
@@ -61,7 +61,9 @@ public class NotificationServiceImpl implements  NotificationService{
                     .subscriber(new ArrayList<>())
                     .build();
 
+            System.out.println("atas notifiy");
             dev.get().notifySubscriber(notificationData);
+            System.out.println("bawah notifiy");
             return notificationDataRepository.save(notificationData);
         }
         else{

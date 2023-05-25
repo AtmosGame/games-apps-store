@@ -33,6 +33,7 @@ public class Subscriber implements Observer{
 
     @Override
     public void handleNotification(NotificationData notificationData) {
+        System.out.println(2 + " DEBUG");
         notifications.add(notificationData);
         notificationData.getSubscriber().add(this);
     }

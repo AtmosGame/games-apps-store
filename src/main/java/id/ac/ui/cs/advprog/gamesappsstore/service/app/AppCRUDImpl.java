@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,6 +73,7 @@ public class AppCRUDImpl implements AppCRUD {
         appDataValidator.validate(appData);
         AppData ret = appDataRepository.save(appData);
         AppDev appDev = AppDev.builder()
+                .id(ret.getId())
                 .appId(appData.getId())
                 .build();
         appDeveloperRepository.save(appDev);
@@ -89,8 +93,14 @@ public class AppCRUDImpl implements AppCRUD {
         return appDataRepository.save(appData);
     }
 
+    private void broadcastBasedOnInstaller(Long appDevId, String message){
+        notificationService.handleNewBroadcast(appDevId, message);
+    }
+
+
     @Override
     public AppData updateInstaller(Long id, AppInstallerUpdate appInstallerUpdate, Integer userId) throws IOException {
+
         AppData appData = findById(id);
         checkUserAuthorization(appData, userId);
 
@@ -101,17 +111,25 @@ public class AppCRUDImpl implements AppCRUD {
         appInstallerValidator.validate(appData, bfrVersion);
         Optional<AppDev> appDev = appDeveloperRepository.findByAppId(id);
         if(appDev.isPresent()){
-            notificationService.handleNewBroadcast(
-                    appDev.get().getAppId(),
-                    String.format("Aplikasi %s melakukan pembaruan menjadi versi %s", appData.getName(), appData.getVersion())
-            );
+            Long appDevId = appDev.get().getId();
+            String message = String.format("Aplikasi %s melakukan pembaruan menjadi versi %s", appData.getName(), appData.getVersion());
+
+            CompletableFuture.runAsync(() -> {
+                try {
+                    notificationService.handleNewBroadcast(appDevId, message);
+                } catch (Exception e) {
+                    // Handle exception
+                    e.printStackTrace();
+                }
+            });
         }
         else{
             throw new AppDevDoesNotExistException();
         }
-
-        return appDataRepository.save(appData);
+        AppData ret = appDataRepository.save(appData);
+        return ret;
     }
+
 
     @Override
     public AppData updateImage(Long id, AppImageUpdate appImageUpdate, Integer userId) throws IOException{

@@ -18,7 +18,6 @@ import java.util.List;
 @Table(name="_developer")
 public class AppDev implements Subject{
     @Id
-    @GeneratedValue
     private Long id;
     private Long appId;
 
@@ -40,7 +39,10 @@ public class AppDev implements Subject{
 
     @Override
     public void notifySubscriber(NotificationData notificationData) {
+        System.out.println(subscribers.size());
+        System.out.println("DEBUG");
         for (Subscriber notifiedSubscriber : subscribers) {
+            System.out.println(1 + " DEBUG");
             notifiedSubscriber.handleNotification(notificationData);
         }
     }
