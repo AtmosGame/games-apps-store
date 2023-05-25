@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IsSubscribedResponse {
-    private boolean isSubscribed;
+    private boolean subscribedStatus;
 }
