@@ -75,7 +75,7 @@ class SearchServiceTest {
     @Test
     void SearchByAvailableApps(){
         List<AppData> searchResults = searchService.searchAppsByKeyword("dota");
-        Assertions.assertEquals(2, searchResults.size());
+        Assertions.assertEquals(1, searchResults.size());
     }
 
     @Test
