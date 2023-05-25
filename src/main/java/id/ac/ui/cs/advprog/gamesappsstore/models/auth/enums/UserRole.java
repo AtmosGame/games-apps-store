@@ -23,7 +23,6 @@ public enum UserRole {
             APP_DATA_CREATE,
             APP_DATA_UPDATE,
             APP_DATA_DELETE,
-            VERIFICATION_READ,
             VERIFICATION_REQUEST_REVERIFICATION,
             NOTIFICATION_BROADCAST
     )),
