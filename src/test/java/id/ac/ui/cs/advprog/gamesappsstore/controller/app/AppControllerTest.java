@@ -81,7 +81,8 @@ class AppControllerTest {
                 "https://image.com/app2",
                 "The second app",
                 "1.0.0",
-                10000d
+                10000d,
+                VerificationStatus.VERIFIED
         );
 
         Mockito
