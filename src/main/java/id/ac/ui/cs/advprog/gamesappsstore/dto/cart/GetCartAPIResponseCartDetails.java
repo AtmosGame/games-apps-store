@@ -16,5 +16,5 @@ public class GetCartAPIResponseCartDetails {
     private String appId;
     private String appName;
     private Double appPrice;
-    private Date appDate;
+    private Date addDate;
 }

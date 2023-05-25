@@ -20,7 +20,8 @@ public class AppService {
                 appData.getImageUrl(),
                 appData.getDescription(),
                 appData.getVersion(),
-                appData.getPrice()
+                appData.getPrice(),
+                appData.getVerificationStatus()
         );
     }
 
