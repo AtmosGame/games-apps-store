@@ -12,9 +12,11 @@ public enum UserPermission {
     CART_READ("cart:read"),
     CART_ADD("cart:add"),
     CART_DELETE("cart:delete"),
+    C("cart:delete"),
     NOTIFICATION_SUBSCRIBE("notification:subscribe"),
     NOTIFICATION_UNSUBSCRIBE("notification:unsubscribe"),
     NOTIFICATION_BROADCAST("notification:broadcast"),
+    SEARCH_GET("search:get"),
     NOTIFICATION_GET_NOTIF_BY_ID("notification:get_notification_by_id");
 
 

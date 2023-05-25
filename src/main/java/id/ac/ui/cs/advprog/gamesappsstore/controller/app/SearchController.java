@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.service.app.SearchServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +13,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/search")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3001", "http://34.87.155.107"})
+@CrossOrigin(origins = {"http://localhost:3001", "https://atmos1.vercel.app/"})
 public class SearchController {
     private final SearchServiceImpl searchService;
     @GetMapping("/{keyword}")
+    @PreAuthorize("hasAuthority('search:get')")
     public ResponseEntity<List<AppData>> getAppsByKeyword(@PathVariable String keyword) {
         List<AppData> response = searchService.searchAppsByKeyword(keyword);
         return ResponseEntity.ok(response);
