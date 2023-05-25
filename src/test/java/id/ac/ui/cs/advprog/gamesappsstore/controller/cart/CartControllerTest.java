@@ -21,7 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class CartControllerTest {
+class CartControllerTest {
     private final String jwtToken = "Bearer uwooogh.sneggs";
 
     @Mock

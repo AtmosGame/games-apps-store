@@ -140,16 +140,6 @@ public class AppCRUDImpl implements AppCRUD {
         }
     }
 
-    @Override
-    public List<AppData> findAllVerifiedApps() {
-        return appDataRepository.findByVerificationStatus(VerificationStatus.VERIFIED);
-    }
-
-    @Override
-    public List<AppData> findAllUnverifiedApps() {
-        return appDataRepository.findByVerificationStatusIsNull();
-    }
-
     private void checkUserAuthorization(AppData app, Integer userId) {
         if (!app.getUserId().equals(userId)) {
             throw new UnauthorizedException("User is not authorized");

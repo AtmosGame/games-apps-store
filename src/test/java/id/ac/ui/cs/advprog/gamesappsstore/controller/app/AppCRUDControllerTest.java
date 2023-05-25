@@ -21,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -99,6 +101,25 @@ class AppCRUDControllerTest {
                 .build();
 
     }
+
+    @Test
+    void getAllAppTest(){
+        List<AppDetailResponseStatus> appDetailResponseStatusList = new ArrayList<>();
+        appDetailResponseStatusList.add(AppDetailResponseStatus.builder()
+                .id(appData.getId())
+                .name(appData.getName())
+                .imageUrl(appData.getImageUrl())
+                .description(appData.getDescription())
+                .version(appData.getVersion())
+                .price(appData.getPrice())
+                .verificationStatus(appData.getVerificationStatus())
+                .build());
+
+        Mockito.when(appCRUD.findAllApp()).thenReturn(appDetailResponseStatusList);
+
+        var response = appCRUDController.getAll();
+        Assertions.assertEquals(appDetailResponseStatusList, response.getBody());
+    }
     @Test
     void postSubmitTest() throws IOException {
         AppData expected = appData;
@@ -153,7 +174,7 @@ class AppCRUDControllerTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         when(appCRUD.updateInstaller(any(Long.class),any(AppInstallerUpdate.class), any(Integer.class))).thenReturn(appData);
 
-        var response = appCRUDController.updateInstaller(1L, appInstallerUpdate);
+        var response = appCRUDController.updateInstaller(1L, appInstallerUpdate.getInstallerFile(), appInstallerUpdate.getVersion());
         Assertions.assertEquals(expected, response.getBody());
     }
 
@@ -165,7 +186,7 @@ class AppCRUDControllerTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         when(appCRUD.updateImage(any(Long.class),any(AppImageUpdate.class), any(Integer.class))).thenReturn(appData);
 
-        var response = appCRUDController.updateImage(1L, appImageUpdate);
+        var response = appCRUDController.updateImage(1L, appImageUpdate.getImageFile());
         Assertions.assertEquals(expected, response.getBody());
     }
     @Test
