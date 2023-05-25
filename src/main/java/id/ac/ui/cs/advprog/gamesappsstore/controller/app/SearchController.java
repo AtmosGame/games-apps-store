@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/search")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3001", "http://34.87.155.107"})
+@CrossOrigin(origins = {"http://localhost:3001", "https://atmos1.vercel.app/"})
 public class SearchController {
     private final SearchServiceImpl searchService;
     @GetMapping("/{keyword}")
