@@ -16,6 +16,7 @@ import java.util.List;
 
 @Controller
 @RestController
+@CrossOrigin(origins = {"http://localhost:3001", "http://localhost:3000", "https://atmos1.vercel.app", "https://atmos1.vercel.app/"})
 public class AppCRUDController {
     @Autowired
     private AppCRUD appCRUD;
