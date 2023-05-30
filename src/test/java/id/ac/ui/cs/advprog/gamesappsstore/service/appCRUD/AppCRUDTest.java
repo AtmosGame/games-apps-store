@@ -582,8 +582,9 @@ class AppCRUDTest {
                 "image", "gambar apa tu man".getBytes());
         submitRequest.setImageFile(newImage);
         AppData appDataBfr = appCRUD.create(1, submitRequest);
+        Long bfrId = appDataBfr.getId();
         Assertions.assertThrows(UnauthorizedException.class, () -> {
-            appCRUD.updateImage((long)appDataBfr.getId(), appImageUpdate, 5);
+            appCRUD.updateImage(bfrId, appImageUpdate, 5);
         });
 
     }
