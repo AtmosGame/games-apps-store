@@ -122,6 +122,7 @@ public class AppCRUDImpl implements AppCRUD {
         else{
             throw new AppDevDoesNotExistException();
         }
+        executorService.shutdown();
         return appDataRepository.save(appData);
     }
 

@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.app;
 
+import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailValidationRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailValidationResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailFullResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
@@ -15,6 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -84,4 +89,90 @@ class AppDetailServiceTest {
         AppDetailFullResponse response = appDetailService.getAppDetailbyId(5L);
         Assertions.assertNull(response);
     }
+
+    @Test
+    void validateAppSuccess() {
+        AppDetailValidationRequest request = AppDetailValidationRequest.builder()
+                .id(1L)
+                .name("Dota 1")
+                .price(10000d)
+                .build();
+
+        AppData appData = AppData.builder()
+                .id(1L)
+                .name("Dota 1")
+                .imageUrl("https://image.com/app1")
+                .installerUrl("https://storage.com/app1")
+                .description("The first app")
+                .version("1.0.0")
+                .price(10000d)
+                .verificationStatus(VerificationStatus.VERIFIED)
+                .verificationAdminId(null)
+                .verificationDate(null)
+                .build();
+
+        // Act
+        AppDetailValidationResponse response = appDetailService.validateApp(request);
+
+        // Assert
+        Assertions.assertTrue(response.getIsValid());
+    }
+
+    @Test
+    void validateAppDiffName() {
+        AppDetailValidationRequest request = AppDetailValidationRequest.builder()
+                .id(1L)
+                .name("Dota 2")
+                .price(10000d)
+                .build();
+
+        AppData appData = AppData.builder()
+                .id(1L)
+                .name("Dota 1")
+                .imageUrl("https://image.com/app1")
+                .installerUrl("https://storage.com/app1")
+                .description("The first app")
+                .version("1.0.0")
+                .price(10000d)
+                .verificationStatus(VerificationStatus.VERIFIED)
+                .verificationAdminId(null)
+                .verificationDate(null)
+                .build();
+
+        // Act
+        AppDetailValidationResponse response = appDetailService.validateApp(request);
+
+        // Assert
+        Assertions.assertFalse(response.getIsValid());
+    }
+
+    @Test
+    void validateAppDiffPrice() {
+
+        AppDetailValidationRequest request = AppDetailValidationRequest.builder()
+                .id(1L)
+                .name("Dota 1")
+                .price(100002d)
+                .build();
+
+        AppData appData = AppData.builder()
+                .id(1L)
+                .name("Dota 1")
+                .imageUrl("https://image.com/app1")
+                .installerUrl("https://storage.com/app1")
+                .description("The first app")
+                .version("1.0.0")
+                .price(10000d)
+                .verificationStatus(VerificationStatus.VERIFIED)
+                .verificationAdminId(null)
+                .verificationDate(null)
+                .build();
+
+        // Act
+        AppDetailValidationResponse response = appDetailService.validateApp(request);
+
+        // Assert
+        Assertions.assertFalse(response.getIsValid());
+    }
+
 }

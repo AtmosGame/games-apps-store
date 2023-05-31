@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.gamesappsstore.service.appCRUD;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.*;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.UnauthorizedException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.AppDevDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.core.storage.Storage;
@@ -398,42 +399,40 @@ class AppCRUDTest {
         });
     }
 
-//    @Test
-//    void updateInstaller() throws IOException{
-//        NotificationData notificationData = NotificationData.builder()
-//                .id(1L)
-//                .subjectId(1L)
-//                .description("Terdapat Update pada Aplikasi ANDA")
-//                .timestamp(new Timestamp(System.currentTimeMillis()))
-//                .subscriber(new ArrayList<>())
-//                .build();
-//
-//        AppDev appDev = AppDev.builder()
-//                .id(1L)
-//                .appId((long)1)
-//                .subscribers(new ArrayList<>())
-//                .build();
-//
-//        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
-//            String temp = ".com";
-//            return invocation.getArgument(1, String.class) + temp;
-//        });
-//        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
-//            var appData1 = invocation.getArgument(0, AppData.class);
-//            appData1.setId((long)1);
-//            return appData1;
-//        });
-//        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
-//        when(appDeveloperRepository.findByAppId(any(Long.class))).thenReturn(Optional.of(appDev));
-//        when(notificationService.handleNewBroadcast(any(Long.class), any(String.class))).thenReturn(notificationData);
-//
-//        AppData appDataBfr = appCRUD.create(1, submitRequest);
-//        AppData result = appCRUD.updateInstaller((long)appDataBfr.getId(), appInstallerUpdate, 1);
-//        AppData appData1 = appDataBfr;
-//        appData1.setVersion(appInstallerUpdate.getVersion());
-//        appData1.setInstallerUrl(result.getInstallerUrl());
-//        Assertions.assertEquals(result, appData1);
-//    }
+    @Test
+    void updateInstaller() throws IOException{
+        NotificationData notificationData = NotificationData.builder()
+                .id(1L)
+                .subjectId(1L)
+                .description("Terdapat Update pada Aplikasi ANDA")
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .build();
+
+        AppDev appDev = AppDev.builder()
+                .id(1L)
+                .appId((long)1)
+                .subscribers(new ArrayList<>())
+                .build();
+
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
+        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+            var appData1 = invocation.getArgument(0, AppData.class);
+            appData1.setId((long)1);
+            return appData1;
+        });
+        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+        when(appDeveloperRepository.findByAppId(any(Long.class))).thenReturn(Optional.of(appDev));
+
+        AppData appDataBfr = appCRUD.create(1, submitRequest);
+        AppData result = appCRUD.updateInstaller((long)appDataBfr.getId(), appInstallerUpdate, 1);
+        AppData appData1 = appDataBfr;
+        appData1.setVersion(appInstallerUpdate.getVersion());
+        appData1.setInstallerUrl(result.getInstallerUrl());
+        Assertions.assertEquals(result, appData1);
+    }
 
     @Test
     void updateInstallerDoesNotExist() throws IOException{
@@ -469,73 +468,70 @@ class AppCRUDTest {
         });
     }
 
-//    @Test
-//    void updateInstallerVersionSame() throws IOException{
-//        NotificationData notificationData = NotificationData.builder()
-//                .id(1L)
-//                .subjectId(1L)
-//                .description("Terdapat Update pada Aplikasi ANDA")
-//                .timestamp(new Timestamp(System.currentTimeMillis()))
-//                .subscriber(new ArrayList<>())
-//                .build();
-//
-//        AppDev appDev = AppDev.builder()
-//                .id(1L)
-//                .appId((long)1)
-//                .subscribers(new ArrayList<>())
-//                .build();
-//
-//        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
-//            String temp = ".com";
-//            return invocation.getArgument(1, String.class) + temp;
-//        });
-//        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
-//            var appData1 = invocation.getArgument(0, AppData.class);
-//            appData1.setId((long)1);
-//            return appData1;
-//        });
-//        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
-//        when(appDeveloperRepository.findByAppId(any(Long.class))).thenReturn(Optional.of(appDev));
-//        when(notificationService.handleNewBroadcast(any(Long.class), any(String.class))).thenReturn(notificationData);
-//
-//        AppData appDataBfr = appCRUD.create(1, submitRequest);
-//        appInstallerUpdate.setVersion("1.0.1");
-//        AppData result = appCRUD.updateInstaller((long)appDataBfr.getId(), appInstallerUpdate, 1);
-//        AppData appData1 = appDataBfr;
-//        appData1.setVersion(appInstallerUpdate.getVersion());
-//        appData1.setInstallerUrl(result.getInstallerUrl());
-//        Assertions.assertEquals(result, appData1);
-//    }
+    @Test
+    void updateInstallerVersionSame() throws IOException{
+        NotificationData notificationData = NotificationData.builder()
+                .id(1L)
+                .subjectId(1L)
+                .description("Terdapat Update pada Aplikasi ANDA")
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .build();
 
-//    @Test
-//    void updateInstallerDevDoesNotExist() throws IOException{
-//        NotificationData notificationData = NotificationData.builder()
-//                .id(1L)
-//                .subjectId(1L)
-//                .description("Terdapat Update pada Aplikasi ANDA")
-//                .timestamp(new Timestamp(System.currentTimeMillis()))
-//                .subscriber(new ArrayList<>())
-//                .build();
-//
-//
-//        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
-//            String temp = ".com";
-//            return invocation.getArgument(1, String.class) + temp;
-//        });
-//        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
-//            var appData1 = invocation.getArgument(0, AppData.class);
-//            appData1.setId((long)1);
-//            return appData1;
-//        });
-//        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
-//
-//        appCRUD.create(1, submitRequest);
-//        appInstallerUpdate.setVersion("1.0.1");
-//
-//        Assertions.assertThrows(AppDevDoesNotExistException.class, () -> {
-//            appCRUD.updateInstaller((long)1, appInstallerUpdate, 1);
-//        });
-//    }
+        AppDev appDev = AppDev.builder()
+                .id(1L)
+                .appId((long)1)
+                .subscribers(new ArrayList<>())
+                .build();
+
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
+        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+            var appData1 = invocation.getArgument(0, AppData.class);
+            appData1.setId((long)1);
+            return appData1;
+        });
+        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+        when(appDeveloperRepository.findByAppId(any(Long.class))).thenReturn(Optional.of(appDev));
+
+        AppData appDataBfr = appCRUD.create(1, submitRequest);
+        appInstallerUpdate.setVersion("1.0.1");
+        AppData result = appCRUD.updateInstaller((long)appDataBfr.getId(), appInstallerUpdate, 1);
+        AppData appData1 = appDataBfr;
+        appData1.setVersion(appInstallerUpdate.getVersion());
+        appData1.setInstallerUrl(result.getInstallerUrl());
+        Assertions.assertEquals(result, appData1);
+    }
+
+    @Test
+    void updateInstallerDevDoesNotExist() throws IOException{
+        NotificationData notificationData = NotificationData.builder()
+                .id(1L)
+                .subjectId(1L)
+                .description("Terdapat Update pada Aplikasi ANDA")
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .build();
+
+
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
+        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+            var appData1 = invocation.getArgument(0, AppData.class);
+            appData1.setId((long)1);
+            return appData1;
+        });
+        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
+        appCRUD.create(1, submitRequest);
+        appInstallerUpdate.setVersion("1.0.1");
+
+        Assertions.assertThrows(AppDevDoesNotExistException.class, () -> {
+            appCRUD.updateInstaller((long)1, appInstallerUpdate, 1);
+        });
+    }
 
     @Test
     void deleteAndFound() throws IOException{
@@ -567,5 +563,29 @@ class AppCRUDTest {
         Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
             appCRUD.delete((long)1, 1);
         });
+    }
+
+    @Test
+    void checkUserNotAuthorizedTest() throws IOException{
+        when(storage.uploadFile(any(InputStream.class), anyString())).thenAnswer(invocation -> {
+            String temp = ".com";
+            return invocation.getArgument(1, String.class) + temp;
+        });
+        when(appDataRepository.save(any(AppData.class))).thenAnswer(invocation -> {
+            var appData1 = invocation.getArgument(0, AppData.class);
+            appData1.setId((long)1);
+            return appData1;
+        });
+        when(appDataRepository.findById(any(Long.class))).thenReturn(Optional.of(appData));
+
+        MultipartFile newImage = new MockMultipartFile("image", "image.png",
+                "image", "gambar apa tu man".getBytes());
+        submitRequest.setImageFile(newImage);
+        AppData appDataBfr = appCRUD.create(1, submitRequest);
+        Long bfrId = appDataBfr.getId();
+        Assertions.assertThrows(UnauthorizedException.class, () -> {
+            appCRUD.updateImage(bfrId, appImageUpdate, 5);
+        });
+
     }
 }

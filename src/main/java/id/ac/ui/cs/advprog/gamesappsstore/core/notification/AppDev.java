@@ -2,13 +2,11 @@ package id.ac.ui.cs.advprog.gamesappsstore.core.notification;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.Hibernate;
 
 import java.util.List;
 
