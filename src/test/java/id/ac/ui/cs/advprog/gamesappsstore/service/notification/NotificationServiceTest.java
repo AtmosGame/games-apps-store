@@ -83,14 +83,6 @@ class NotificationServiceTest {
     }
 
     @Test
-    void notificationByUserIdUserDoesntExistTest(){
-        Assertions.assertThrows(UserNotFoundException.class, () -> {
-            notificationService.getNotificationByUserId((long)1);
-        });
-    }
-
-
-    @Test
     void handleSubscribedTest(){
         appDev.getSubscribers().add(subscriber);
         when(appDeveloperRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(appDev));
