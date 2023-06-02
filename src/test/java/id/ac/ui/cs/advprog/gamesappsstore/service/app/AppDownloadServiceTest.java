@@ -1,6 +1,9 @@
 package id.ac.ui.cs.advprog.gamesappsstore.service.app;
 
+import id.ac.ui.cs.advprog.gamesappsstore.core.download.api.IsAppOwnedAPICall;
+import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.AppDataRequest;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.download.AppDownloadResponse;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.repository.app.AppDataRepository;
@@ -8,6 +11,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +28,11 @@ class AppDownloadServiceTest {
     AppDataRepository appDataRepository;
 
     @Autowired
+    @InjectMocks
     AppDownloadServiceImpl appDownloadService;
+
+    @Mock
+    IsAppOwnedAPICall isAppOwnedAPICall;
 
 
     @BeforeEach
@@ -83,5 +93,41 @@ class AppDownloadServiceTest {
         AppDownloadResponse response = appDownloadService.getDownloadUrl(username, appId, jwtToken);
 
         Assertions.assertEquals("https://storage.com/app3", response.getInstallerUrl());
+    }
+
+    @Test
+    void testGetDownloadUrlWithUnavaliableApp(){
+        String username = "testUser";
+        String jwtToken = "testToken";
+        Long appId = 4L;
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
+            appDownloadService.getDownloadUrl(username, appId, jwtToken);
+        });
+    }
+
+    @Test
+    void testGetDownloadUrlWithOwnedApp(){
+        String username = "testUser";
+        String jwtToken = "testToken";
+        Long appId = 2L;
+
+        Mockito.when(isAppOwnedAPICall.execute(username, appId, jwtToken)).thenReturn(true);
+
+        AppDownloadResponse response = appDownloadService.getDownloadUrl(username, appId, jwtToken);
+
+        Assertions.assertEquals("https://storage.com/app2", response.getInstallerUrl());
+    }
+
+    @Test
+    void testGetDownloadUrlWithNotOwnedApp(){
+        String username = "testUser";
+        String jwtToken = "testToken";
+        Long appId = 2L;
+
+        Mockito.when(isAppOwnedAPICall.execute(username, appId, jwtToken)).thenReturn(false);
+
+        AppDownloadResponse response = appDownloadService.getDownloadUrl(username, appId, jwtToken);
+
+        Assertions.assertEquals("you don't own the app", response.getInstallerUrl());
     }
 }

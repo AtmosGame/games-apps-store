@@ -34,7 +34,7 @@ class SearchServiceTest {
                 .description("The first app")
                 .version("1.0.0")
                 .price(10000d)
-                .verificationStatus(VerificationStatus.UNVERIFIED)
+                .verificationStatus(VerificationStatus.VERIFIED)
                 .verificationAdminId(null)
                 .verificationDate(null)
                 .build();
@@ -46,7 +46,7 @@ class SearchServiceTest {
                 .description("The second app")
                 .version("1.0.0")
                 .price(10000d)
-                .verificationStatus(VerificationStatus.VERIFIED)
+                .verificationStatus(VerificationStatus.UNVERIFIED)
                 .verificationAdminId(1)
                 .verificationDate(new Date())
                 .build();
@@ -58,7 +58,7 @@ class SearchServiceTest {
                 .description("The third app")
                 .version("1.0.0")
                 .price(10000d)
-                .verificationStatus(VerificationStatus.REJECTED)
+                .verificationStatus(VerificationStatus.VERIFIED)
                 .verificationAdminId(1)
                 .verificationDate(new Date())
                 .build();
@@ -73,14 +73,36 @@ class SearchServiceTest {
         Assertions.assertEquals(3, searchResults.size());
     }
     @Test
-    void SearchByAvailableApps(){
-        List<AppData> searchResults = searchService.searchAppsByKeyword("dota");
+    void searchWithFullMatchingKeyword() {
+        List<AppData> searchResults = searchService.searchAppsByKeyword("Mobile Legends");
+        Assertions.assertEquals(1, searchResults.size());
+        AppData appData = searchResults.get(0);
+        Assertions.assertEquals("Mobile Legends", appData.getName());
+    }
+
+    @Test
+    void searchWithNonMatchingKeyword() {
+        List<AppData> searchResults = searchService.searchAppsByKeyword("nonexistent");
+        Assertions.assertEquals(0, searchResults.size());
+    }
+
+    @Test
+    void searchWithPartialMatchingKeyword() {
+        List<AppData> searchResults = searchService.searchAppsByKeyword("DOTA");
         Assertions.assertEquals(1, searchResults.size());
     }
 
     @Test
-    void SearchByUnavailableApps(){
-        List<AppData> searchResults = searchService.searchAppsByKeyword("geming");
+    void searchWithNullKeyword() {
+        List<AppData> searchResults = searchService.searchAppsByKeyword(null);
         Assertions.assertEquals(0, searchResults.size());
     }
+
+    @Test
+    void searchWithEmptyKeyword() {
+        List<AppData> searchResults = searchService.searchAppsByKeyword("");
+        Assertions.assertEquals(2, searchResults.size());
+    }
+
+
 }
