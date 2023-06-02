@@ -15,7 +15,7 @@ public class IsAppOwnedAPICall {
     @Value("${atmos.microservices.payment.url}/api/v1/check-purchased")
     private String endPoint;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = new RestTemplate();
 
     public boolean execute(@NonNull String username,@NonNull Long id, @NonNull String jwtToken) {
         var headers = getHeaders(jwtToken);
