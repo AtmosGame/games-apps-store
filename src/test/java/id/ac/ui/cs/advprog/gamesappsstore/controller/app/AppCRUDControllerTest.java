@@ -1,6 +1,9 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.app;
 
 import id.ac.ui.cs.advprog.gamesappsstore.dto.appcrud.*;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.advice.GlobalExceptionHandler;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.ErrorTemplate;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
@@ -14,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -99,6 +104,22 @@ class AppCRUDControllerTest {
                 .price(4.99)
                 .verificationStatus(VerificationStatus.UNVERIFIED)
                 .build();
+
+    }
+
+    @Test
+    void handleTypeMismatchTest() {
+        GlobalExceptionHandler exceptionHandler = new GlobalExceptionHandler();
+
+        AppDataDoesNotExistException exception = new AppDataDoesNotExistException();
+
+        ResponseEntity<Object> responseEntity = exceptionHandler.errorException(exception);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+        String expectedMessage = "Tidak App dengan id tersebut";
+        ErrorTemplate errorTemplate = (ErrorTemplate) responseEntity.getBody();
+        Assertions.assertEquals(expectedMessage, errorTemplate.message());
 
     }
 
