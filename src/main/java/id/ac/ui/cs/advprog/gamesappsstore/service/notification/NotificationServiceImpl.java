@@ -2,7 +2,6 @@ package id.ac.ui.cs.advprog.gamesappsstore.service.notification;
 
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.Subscriber;
-import id.ac.ui.cs.advprog.gamesappsstore.exceptions.auth.UserNotFoundException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.AppDevDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.SubscriberAlreadySubscribeExepction;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.SubscriberDoesNotExistException;
