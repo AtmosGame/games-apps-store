@@ -20,9 +20,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.WebRequest;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -31,6 +35,9 @@ import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationControllerTest {
+    @Mock
+    private WebRequest webRequest;
+
     @Mock
     NotificationService notificationService;
     @Mock
@@ -93,7 +100,21 @@ class NotificationControllerTest {
         Assertions.assertEquals(expected, response.getBody());
     }
 
+    @Test
+    void handleTypeMismatchTest() {
+        GlobalExceptionHandler exceptionHandler = new GlobalExceptionHandler();
 
+        HttpMessageNotReadableException exception = new HttpMessageNotReadableException("Invalid request body");
+
+        ResponseEntity<Object> responseEntity = exceptionHandler.handleTypeMismatch(exception, webRequest);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+        String expectedMessage = "Format input tidak valid. Pastikan semua bidang input berjenis yang benar.";
+        String actualMessage = ((Map<String, Object>) responseEntity.getBody()).get("message").toString();
+        Assertions.assertEquals(expectedMessage, actualMessage);
+
+    }
     @Test
     void unsubOrSubStringIdInvalidFormat(){
         String jsonResponse = "{\n" +
@@ -102,8 +123,8 @@ class NotificationControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
 
         Assertions.assertThrows(InvalidFormatException.class, () -> {
-                objectMapper.readValue(jsonResponse, SubAndUnsubRequest.class);
-            });
+            notificationController.subscribe(objectMapper.readValue(jsonResponse, SubAndUnsubRequest.class));
+        });
     }
 
     @Test
