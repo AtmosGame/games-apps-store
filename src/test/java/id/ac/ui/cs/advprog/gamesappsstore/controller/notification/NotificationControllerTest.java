@@ -1,10 +1,13 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.notification;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.Subscriber;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.BrodcastRequest;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.IsSubscribedResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.SubAndUnsubRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.advice.GlobalExceptionHandler;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.PriceRangeException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
@@ -17,21 +20,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.WebRequest;
 
-import javax.annotation.meta.When;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationControllerTest {
+    @Mock
+    private WebRequest webRequest;
+
     @Mock
     NotificationService notificationService;
     @Mock
@@ -95,6 +101,33 @@ class NotificationControllerTest {
     }
 
     @Test
+    void handleTypeMismatchTest() {
+        GlobalExceptionHandler exceptionHandler = new GlobalExceptionHandler();
+
+        HttpMessageNotReadableException exception = new HttpMessageNotReadableException("Invalid request body");
+
+        ResponseEntity<Object> responseEntity = exceptionHandler.handleTypeMismatch(exception, webRequest);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+        String expectedMessage = "Format input tidak valid. Pastikan semua bidang input berjenis yang benar.";
+        String actualMessage = ((Map<String, Object>) responseEntity.getBody()).get("message").toString();
+        Assertions.assertEquals(expectedMessage, actualMessage);
+
+    }
+    @Test
+    void unsubOrSubStringIdInvalidFormat(){
+        String jsonResponse = "{\n" +
+                "    \"appDevId\" : \"sadsadsa\"\n" +
+                "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Assertions.assertThrows(InvalidFormatException.class, () -> {
+            notificationController.subscribe(objectMapper.readValue(jsonResponse, SubAndUnsubRequest.class));
+        });
+    }
+
+    @Test
     void successUnsubscribe(){
         Mockito.when(authentication.getPrincipal()).thenReturn(user);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -116,7 +149,6 @@ class NotificationControllerTest {
 
 
     }
-
 
     @Test
     void successNotificationById(){
