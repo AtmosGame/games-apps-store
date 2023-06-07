@@ -38,6 +38,7 @@ class NotificationServiceTest {
     @InjectMocks
     NotificationServiceImpl notificationService;
     AppDev appDev;
+    AppDev difAppDev;
     Subscriber subscriber;
     NotificationData notificationData;
     @BeforeEach
@@ -45,6 +46,12 @@ class NotificationServiceTest {
         appDev = AppDev.builder()
                 .id(1L)
                 .appId((long)1)
+                .subscribers(new ArrayList<>())
+                .build();
+
+        difAppDev = AppDev.builder()
+                .id(2L)
+                .appId((long)2)
                 .subscribers(new ArrayList<>())
                 .build();
 
@@ -165,6 +172,20 @@ class NotificationServiceTest {
     void unsubscribeTest(){
         appDev.getSubscribers().add(subscriber);
         subscriber.setAppDev(appDev);
+
+        when(appDeveloperRepository.findById(any(Long.class))).thenReturn(Optional.of(appDev));
+        when(subscriberRepository.findByAppDevAndUserId(any(AppDev.class), any(Long.class))).thenReturn(Optional.of(subscriber));
+
+        notificationService.handleUnsubscribe(1L, 1L);
+
+        verify(subscriberRepository, atLeastOnce()).deleteById(any(Long.class));
+
+    }
+
+    @Test
+    void unsubscribeDifferenceAppDevTest(){
+        appDev.getSubscribers().add(subscriber);
+        subscriber.setAppDev(difAppDev);
 
         when(appDeveloperRepository.findById(any(Long.class))).thenReturn(Optional.of(appDev));
         when(subscriberRepository.findByAppDevAndUserId(any(AppDev.class), any(Long.class))).thenReturn(Optional.of(subscriber));
