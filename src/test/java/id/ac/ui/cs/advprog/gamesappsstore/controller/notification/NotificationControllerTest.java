@@ -1,10 +1,13 @@
 package id.ac.ui.cs.advprog.gamesappsstore.controller.notification;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.AppDev;
 import id.ac.ui.cs.advprog.gamesappsstore.core.notification.Subscriber;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.BrodcastRequest;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.IsSubscribedResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.notfication.SubAndUnsubRequest;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.advice.GlobalExceptionHandler;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.PriceRangeException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.User;
 import id.ac.ui.cs.advprog.gamesappsstore.models.auth.enums.UserRole;
 import id.ac.ui.cs.advprog.gamesappsstore.models.notification.NotificationData;
@@ -21,14 +24,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.annotation.meta.When;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationControllerTest {
@@ -94,6 +93,19 @@ class NotificationControllerTest {
         Assertions.assertEquals(expected, response.getBody());
     }
 
+
+    @Test
+    void unsubOrSubStringIdInvalidFormat(){
+        String jsonResponse = "{\n" +
+                "    \"appDevId\" : \"sadsadsa\"\n" +
+                "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Assertions.assertThrows(InvalidFormatException.class, () -> {
+                objectMapper.readValue(jsonResponse, SubAndUnsubRequest.class);
+            });
+    }
+
     @Test
     void successUnsubscribe(){
         Mockito.when(authentication.getPrincipal()).thenReturn(user);
@@ -116,7 +128,6 @@ class NotificationControllerTest {
 
 
     }
-
 
     @Test
     void successNotificationById(){

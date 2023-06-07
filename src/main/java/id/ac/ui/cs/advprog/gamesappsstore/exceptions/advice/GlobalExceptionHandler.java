@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.gamesappsstore.exceptions.advice;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ForbiddenMethodCall;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.NoSetupException;
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.ServiceUnavailableException;
@@ -12,11 +13,16 @@ import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.SubscriberAlre
 import id.ac.ui.cs.advprog.gamesappsstore.exceptions.notification.SubscriberDoesNotExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -37,4 +43,14 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(baseException, badRequest);
     }
+
+        @ExceptionHandler({HttpMessageNotReadableException.class, InvalidFormatException.class})
+        public ResponseEntity<Object> handleTypeMismatch(HttpMessageNotReadableException ex, WebRequest request) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("message", "Format input tidak valid. Pastikan semua bidang input berjenis yang benar.");
+            body.put("httpStatus", HttpStatus.BAD_REQUEST.value());
+            body.put("timestamp", new Date());
+            return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        }
+
 }
