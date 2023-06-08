@@ -21,8 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
-
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
@@ -37,7 +35,7 @@ class CartServiceTest {
 
     @InjectMocks
     @Autowired
-    private CartService cartService;
+    private CartServiceImpl cartService;
 
     @Autowired
     private AppDataRepository appDataRepository;
