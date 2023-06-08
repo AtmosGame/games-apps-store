@@ -28,18 +28,7 @@ public class VerificationServiceImpl implements VerificationService {
 
     public VerificationDetailResponse getAppDetail(Long id) {
         AppData appData = getAppOrNotFound(id);
-        return new VerificationDetailResponse(
-                appData.getId(),
-                appData.getName(),
-                appData.getImageUrl(),
-                appData.getDescription(),
-                appData.getInstallerUrl(),
-                appData.getVersion(),
-                appData.getPrice(),
-                appData.getVerificationStatus().toString(),
-                appData.getVerificationAdminId(),
-                appData.getVerificationDate()
-        );
+        return new VerificationDetailResponse(appData);
     }
 
     public void verify(User admin, Long id) {

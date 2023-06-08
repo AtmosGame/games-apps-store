@@ -14,16 +14,7 @@ public class AppServiceImpl implements AppService {
 
     public AppDetailResponse getAppDetail(Long id) {
         AppData appData = getAppOrNotFound(id);
-        return new AppDetailResponse(
-                appData.getId(),
-                appData.getName(),
-                appData.getUserId(),
-                appData.getImageUrl(),
-                appData.getDescription(),
-                appData.getVersion(),
-                appData.getPrice(),
-                appData.getVerificationStatus()
-        );
+        return new AppDetailResponse(appData);
     }
 
     private AppData getAppOrNotFound(Long id) {
