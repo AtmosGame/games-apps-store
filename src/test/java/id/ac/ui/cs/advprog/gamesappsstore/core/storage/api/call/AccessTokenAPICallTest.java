@@ -98,4 +98,18 @@ class AccessTokenAPICallTest {
         AccessTokenAPICall accessTokenAPICall1 = new AccessTokenAPICall("apahayo");
         Assertions.assertThrows(NoSetupException.class, accessTokenAPICall1::execute);
     }
+
+    @Test
+    void nullArgumentSetupTest() {
+        AccessTokenAPICall accessTokenAPICall1 = new AccessTokenAPICall("apahayo");
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            accessTokenAPICall1.setup(null, "a", "a");
+        });
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            accessTokenAPICall1.setup("a", null, "a");
+        });
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            accessTokenAPICall1.setup("a", "a", null);
+        });
+    }
 }
