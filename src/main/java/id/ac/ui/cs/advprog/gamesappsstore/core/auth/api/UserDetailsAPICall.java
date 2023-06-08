@@ -71,16 +71,6 @@ public class UserDetailsAPICall {
     }
 
     private UserRole stringToUserRole(String roleString) {
-        switch (roleString) {
-            case "ADMIN" -> {
-                return UserRole.ADMIN;
-            }
-            case "DEVELOPER" -> {
-                return UserRole.DEVELOPER;
-            }
-            default -> {
-                return UserRole.USER;
-            }
-        }
+        return UserRole.valueOf(roleString);
     }
 }

@@ -28,7 +28,7 @@ class VerificationServiceTest {
 
     @InjectMocks
     @Autowired
-    private VerificationService verificationService;
+    private VerificationServiceImpl verificationService;
 
     private Date date2;
 
