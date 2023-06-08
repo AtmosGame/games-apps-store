@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.gamesappsstore.service.app;
 
 import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailValidationRequest;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailValidationResponse;
+import id.ac.ui.cs.advprog.gamesappsstore.exceptions.crudapp.AppDataDoesNotExistException;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.AppData;
 import id.ac.ui.cs.advprog.gamesappsstore.dto.app.AppDetailFullResponse;
 import id.ac.ui.cs.advprog.gamesappsstore.models.app.enums.VerificationStatus;
@@ -175,4 +176,15 @@ class AppDetailServiceTest {
         Assertions.assertFalse(response.getIsValid());
     }
 
+    @Test
+    void validateIdNotFound() {
+        AppDetailValidationRequest request = AppDetailValidationRequest.builder()
+                .id(100L)
+                .name("Dota 1")
+                .price(100002d)
+                .build();
+        Assertions.assertThrows(AppDataDoesNotExistException.class, () -> {
+            appDetailService.validateApp(request);
+        });
+    }
 }

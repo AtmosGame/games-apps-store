@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -29,6 +30,8 @@ class UploadFileAPICallTest {
 
     @Mock
     private RestTemplate restTemplate;
+    @Mock
+    private InputStream mockFile;
 
     @InjectMocks
     private UploadFileAPICall uploadFileAPICall = new UploadFileAPICall("apahayo");
@@ -147,5 +150,27 @@ class UploadFileAPICallTest {
     void noSetupTest() {
         UploadFileAPICall uploadFileAPICall1 = new UploadFileAPICall("apahayo");
         Assertions.assertThrows(NoSetupException.class, uploadFileAPICall1::execute);
+    }
+
+    @Test
+    void nullArgumentSetupTest() {
+        UploadFileAPICall uploadFileAPICall1 = new UploadFileAPICall("apahayo");
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            uploadFileAPICall1.setup(null, "a", file);
+        });
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            uploadFileAPICall1.setup("a", null, file);
+        });
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            uploadFileAPICall1.setup("a", "a", null);
+        });
+    }
+
+    @Test
+    void errorOnConversionTest() throws IOException {
+        UploadFileAPICall uploadFileAPICall1 = new UploadFileAPICall("apahayo");
+        uploadFileAPICall1.setup("a", "a", mockFile);
+        Mockito.when(mockFile.readAllBytes()).thenThrow(IOException.class);
+        Assertions.assertThrows(ServiceUnavailableException.class, uploadFileAPICall1::execute);
     }
 }

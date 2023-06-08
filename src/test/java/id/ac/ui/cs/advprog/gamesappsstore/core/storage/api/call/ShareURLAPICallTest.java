@@ -177,4 +177,15 @@ class ShareURLAPICallTest {
         ShareURLAPICall shareURLAPICall1 = new ShareURLAPICall("apahayo");
         Assertions.assertThrows(NoSetupException.class, shareURLAPICall1::execute);
     }
+
+    @Test
+    void nullArgumentSetupTest() {
+        ShareURLAPICall shareURLAPICall1 = new ShareURLAPICall("apahayo");
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            shareURLAPICall1.setup(null, "a");
+        });
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            shareURLAPICall1.setup("a", null);
+        });
+    }
 }

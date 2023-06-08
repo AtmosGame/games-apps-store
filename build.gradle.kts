@@ -67,6 +67,7 @@ sonarqube {
 		property ("sonar.organization", "atmos-games-apps-store")
 		property ("sonar.sourceEncoding", "UTF-8")
 		property ("sonar.branch.name", "main")
+		property ("sonar.coverage.exclusions", "**/*Application**,**/dto/**,**/exceptions/**")
 	}
 }
 
