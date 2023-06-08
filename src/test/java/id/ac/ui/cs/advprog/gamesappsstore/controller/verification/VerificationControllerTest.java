@@ -103,6 +103,19 @@ class VerificationControllerTest {
     }
 
     @Test
+    void getAllVerifiedAppsTest() {
+        List<AppData> expectedList = new ArrayList<>();
+        expectedList.add(appData2);
+
+        Mockito
+                .when(verificationService.findAllVerifiedApps())
+                .thenReturn(expectedList);
+        ResponseEntity<List<AppData>> response = verificationController.getAllVerifiedApps();
+        List<AppData> appList = response.getBody();
+        Assertions.assertEquals(expectedList, appList);
+    }
+
+    @Test
     void getAllUnverifiedAppsTest() {
         List<AppData> expectedList = new ArrayList<>();
         expectedList.add(appData1);
